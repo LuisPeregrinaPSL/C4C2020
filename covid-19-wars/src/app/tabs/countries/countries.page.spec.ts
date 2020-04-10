@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
+import { ExploreContainerComponentModule } from '../../explore-container/explore-container.module';
 
-import { Tab2Page } from './tab2.page';
+import { CountriesPage } from './countries.page';
 
-describe('Tab2Page', () => {
-  let component: Tab2Page;
-  let fixture: ComponentFixture<Tab2Page>;
+describe('CountriesPage', () => {
+  let component: CountriesPage;
+  let fixture: ComponentFixture<CountriesPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [Tab2Page],
+      declarations: [CountriesPage],
       imports: [IonicModule.forRoot(), ExploreContainerComponentModule]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Tab2Page);
+    fixture = TestBed.createComponent(CountriesPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

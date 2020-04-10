@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -8,51 +9,52 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
+        path: 'cities',
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+            loadChildren: () => import('./cities/cities.module').then(m => m.CitiesPageModule)
           }
         ]
       },
       {
-        path: 'tab2',
+        path: 'states',
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+            loadChildren: () => import('./states/states.module').then(m => m.StatesPageModule)
           }
         ]
       },
       {
-        path: 'tab3',
+        path: 'countries',
         children: [
           {
             path: '',
-            loadChildren: () =>
-              import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+            loadChildren: () => import('./countries/countries.module').then(m => m.CountriesPageModule)
           }
         ]
+      },
+      {
+        path: 'config',
+        loadChildren: () => import('./config/config.module').then(m => m.ConfigPageModule)
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/cities',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/cities',
     pathMatch: 'full'
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes), ReactiveFormsModule],
   exports: [RouterModule]
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

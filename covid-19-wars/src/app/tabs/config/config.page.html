@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Configuration</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="configForm" (ngSubmit)="processForm()" (keyup.enter)="processForm()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="fixed">Vendor:</ion-label>
+        <ion-input formControlName="vendor" type="text">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Geolocation enabled</ion-label>
+        <ion-checkbox slot="end" formControlName="geolocation"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-button (click)="update()" color="primary" expand="block">Update</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-content>
