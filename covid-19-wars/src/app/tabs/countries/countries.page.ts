@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { GpsService } from '../../services/gps.service';
 
 @Component({
   selector: 'app-countries',
@@ -7,6 +8,6 @@ import { Component } from '@angular/core';
 })
 export class CountriesPage {
 
-  constructor() { }
+  constructor(public gps:GpsService) { }
 
 }
