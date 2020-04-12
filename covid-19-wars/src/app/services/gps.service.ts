@@ -13,7 +13,7 @@ const { Geolocation, App, BackgroundTask, LocalNotifications } = Plugins;
 })
 export class GpsService {
   history: Array<GpsHistory>;
-  wait: any;
+  geoFence: any;
   coordinate: SimpleCoordinates;
   watchCoordinate: any;
   watchId: CallbackID;
@@ -22,19 +22,12 @@ export class GpsService {
   constructor(
     public alertCtrl: AlertController,
     public appStorageSvc: AppStorageService) {
-    console.log('Constructor...')
-    this.init();
-  }
-
-  public init() {
-    console.log('GPS Service init...')
     if (this.requestPermissions()) {
-      this.checkPosition();
-      this.setBackgroundEvent();
+      this.setEvent();
     }
   }
 
-  private setBackgroundEvent() {
+  private setEvent() {
     App.addListener('appStateChange', (state) => {
       if (state.isActive) {
         console.log('Going to front...');
@@ -59,134 +52,43 @@ export class GpsService {
               }
             ]
           });
-          console.log('scheduled notifications', notifs);
-
-          setTimeout(() => {
-            this.notifyUpdates();
-          }, AppConfiguration.GPS_SET_BACKGROUND_EVENT);
-
-          this.trackCoordinatesInBackground();
+          this.checkPosition();
 
           BackgroundTask.finish({
             taskId
           });
         });
       }
-    })
+    });
   }
 
   async checkPosition() {
-    var currentCoord: SimpleCoordinates = this.coordinate;
-    await this.setCurrentCoordinate();
-    console.log('using coordinate');
-    console.log(this.coordinate);
-    if (currentCoord != undefined) {
-      var meters = this.convertToMeters(currentCoord.latitude, currentCoord.longitude, this.coordinate.latitude, this.coordinate.longitude);
-      console.log('Previous and current: ', currentCoord.latitude, currentCoord.longitude, this.coordinate.latitude, this.coordinate.longitude);
-      console.log('Meters: ' + meters);
-
+    var previousCoord = this.coordinate;
+    this.coordinate = await this.getCurrentPosition();
+    if (previousCoord != undefined) {
+      var meters = this.convertToMeters(previousCoord.latitude, previousCoord.longitude, this.coordinate.latitude, this.coordinate.longitude);
       if (meters >= AppConfiguration.DISTANCE_THRESHOLD) {
+        await this.appStorageSvc.addHistory(new GpsHistory(this.coordinate));
+      }
+      let casa = (await this.appStorageSvc.getConfiguration()).casa;
+      meters = this.convertToMeters(casa.latitude, casa.longitude, this.coordinate.latitude, this.coordinate.longitude);
+      if (meters >= AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
         this.notifyUser('More than ' + AppConfiguration.DISTANCE_THRESHOLD + ' meters', 'You have passed more than ' + AppConfiguration.DISTANCE_THRESHOLD + ' meters');
       }
-
-
-      await this.appStorageSvc.addHistory(new GpsHistory(currentCoord));
-
-      this.appStorageSvc.getHistory().then(
-        (gpsHistory: GpsHistory[]) => console.log('History', gpsHistory),
-        () => console.log("empty history")
-      );
     }
 
-
-
-    if (!this.backgroundMode) {
-      setTimeout(() => {
-        this.checkPosition();
-      }, AppConfiguration.GPS_CHECK_POSITION_TIMEOUT);
-    }
+    setTimeout(() => {
+      this.checkPosition();
+    }, (this.backgroundMode ? AppConfiguration.GPS_CHECK_POSITION_BACKGROUND_TIMEOUT : AppConfiguration.GPS_CHECK_POSITION_TIMEOUT));
   }
 
   async requestPermissions() {
-    let permResult = await Plugins.Geolocation.requestPermissions();
-    console.log('Perm request result: ', permResult);
-    return permResult;
+    return await Plugins.Geolocation.requestPermissions();
   }
 
-  private async setCurrentCoordinate() {
-    if (!Capacitor.isPluginAvailable('Geolocation')) {
-      console.log('Plugin geolocation not available');
-      return;
-    }
-
-    let coords = (await this.getCurrentPosition()).coords;
-    this.coordinate = new SimpleCoordinates(coords.latitude, coords.longitude);
-  }
-
-  public async getCurrentPosition() {
-    const coordinates = await Geolocation.getCurrentPosition();
-    console.log('getCurrentPosition()', coordinates.coords.latitude, coordinates.coords.longitude);
-    return coordinates;
-  }
-
-  public watchPosition(callback: any) {
-    return Geolocation.watchPosition({}, callback);
-  }
-
-  private async trackCoordinatesInBackground() {
-    console.log('trackCoordinatesInBackground');
-    this.wait = Geolocation.watchPosition({}, (data: GeolocationPosition) => {
-      console.log('Latitude: ', data.coords.latitude);
-
-      var currentCoord: any = this.coordinate;
-      if (currentCoord != null) {
-        var meters = this.convertToMeters(currentCoord.latitude, currentCoord.longitude, data.coords.latitude, data.coords.longitude);
-        console.log('Previous and current: ', currentCoord.latitude, currentCoord.longitude, data.coords.latitude, data.coords.longitude);
-        console.log('Meters: ' + meters);
-        this.showLocalNotification('Meters', 'Meters: ' + meters);
-        if (meters >= 30) {
-          this.notifyUser('More than 30 meters', 'You have passed more than 30 meters');
-        }
-      }
-
-      if (!this.backgroundMode) {
-        Geolocation.clearWatch(this.wait);
-      }
-    });
-  }
-
-  public async showHistory() {
-    var message = '';
-
-    for (let i = 0; i < this.history.length; i++) {
-      message += `
-       <p> History Log #` + (i + 1) + `.</p>
-       <ul>
-         <li>Latitude: ` + this.history[i].location.latitude + `</li>
-         <li>Longitude: ` + this.history[i].location.longitude + `</li>
-         <li>Accuracy: ` + this.history[i].location.accuracy + `</li>
-         <li>Accuracy: ` + this.history[i].time.toString() + `</li>
-         <li>Map: <a href="https://www.google.com.mx/maps/search/` + this.history[i].location.latitude + `,` + this.history[i].location.longitude + `">Click here</a></li>
-       </ul>
-     `
-
-    }
-
-    const alert = await this.alertCtrl.create({
-      header: 'Position History',
-      message: message,
-      buttons: ['OK']
-    });
-    alert.present()
-  }
-
-  private notifyUpdates() {
-    if (this.backgroundMode) {
-      this.showLocalNotification('New events', 'New events have ocurred while away');
-      setTimeout(() => {
-        this.notifyUpdates();
-      }, AppConfiguration.GPS_BACKGROUND_TIMEOUT);
-    }
+  public async getCurrentPosition(): Promise<SimpleCoordinates> {
+    let coords = (await Geolocation.getCurrentPosition()).coords;
+    return new SimpleCoordinates(coords.latitude, coords.longitude);
   }
 
   private notifyUser(header: string, message: string) {
@@ -208,7 +110,6 @@ export class GpsService {
   }
 
   private showLocalNotification(header: string, message: string) {
-    console.log('showing notification');
     const notifs = LocalNotifications.schedule({
       notifications: [
         {
@@ -222,7 +123,6 @@ export class GpsService {
         }
       ]
     });
-    console.log('scheduled notifications 2', notifs);
   }
 
   private convertToMeters(lat1, lon1, lat2, lon2) {

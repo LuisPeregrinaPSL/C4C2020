@@ -2,10 +2,10 @@ import { SimpleCoordinates } from './simple-coordinates';
 
 export class GpsHistory {
     public time: Date;
-    public location: SimpleCoordinates;
+    public coords: SimpleCoordinates;
 
-    constructor(location: SimpleCoordinates, time?: Date) {
-        this.location = location;
+    constructor(coords: SimpleCoordinates, time?: Date) {
+        this.coords = coords;
         this.time = (time != undefined ? time : new Date());
     }
 }

@@ -51,8 +51,7 @@ export class MePage implements OnInit {
   }
 
   public async establecerCasa() {
-    let pos = (await this.gps.getCurrentPosition());
-    let newCoords = new SimpleCoordinates(pos.coords.latitude, pos.coords.longitude)
+    let newCoords = await this.gps.getCurrentPosition();
     if (newCoords.latitude != this.config.casa.latitude || newCoords.longitude != this.config.casa.longitude) {
       this.config.casa = newCoords;
       this.configService.setConfiguration(this.config);

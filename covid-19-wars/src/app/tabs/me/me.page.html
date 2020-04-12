@@ -80,10 +80,10 @@
             </ion-button>
             <ion-list>
               <ion-item *ngFor="let gpsHistory of historial">
-                <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.location.latitude}}
-                  lon:{{gpsHistory.location.longitude}}]</ion-label>
+                <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.coords.latitude}}
+                  lon:{{gpsHistory.coords.longitude}}]</ion-label>
                 <ion-button slot="end"
-                  href="https://www.google.com.mx/maps/search/{{gpsHistory.location.latitude}},{{gpsHistory.location.longitude}}"
+                  href="https://www.google.com.mx/maps/search/{{gpsHistory.coords.latitude}},{{gpsHistory.coords.longitude}}"
                   target="_blank">
                   <ion-icon name="open-outline">
                   </ion-icon>
