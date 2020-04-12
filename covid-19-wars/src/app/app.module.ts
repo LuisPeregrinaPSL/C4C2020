@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { GpsService } from './services/gps.service';
+import { AppConfiguration } from './app-configuration';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,8 +26,8 @@ import { GpsService } from './services/gps.service';
     ReactiveFormsModule,
     HttpClientModule,
     IonicStorageModule.forRoot({
-      name: '__gps',
-  driverOrder: ['indexeddb', 'sqlite', 'websql']
+      name: AppConfiguration.APP_DB_SCHEMA,
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
     })
   ],
   providers: [
@@ -36,6 +37,6 @@ import { GpsService } from './services/gps.service';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { 
-  constructor(public gps:GpsService) {}
+export class AppModule {
+  constructor(public gps: GpsService) { }
 }

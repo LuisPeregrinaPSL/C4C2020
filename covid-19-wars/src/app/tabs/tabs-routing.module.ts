@@ -10,45 +10,30 @@ const routes: Routes = [
     children: [
       {
         path: 'cities',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('./cities/cities.module').then(m => m.CitiesPageModule)
-          }
-        ]
+        loadChildren: () => import('./cities/cities.module').then(m => m.CitiesPageModule)
       },
       {
         path: 'states',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('./states/states.module').then(m => m.StatesPageModule)
-          }
-        ]
+        loadChildren: () => import('./states/states.module').then(m => m.StatesPageModule)
       },
       {
         path: 'countries',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('./countries/countries.module').then(m => m.CountriesPageModule)
-          }
-        ]
+        loadChildren: () => import('./countries/countries.module').then(m => m.CountriesPageModule)
       },
       {
-        path: 'config',
-        loadChildren: () => import('./config/config.module').then(m => m.ConfigPageModule)
+        path: 'me',
+        loadChildren: () => import('./me/me.module').then(m => m.MePageModule)
       },
       {
         path: '',
-        redirectTo: '/tabs/cities',
+        redirectTo: '/tabs/me',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/cities',
+    redirectTo: '/tabs/me',
     pathMatch: 'full'
   }
 ];

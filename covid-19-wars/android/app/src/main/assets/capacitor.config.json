@@ -1,0 +1,15 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "covid-19-wars",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {},
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#488AFF",
+      "sound": "beep.wav"
+    }
+  }
+}
