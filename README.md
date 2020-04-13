@@ -1,6 +1,6 @@
 # Staying@Home
 
-  Gamifying and analyzing People@home data to focus preventive spread measures
+  Gamifying and analyzing People@home data to focus preventive virus spread measures
 
    ### Team members
    * Jaime de Alba (jaime_alba@persistent.com)
@@ -23,7 +23,7 @@
   
   A more localized implementation of these measures could help to get better results and optimize resource utilization.
 
-  **Proposed solution:** our solution includes 2 main components:
+  **Proposed solution:** solution includes 2 main components:
 
 **Data analyzer:**
 Online platform receiving data and statistics about the time that people stays at home on different areas. 
@@ -52,6 +52,8 @@ There is a GPS tracking component monitoring if the users moves enough to consid
 ### Roadmap:
 
 ### IBM Services and Open Sources components/services
-- Kibana / Elastic Search
-- Ionic framework
-We use the Ionic 4 framework for application development; this framework uses Angular 7 with TypeScript for the code, CSS preprocessing using SASS. Ionic leverages the application building duties to Apache Cordova, which in turn uses Node.js as its backbone, connecting to the Node.js & Cloudant application we developed on IBM Cloud.
+
+**Kibana / Elastic Search**
+
+**Ionic framework:**
+Ionic 4 framework was used for application development; this framework uses Angular 7 with TypeScript for the code, CSS preprocessing using SASS. Ionic leverages the application building duties to Apache Cordova, which in turn uses Node.js as its backbone, connecting to the **Node.js & Cloudant application running on IBM Cloud.**
