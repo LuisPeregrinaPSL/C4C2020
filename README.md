@@ -54,3 +54,4 @@ There is a GPS tracking component monitoring if the users moves enough to consid
 ### IBM Services and Open Sources components/services
 - Kibana / Elastic Search
 - Ionic framework
+We use the Ionic 4 framework for application development; this framework uses Angular 7 with TypeScript for the code, CSS preprocessing using SASS. Ionic leverages the application building duties to Apache Cordova, which in turn uses Node.js as its backbone, connecting to the Node.js & Cloudant application we developed on IBM Cloud.
