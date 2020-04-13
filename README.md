@@ -45,6 +45,7 @@ There is a GPS tracking component monitoring if the users moves enough to consid
 - Government will be able to optimize resources utilization
 - Quick insights about the results of measures implemented for Stay at home initiatives
 - Better understanding of areas that may require more help
+- Motivate people to stay at home by allowing to track time in lockdown and recognizing them
 
 ### Link to video:
 
