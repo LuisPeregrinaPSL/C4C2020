@@ -12,6 +12,9 @@ const { Geolocation, App, BackgroundTask, LocalNotifications } = Plugins;
   providedIn: 'root'
 })
 export class GpsService {
+  public static DISTANCE_TO_HOME_EVENT: string = 'isFarFromHome';
+  public static BACK_IN_HOME_EVENT: string = 'isBackInHome';
+
   history: Array<GpsHistory>;
   geoFence: any;
   coordinate: SimpleCoordinates;
@@ -24,6 +27,7 @@ export class GpsService {
     public appStorageSvc: AppStorageService) {
     if (this.requestPermissions()) {
       this.setEvent();
+      this.checkPosition();
     }
   }
 
@@ -32,7 +36,6 @@ export class GpsService {
       if (state.isActive) {
         console.log('Going to front...');
         this.backgroundMode = false;
-        this.checkPosition();
       }
       else {
         console.log('Going to the background...');
@@ -52,7 +55,6 @@ export class GpsService {
               }
             ]
           });
-          this.checkPosition();
 
           BackgroundTask.finish({
             taskId
@@ -63,6 +65,7 @@ export class GpsService {
   }
 
   async checkPosition() {
+    console.log('checking position...')
     var previousCoord = this.coordinate;
     this.coordinate = await this.getCurrentPosition();
     if (previousCoord != undefined) {
@@ -123,6 +126,10 @@ export class GpsService {
         }
       ]
     });
+  }
+
+  private addListener(event: string, callback: Function) {
+
   }
 
   private convertToMeters(lat1, lon1, lat2, lon2) {
