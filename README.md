@@ -1,6 +1,6 @@
 # Staying@Home
 
-  Gamifying and analyzing People@home data to focus preventive measures on conflicting areas
+  Gamifying and analyzing People@home data to focus preventive spread measures
 
    ### Team members
    * Jaime de Alba (jaime_alba@persistent.com)
@@ -10,7 +10,19 @@
    * Hector Toscano (hector_toscano@persistent.com)
    
   ### Project Description
-  Our solution includes 2 main components:
+  
+  **Problem solved:**
+  One of the most effective actions to prevent the spread of the virus implemented on all countries is the lockdown and/or stay at home initiatives. 
+  
+  As a result, there are multiple actions implemented by governments to invite/force people to stay at home, however these actions are usually applied to complete areas and cities:
+  
+  - Security checkpoints on streets
+  - Policy patrols asking people to go Home
+  - Multiple advertising and sensitization campaigns
+  
+  A more localized implementation of these measures could help to get better results
+
+Our solution includes 2 main components:
 
 **Data analyzer:**
 Online platform receiving data and statistics about the time that people stays at home on different areas. 
@@ -23,19 +35,15 @@ By using gamification, the app allows the user to build a forest at their virtua
 
 -	For each 6 consecutive hours at home, user will get a tree.
 -	For every 3 trees that he gets, one is also added to his community forest.
--	If he leaves home before the 6 hours needed to get a tree, then a new one starts growing from 0.
+-	If he leaves home before the 6 hours needed to get a tree, then a new one starts growing from 0 once he gets back home.
 -	As more trees are added to the forest, user can get additional items and go through different contribution levels.
 
 There is a GPS tracking component monitoring if the users moves enough to consider that they leave home.
 
-**Problem solved:**
-One of the most critical actions to prevent the spread of the virus that is being implemented on all countries is the lackdown and stay at home initiatives. 
-There are multiple actions implemented by governments to persue/force people to stay at home, however these actions are usually applied to complete areas and cities, a more focalized implementation of these measures could help to get better results.
-
 **Benefits**
 Government will be able to optimize resources
-Quickbinsights about the results of measures implemented for Stay at home initiatives
-Better understending of areas that may require more help
+Quick insights about the results of measures implemented for Stay at home initiatives
+Better understanding of areas that may require more help
 
 ### Link to video:
 
