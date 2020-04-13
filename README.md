@@ -19,7 +19,7 @@
   - Security checkpoints on streets
   - Policy patrols asking people to go Home
   - Multiple advertising and sensitization campaigns
-  - Sanitizer tunnel in crowded places
+  - Sanitizer tunnels in crowded places
   
   A more localized implementation of these measures could help to get better results and optimize resource utilization.
 
@@ -42,9 +42,9 @@ By using gamification, the app allows the user to build a forest at their virtua
 There is a GPS tracking component monitoring if the users moves enough to consider that they leave home.
 
 **Benefits**
-Government will be able to optimize resources utilization
-Quick insights about the results of measures implemented for Stay at home initiatives
-Better understanding of areas that may require more help
+- Government will be able to optimize resources utilization
+- Quick insights about the results of measures implemented for Stay at home initiatives
+- Better understanding of areas that may require more help
 
 ### Link to video:
 
