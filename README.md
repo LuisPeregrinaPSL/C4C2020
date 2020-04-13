@@ -12,17 +12,18 @@
   ### Project Description
   
   **Problem solved:**
-  One of the most effective actions to prevent the spread of the virus implemented on all countries is the lockdown and/or stay at home initiatives. 
+  The most effective action to prevent the spread of the virus implemented all countries is the lockdown and/or stay at home initiative. 
   
-  As a result, there are multiple actions implemented by governments to invite/force people to stay at home, however these actions are usually applied to complete areas and cities:
+  As a result, there are multiple actions implemented by governments to invite/force people to stay at home, these actions and policies are usually applied to broad areas such as cities, states, countries:
   
   - Security checkpoints on streets
   - Policy patrols asking people to go Home
   - Multiple advertising and sensitization campaigns
+  - etc
   
-  A more localized implementation of these measures could help to get better results
+  A more localized implementation of these measures could help to get better results and optimze resource utilization.
 
-Our solution includes 2 main components:
+  **Proposed solution:** our solution includes 2 main components:
 
 **Data analyzer:**
 Online platform receiving data and statistics about the time that people stays at home on different areas. 
