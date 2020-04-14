@@ -8,4 +8,32 @@
 
 <ion-content class="ion-padding">
 
+  <ion-card>
+
+    <ion-card-header>
+      <ion-card-title>My Forrest in time</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button (click)="loadHistory()">
+        <ion-icon name="reload"></ion-icon>
+      </ion-button>
+      <ion-list>
+        <ng-container *ngFor="let gpsHistory of historyArray">
+          <ion-item>
+            <ion-label>{{gpsHistory.time}}<br>
+              Latitude:{{gpsHistory.coords.latitude}}<br>
+              Longitude:{{gpsHistory.coords.longitude}}</ion-label>
+            <ion-button slot="end"
+              href="https://www.google.com.mx/maps/search/{{gpsHistory.coords.latitude}},{{gpsHistory.coords.longitude}}"
+              target="_blank">
+              <ion-icon name="open-outline">
+              </ion-icon>
+            </ion-button>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
+
 </ion-content>

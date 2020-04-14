@@ -1,11 +1,50 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      My Home
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-card>
 
+    <ion-card-header>
+      <ion-card-title>My challenges</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ng-container>
+          <ion-item>
+            <ion-label>Do exercise</ion-label>
+            <ion-button slot="end"
+              href="#"
+              target="_blank">
+              <ion-icon name="checkmark-done-outline">
+              </ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-label>Cook a good meal</ion-label>
+            <ion-button slot="end"
+              href="#"
+              target="_blank">
+              <ion-icon name="checkmark-done-outline">
+              </ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-label>Find a virtual item with the GPS</ion-label>
+            <ion-button slot="end"
+              href="#"
+              target="_blank">
+              <ion-icon name="checkmark-outline">
+              </ion-icon>
+            </ion-button>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
 </ion-content>
