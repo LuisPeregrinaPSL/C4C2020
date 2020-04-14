@@ -1,54 +1,47 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Configuration</ion-title>
+    <ion-title>My Forest</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
   <ion-grid>
     <ion-row>
-      <ion-col size="6">
+      <ion-col size-md="6">
         <ion-card>
           <ion-card-content>
             <img src="./assets/arboles/default.png" />
             <ion-item>
-              <ion-label>ID:</ion-label>
-              <ion-input disabled slot="end">{{config.deviceId}}</ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Arboles:</ion-label>
-              <ion-input disabled slot="end">{{config.arboles}}</ion-input>
+              <ion-label>Trees:</ion-label>
+              <ion-input disabled slot="end">{{config.trees}}</ion-input>
             </ion-item>
           </ion-card-content>
         </ion-card>
       </ion-col>
 
-      <ion-col size="6">
+      <ion-col size-md="6">
         <form [formGroup]="configForm" (ngSubmit)="processForm()" (keyup.enter)="processForm()">
-          <ion-list>
-            <ion-item>
-              <ion-label position="fixed">Vendor:</ion-label>
-              <ion-input formControlName="vendor" type="text">
-              </ion-input>
-            </ion-item>
+          <ion-card>
+            <ion-card-content>
 
-            <ion-item>
-              <ion-label>Geolocation enabled</ion-label>
-              <ion-checkbox slot="end" formControlName="geolocation"></ion-checkbox>
-            </ion-item>
+              <ion-item>
+                <ion-label>Geolocation enabled</ion-label>
+                <ion-checkbox slot="end" formControlName="geolocationEnabled"></ion-checkbox>
+              </ion-item>
 
-            <ion-item>
-              <ion-label>Establecer ubicación como casa</ion-label>
-              <ion-button [disabled]="!config.geolocation" (click)="establecerCasa()">
-                <ion-icon name="home"></ion-icon>
-              </ion-button>
-            </ion-item>
-          </ion-list>
+              <ion-item>
+                <ion-label>Set current location as Home:</ion-label>
+                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()">
+                  <ion-icon name="home"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
         </form>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="6">
+      <ion-col size-md="6">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Status</ion-card-title>
@@ -56,30 +49,34 @@
 
           <ion-card-content>
             <ion-item>
-              <ion-label>{{estado}}</ion-label>
+              <!--ion-label *ngIf="status=1">Growing</ion-label-->
+              <!--ion-label *ngIf="status=0">Shrinking</ion-label-->
             </ion-item>
             <ion-item>
-              <ion-label>Tiempo restante:</ion-label>
-              <ion-input disabled slot="end">{{tiempoRestante}}</ion-input>
+              <ion-label>Remaining time:</ion-label>
+              <ion-input disabled slot="end">
+                <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'm:s' }">
+                </countdown>
+              </ion-input>
             </ion-item>
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col size="6">
+      <ion-col size-md=" 6">
         <ion-card>
 
           <ion-card-header>
             <ion-card-title>History</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button (click)="cargarHistorial()">
+            <ion-button (click)="loadHistory()">
               <ion-icon name="reload"></ion-icon>
             </ion-button>
-            <ion-button color="warning" (click)="borrarHistorial()">
+            <ion-button color="warning" (click)="deleteHistory()">
               <ion-icon name="trash"></ion-icon>
             </ion-button>
             <ion-list>
-              <ion-item *ngFor="let gpsHistory of historial">
+              <ion-item *ngFor="let gpsHistory of historyArray">
                 <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.coords.latitude}}
                   lon:{{gpsHistory.coords.longitude}}]</ion-label>
                 <ion-button slot="end"
@@ -97,7 +94,11 @@
     </ion-row>
   </ion-grid>
 
-
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="navigator && navigator.share">
+    <ion-fab-button>
+      <ion-icon name="share-social" (click)="shareOptions()"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 
 </ion-content>

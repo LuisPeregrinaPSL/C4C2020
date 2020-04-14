@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { GpsService } from './services/gps.service';
 import { AppConfiguration } from './app-configuration';
 
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

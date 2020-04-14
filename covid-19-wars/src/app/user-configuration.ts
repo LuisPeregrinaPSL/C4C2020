@@ -2,16 +2,16 @@ import { SimpleCoordinates } from './simple-coordinates';
 
 export class UserConfiguration {
     public vendor: string;
-    public geolocation: boolean;
+    public geolocationEnabled: boolean;
     public deviceId: string;
-    public arboles: number;
-    public casa: SimpleCoordinates;
+    public trees: number;
+    public home: SimpleCoordinates;
 
     constructor() {
         this.vendor = "Default vendor";
-        this.geolocation = false;
+        this.geolocationEnabled = false;
         this.deviceId = "Default device id";
-        this.arboles = 0;
-        this.casa = new SimpleCoordinates(0, 0);
+        this.trees = 0;
+        this.home = null;
     }
 }

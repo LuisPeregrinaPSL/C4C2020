@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { SimpleCoordinates } from 'src/app/simple-coordinates';
 import { GpsHistory } from 'src/app/gps-history';
+import { Plugins, DeviceInfo } from '@capacitor/core';
+import { AppConfiguration } from 'src/app/app-configuration';
+import { CountdownComponent } from 'ngx-countdown';
+import { SimpleCoordinates } from 'src/app/simple-coordinates';
+
+
+const { Device, Share } = Plugins;
 
 @Component({
   selector: 'app-me',
@@ -16,17 +22,25 @@ export class MePage implements OnInit {
   config: UserConfiguration = new UserConfiguration();
   configForm: FormGroup;
   loader: any;
-  historial: Array<GpsHistory>;
+  historyArray: Array<GpsHistory>;
+  timeToGrowTree = AppConfiguration.TIME_TO_GROW_TREE / 1000;
+  status;
+  @ViewChild('countdown', { static: false }) countdown: CountdownComponent;
 
   constructor(
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
-    public gps: GpsService,
+    public gpsSvc: GpsService,
     public configService: AppStorageService
   ) {
-    this.prefillAndValidateForm(this.config);
+    this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
 
+    gpsSvc.addListener(GpsService.IS_AT_HOME_EVENT, (data: SimpleCoordinates) => {
+      if (this.countdown.left == 0) {
+        setTimeout(() => this.countdown.restart(), 1000);
+      }
+    });
   }
 
   ngOnInit() {
@@ -42,20 +56,27 @@ export class MePage implements OnInit {
       this.configService.getConfiguration().then(
         (newConfig: UserConfiguration) => {
           this.config = newConfig;
-          this.prefillAndValidateForm(this.config);
-          this.loader.dismiss();
         }, (error: any) => {
-          this.loader.dismiss();
+          this.config = new UserConfiguration();
+        }).finally(() => {
+          Device.getInfo().then((info: DeviceInfo) => {
+            if (info.uuid != this.config.deviceId) {
+              this.config.deviceId = info.uuid;
+              this.updateConfig();
+            }
+          }).finally(() => {
+            this.prefillAndValidateForm(this.config);
+            this.loader.dismiss();
+          });
         });
     });
   }
 
-  public async establecerCasa() {
-    let newCoords = await this.gps.getCurrentPosition();
-    if (newCoords.latitude != this.config.casa.latitude || newCoords.longitude != this.config.casa.longitude) {
-      this.config.casa = newCoords;
-      this.configService.setConfiguration(this.config);
-      console.log("Updated this.config.casa to \"" + this.config.casa + "\"")
+  public async setHome() {
+    let newCoords = await this.gpsSvc.getCurrentPosition();
+    if (this.config && (this.config.home == undefined || newCoords.latitude != this.config.home.latitude || newCoords.longitude != this.config.home.longitude)) {
+      this.config.home = newCoords;
+      this.updateConfig();
     }
   }
 
@@ -66,7 +87,7 @@ export class MePage implements OnInit {
         Validators.maxLength(20),
         Validators.required
       ])],
-      geolocation: [formData.geolocation]
+      geolocationEnabled: [formData.geolocationEnabled]
     })
     this.onChanges();
   }
@@ -83,17 +104,32 @@ export class MePage implements OnInit {
         }
       }
       if (changed) {
-        this.configService.setConfiguration(this.config);
+        this.updateConfig();
       }
     });
   }
 
-  public async cargarHistorial() {
-    this.historial = await this.configService.getHistory();
-    console.log(this.historial.length);
+  public async loadHistory() {
+    this.historyArray = await this.configService.getHistory();
+    console.log(this.historyArray.length);
   }
-  public async borrarHistorial() {
-    this.historial = [];
+
+  public async deleteHistory() {
+    this.historyArray = [];
     this.configService.deleteHistory();
   }
+
+  private updateConfig() {
+    this.configService.setConfiguration(this.config);
+  }
+
+  public async shareOptions() {
+    await Share.share({
+      title: 'Stay@home',
+      text: 'I have ' + this.config.trees + ' trees in my forest. Can you beat my record?',
+      url: 'http://stayathome.com/',
+      dialogTitle: 'Share with buddies'
+    });
+  }
+
 }

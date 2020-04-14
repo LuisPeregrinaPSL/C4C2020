@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MePage } from './me.page';
+import { CountdownModule } from 'ngx-countdown';
 
 @NgModule({
   imports: [
@@ -11,7 +12,8 @@ import { MePage } from './me.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild([{ path: '', component: MePage }])
+    RouterModule.forChild([{ path: '', component: MePage }]),
+    CountdownModule
   ],
   declarations: [MePage]
 })

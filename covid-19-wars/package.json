@@ -30,6 +30,7 @@
     "@types/debounce-promise": "^3.1.1",
     "core-js": "^2.5.4",
     "debounce-promise": "^3.1.2",
+    "ngx-countdown": "^9.0.1",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

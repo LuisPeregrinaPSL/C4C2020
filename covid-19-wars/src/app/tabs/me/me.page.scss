@@ -4,3 +4,12 @@ img{
     margin: auto;
     display: block;
   }
+
+ion-toolbar{
+  --background: var(--ion-color-primary);
+  --color: #ffffff;
+}
+
+ion-content{
+  --background: var(--ion-color-secondary);
+}
