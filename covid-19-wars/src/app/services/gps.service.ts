@@ -12,8 +12,9 @@ const { Geolocation, App, BackgroundTask, LocalNotifications } = Plugins;
   providedIn: 'root'
 })
 export class GpsService {
-  public static DISTANCE_TO_HOME_EVENT: string = 'isFarFromHome';
+  public static AWAY_FROM_HOME_EVENT: string = 'isFarFromHome';
   public static BACK_IN_HOME_EVENT: string = 'isBackInHome';
+  public static IS_AT_HOME_EVENT: string = 'isAtHome';
 
   history: Array<GpsHistory>;
   geoFence: any;
@@ -21,16 +22,24 @@ export class GpsService {
   watchCoordinate: any;
   watchId: CallbackID;
   backgroundMode: boolean = false;
+  isAtHome: boolean = false;
+
+  private callbackInfo: string[] = [];
 
   constructor(
     public alertCtrl: AlertController,
     public appStorageSvc: AppStorageService) {
-    if (this.requestPermissions()) {
-      this.setEvent();
-      this.checkPosition();
-    }
+      this.initEventTypes();
+      if (this.requestPermissions()) {
+        this.setEvent();
+        this.checkPosition();
+      }
   }
 
+  private initEventTypes(){
+    this.callbackInfo[GpsService.AWAY_FROM_HOME_EVENT] = [];
+    this.callbackInfo[GpsService.IS_AT_HOME_EVENT] = [];
+  }
   private setEvent() {
     App.addListener('appStateChange', (state) => {
       if (state.isActive) {
@@ -76,7 +85,15 @@ export class GpsService {
       let casa = (await this.appStorageSvc.getConfiguration()).casa;
       meters = this.convertToMeters(casa.latitude, casa.longitude, this.coordinate.latitude, this.coordinate.longitude);
       if (meters >= AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
+        this.notifyEvent(GpsService.AWAY_FROM_HOME_EVENT, this.coordinate);
         this.notifyUser('More than ' + AppConfiguration.DISTANCE_THRESHOLD + ' meters', 'You have passed more than ' + AppConfiguration.DISTANCE_THRESHOLD + ' meters');
+        this.isAtHome = false;
+      }
+      else {
+        if(!this.isAtHome) {
+          this.notifyEvent(GpsService.IS_AT_HOME_EVENT, this.coordinate);
+          this.isAtHome = true;
+        }
       }
     }
 
@@ -128,8 +145,22 @@ export class GpsService {
     });
   }
 
-  private addListener(event: string, callback: Function) {
+  public addListener(event: string, callback: Function) {
+    if(!this.callbackInfo[event]) {
+      console.log('Event name does not exists');
+      return;
+    }
+    else {
+      this.callbackInfo[event].push(callback);
+    }
+  }
 
+  private notifyEvent(event: string, data: SimpleCoordinates) {
+    if(this.callbackInfo[event]) {
+      this.callbackInfo[event].forEach(function (callback:Function) {
+        callback(data);
+      }); 
+    }
   }
 
   private convertToMeters(lat1, lon1, lat2, lon2) {
