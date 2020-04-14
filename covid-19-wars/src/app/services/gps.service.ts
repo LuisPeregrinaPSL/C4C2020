@@ -204,8 +204,10 @@ export class GpsService {
 
   public async updateTree(timeSpan: number) {
     let conf = await this.appStorageSvc.getConfiguration();
+    let newTreeCount = conf.trees;
     conf.trees = Math.floor(timeSpan / AppConfiguration.TIME_TO_GROW_TREE);
+    newTreeCount = conf.trees - newTreeCount;
     this.appStorageSvc.setConfiguration(conf);
-    return conf.trees;
+    return newTreeCount;
   }
 }

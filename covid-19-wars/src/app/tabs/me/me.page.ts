@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
@@ -18,7 +18,7 @@ const { Device, Share } = Plugins;
   templateUrl: './me.page.html',
   styleUrls: ['./me.page.scss'],
 })
-export class MePage implements OnInit {
+export class MePage implements OnInit, AfterViewInit {
   config: UserConfiguration = new UserConfiguration();
   configForm: FormGroup;
   loader: any;
@@ -26,6 +26,8 @@ export class MePage implements OnInit {
   timeToGrowTree = AppConfiguration.TIME_TO_GROW_TREE / 1000;
   status;
   @ViewChild('countdown', { static: false }) countdown: CountdownComponent;
+  @ViewChild('imageCanvas', { static: false }) canvas: any;
+  canvasElement: any;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -44,6 +46,10 @@ export class MePage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    this.canvasElement = this.canvas.nativeElement;
   }
 
   async loadFormData() {
@@ -66,6 +72,7 @@ export class MePage implements OnInit {
             }
           }).finally(() => {
             this.prefillAndValidateForm(this.config);
+            this.drawForest();
             this.loader.dismiss();
           });
         });
@@ -132,4 +139,23 @@ export class MePage implements OnInit {
     });
   }
 
+  private drawForest() {
+    var canvasPosition = this.canvasElement.getBoundingClientRect();
+    var treeImage = new Image(6, 12);
+    treeImage.src = './assets/icon/tree.svg';
+    let ctx = this.canvasElement.getContext('2d');
+
+    treeImage.onload = () => {
+      for (let i = 0; i < this.config.trees; i++) {
+        let randomX = this.getRandomInt(this.canvasElement.width);
+        let randomY = this.getRandomInt(this.canvasElement.height)
+        ctx.drawImage(treeImage, randomX, randomY, treeImage.width, treeImage.height);
+      }
+
+    }
+  }
+
+  private getRandomInt(max: number) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
 }

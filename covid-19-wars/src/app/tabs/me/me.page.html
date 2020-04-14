@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>My Forest</ion-title>
+    <ion-title>Staying@home</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,11 +9,22 @@
     <ion-row>
       <ion-col size-md="6">
         <ion-card>
+          <ion-card-header>
+            <ion-card-title>My forest</ion-card-title>
+          </ion-card-header>
           <ion-card-content>
-            <img src="./assets/arboles/default.png" />
+            <!--img src="./assets/arboles/default.png" /-->
+            <canvas #imageCanvas></canvas>
             <ion-item>
-              <ion-label>Trees:</ion-label>
-              <ion-input disabled slot="end">{{config.trees}}</ion-input>
+              <ion-label>Trees in my forest:</ion-label>
+              <ion-text slot="end">{{config.trees}}</ion-text>
+            </ion-item>
+            <ion-item>
+              <ion-label>Next tree in:</ion-label>
+              <ion-text slot="end">
+                <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'm:s' }">
+                </countdown>
+              </ion-text>
             </ion-item>
           </ion-card-content>
         </ion-card>
@@ -22,8 +33,10 @@
       <ion-col size-md="6">
         <form [formGroup]="configForm" (ngSubmit)="processForm()" (keyup.enter)="processForm()">
           <ion-card>
+            <ion-card-header>
+              <ion-card-title>Settings</ion-card-title>
+            </ion-card-header>
             <ion-card-content>
-
               <ion-item>
                 <ion-label>Geolocation enabled</ion-label>
                 <ion-checkbox slot="end" formControlName="geolocationEnabled"></ion-checkbox>
@@ -41,32 +54,12 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size-md="6">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Next tree counter</ion-card-title>
-          </ion-card-header>
 
-          <ion-card-content>
-            <ion-item>
-              <!--ion-label *ngIf="status=1">Growing</ion-label-->
-              <!--ion-label *ngIf="status=0">Shrinking</ion-label-->
-            </ion-item>
-            <ion-item>
-              <ion-label>Remaining time:</ion-label>
-              <ion-input disabled slot="end">
-                <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'm:s' }">
-                </countdown>
-              </ion-input>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-      <ion-col size-md=" 6">
+      <ion-col size-md="12">
         <ion-card>
 
           <ion-card-header>
-            <ion-card-title>My Forrest in time</ion-card-title>
+            <ion-card-title>My forest in time</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-button (click)="loadHistory()">

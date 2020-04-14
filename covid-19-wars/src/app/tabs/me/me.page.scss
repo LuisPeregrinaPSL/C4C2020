@@ -1,10 +1,7 @@
-img{
-    height: 40vh;
-    width: auto;
-    margin: auto;
-    display: block;
-  }
-
+canvas {
+  width: 100%;
+  height: auto
+}
 ion-toolbar{
   --background: var(--ion-color-primary);
   --color: #ffffff;
