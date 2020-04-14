@@ -44,7 +44,7 @@
       <ion-col size-md="6">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Status</ion-card-title>
+            <ion-card-title>Next tree counter</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
@@ -66,7 +66,7 @@
         <ion-card>
 
           <ion-card-header>
-            <ion-card-title>History</ion-card-title>
+            <ion-card-title>My Forrest in time</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-button (click)="loadHistory()">
@@ -76,16 +76,18 @@
               <ion-icon name="trash"></ion-icon>
             </ion-button>
             <ion-list>
-              <ion-item *ngFor="let gpsHistory of historyArray">
-                <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.coords.latitude}}
-                  lon:{{gpsHistory.coords.longitude}}]</ion-label>
-                <ion-button slot="end"
-                  href="https://www.google.com.mx/maps/search/{{gpsHistory.coords.latitude}},{{gpsHistory.coords.longitude}}"
-                  target="_blank">
-                  <ion-icon name="open-outline">
-                  </ion-icon>
-                </ion-button>
-              </ion-item>
+              <ng-container *ngFor="let gpsHistory of historyArray">
+                <ion-item *ngIf="gpsHistory.newTree">
+                  <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.coords.latitude}}
+                    lon:{{gpsHistory.coords.longitude}}]</ion-label>
+                  <ion-button slot="end"
+                    href="https://www.google.com.mx/maps/search/{{gpsHistory.coords.latitude}},{{gpsHistory.coords.longitude}}"
+                    target="_blank">
+                    <ion-icon name="open-outline">
+                    </ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ng-container>
             </ion-list>
           </ion-card-content>
 

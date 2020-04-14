@@ -83,9 +83,10 @@ export class GpsService {
       if (!config.geolocationEnabled || !config.home) { throw new Error('Geolocalization and/or home not enabled yet.') }
       this.coordinate = await this.getCurrentPosition();
       // Last time should provide the last time that we changed states
-      this.appStorageSvc.getLastHistory().then((lastTime: GpsHistory) => {
+      this.appStorageSvc.getLastHistory().then(async (lastTime: GpsHistory) => {
         if (config.home) {
           let meters = this.convertToMeters(config.home.latitude, config.home.longitude, this.coordinate.latitude, this.coordinate.longitude);
+          let newTreeCount = 0;
           if (meters >= AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
             this.notifyEvent(GpsService.AWAY_FROM_HOME_EVENT, this.coordinate);
             this.notifyUser('More than ' + AppConfiguration.DISTANCE_THRESHOLD + ' meters', 'You have passed more than ' + AppConfiguration.DISTANCE_THRESHOLD + ' meters');
@@ -95,11 +96,12 @@ export class GpsService {
             this.status = ForestStatus.GROWING;
             let newDate = new Date();
             let diff = newDate.getTime() - lastTime.time.getTime();
-            this.updateTree(diff);
+
+            newTreeCount = await this.updateTree(diff);
             this.notifyEvent(GpsService.IS_AT_HOME_EVENT, this.coordinate);
           }
-          if (this.status != lastTime.status) {
-            this.appStorageSvc.addHistory(new GpsHistory(this.coordinate, new Date(), this.status));
+          if (this.status != lastTime.status || newTreeCount > config.trees) {
+            this.appStorageSvc.addHistory(new GpsHistory(this.coordinate, new Date(), this.status, true));
           }
         } else {
           // Home not set yet.
@@ -111,6 +113,7 @@ export class GpsService {
     }).catch(() => {
       // No config, do not do anythuing as the geolocation might not be set.
     });
+
     setTimeout(() => {
       this.checkPosition();
     }, (this.backgroundMode ? AppConfiguration.GPS_CHECK_POSITION_BACKGROUND_TIMEOUT : AppConfiguration.GPS_CHECK_POSITION_TIMEOUT));
@@ -199,10 +202,10 @@ export class GpsService {
     })
   }
 
-  public updateTree(timeSpan: number) {
-    this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
-      config.trees = Math.floor(timeSpan / AppConfiguration.TIME_TO_GROW_TREE);
-      this.appStorageSvc.setConfiguration(config);
-    })
+  public async updateTree(timeSpan: number) {
+    let conf = await this.appStorageSvc.getConfiguration();
+    conf.trees = Math.floor(timeSpan / AppConfiguration.TIME_TO_GROW_TREE);
+    this.appStorageSvc.setConfiguration(conf);
+    return conf.trees;
   }
 }
