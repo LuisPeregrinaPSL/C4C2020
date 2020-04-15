@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "covid-19-wars",
+  "appId": "com.persistent.c4c2020.mx",
+  "appName": "stay-at-home",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.persistent.c4c2020.mx;
 
 import android.os.Bundle;
 

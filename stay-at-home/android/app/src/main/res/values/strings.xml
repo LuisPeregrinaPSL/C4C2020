@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">covid-19-wars</string>
-    <string name="title_activity_main">covid-19-wars</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">stay-at-home</string>
+    <string name="title_activity_main">stay-at-home</string>
+    <string name="package_name">com.persistent.c4c2020.mx</string>
+    <string name="custom_url_scheme">com.persistent.c4c2020.mx</string>
 </resources>
