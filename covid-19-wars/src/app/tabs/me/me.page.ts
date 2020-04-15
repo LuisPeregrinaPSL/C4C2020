@@ -141,9 +141,16 @@ export class MePage implements OnInit, AfterViewInit {
 
   private drawForest() {
     var canvasPosition = this.canvasElement.getBoundingClientRect();
-    var treeImage = new Image(6, 12);
+    var treeImage = new Image(12, 20);
     treeImage.src = './assets/icon/tree.svg';
     let ctx = this.canvasElement.getContext('2d');
+    ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+
+    var gradient = ctx.createLinearGradient(0, 0, this.canvasElement.width, this.canvasElement.height);
+    gradient.addColorStop(0, '#9dc648');
+    gradient.addColorStop(1, '#308963');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
     treeImage.onload = () => {
       for (let i = 0; i < this.config.trees; i++) {

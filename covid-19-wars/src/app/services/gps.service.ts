@@ -180,7 +180,7 @@ export class GpsService {
     }
   }
 
-  private convertToMeters(lat1, lon1, lat2, lon2) {
+  private convertToMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
     var R = 6378.137; // Radius of earth in KM
     var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
     var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
@@ -204,10 +204,8 @@ export class GpsService {
 
   public async updateTree(timeSpan: number) {
     let conf = await this.appStorageSvc.getConfiguration();
-    let newTreeCount = conf.trees;
     conf.trees = Math.floor(timeSpan / AppConfiguration.TIME_TO_GROW_TREE);
-    newTreeCount = conf.trees - newTreeCount;
     this.appStorageSvc.setConfiguration(conf);
-    return newTreeCount;
+    return conf.trees;
   }
 }

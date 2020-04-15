@@ -102,7 +102,7 @@
             "scripts": [],
             "assets": [
               {
-                "glob": "favicon.ico",
+                "glob": "application.svg",
                 "input": "src/",
                 "output": "/"
               },
@@ -128,7 +128,9 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "e2e": {

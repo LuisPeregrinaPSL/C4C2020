@@ -10,11 +10,12 @@
       <ion-col size-md="6">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>My forest</ion-card-title>
+            <ion-card-title>My forest
+            </ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <!--img src="./assets/arboles/default.png" /-->
-            <canvas #imageCanvas></canvas>
+            <canvas #imageCanvas (click)="drawForest()"></canvas>
             <ion-item>
               <ion-label>Trees in my forest:</ion-label>
               <ion-text slot="end">{{config.trees}}</ion-text>
@@ -89,7 +90,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="navigator && navigator.share">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="share-social" (click)="shareOptions()"></ion-icon>
     </ion-fab-button>
