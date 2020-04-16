@@ -9,6 +9,9 @@ import { Plugins, DeviceInfo } from '@capacitor/core';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { CountdownComponent } from 'ngx-countdown';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
+import { Screenshot } from '@ionic-native/screenshot/ngx';
+import { Constants } from 'src/app/constants';
+import { RestApiService } from 'src/app/services/rest-api.service';
 
 
 const { Device, Share } = Plugins;
@@ -33,7 +36,9 @@ export class MePage implements OnInit, AfterViewInit {
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public gpsSvc: GpsService,
-    public configService: AppStorageService
+    public configService: AppStorageService,
+    public screenshot: Screenshot,
+    public restApi: RestApiService
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
@@ -131,10 +136,13 @@ export class MePage implements OnInit, AfterViewInit {
   }
 
   public async shareOptions() {
-    await Share.share({
+    this.screenshot.URI(50).then(async resolved => {
+      this.restApi.uploadImage(this.config.deviceId, resolved.URI);
+    });
+    Share.share({
       title: 'Stay@home',
       text: 'I have ' + this.config.trees + ' trees in my forest. Can you beat my record?',
-      url: 'http://stayathome.com/',
+      url: Constants.SERVER + '?id=' + this.config.deviceId,
       dialogTitle: 'Share with buddies'
     });
   }
@@ -165,4 +173,7 @@ export class MePage implements OnInit, AfterViewInit {
   private getRandomInt(max: number) {
     return Math.floor(Math.random() * Math.floor(max));
   }
+
+
+
 }

@@ -1,0 +1,27 @@
+{
+  "name": "staying-at-home-server",
+  "version": "1.0.0",
+  "description": "Server-side of Staying@home",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Luis Antonio Peregrina Andrade",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LuisPeregrinaPSL/C4C2020/issues"
+  },
+  "homepage": "https://github.com/LuisPeregrinaPSL/C4C2020#readme",
+  "dependencies": {
+    "cfenv": "^1.2.2",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.7-alpha.3",
+    "jimp": "^0.10.2",
+    "pug": "^2.0.4",
+    "tmp": "^0.1.0"
+  },
+  "engines": {
+    "node": "10.*"
+  },
+  "private": false
+}

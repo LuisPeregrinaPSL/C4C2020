@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { GpsService } from './services/gps.service';
 import { AppConfiguration } from './app-configuration';
+import { Screenshot } from '@ionic-native/screenshot/ngx';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { AppConfiguration } from './app-configuration';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Screenshot
   ],
   bootstrap: [AppComponent]
 })

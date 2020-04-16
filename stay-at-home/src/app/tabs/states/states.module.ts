@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StatesPage } from './states.page';
+import { Screenshot } from '@ionic-native/screenshot/ngx';
 
 @NgModule({
   imports: [
