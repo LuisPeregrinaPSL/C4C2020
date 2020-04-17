@@ -5,6 +5,7 @@
 </ion-header>
 
 <ion-content fullscreen>
+  <canvas #confetti id="confetti" width="{{pageWidth}}" height="{{pageHeight}}"></canvas>
   <ion-grid>
     <ion-row>
       <ion-col size-md="6">
@@ -15,7 +16,7 @@
           </ion-card-header>
           <ion-card-content>
             <!--img src="./assets/arboles/default.png" /-->
-            <canvas #imageCanvas (click)="drawForest()"></canvas>
+            <canvas #imageCanvas (click)="drawForest()" id='forest'></canvas>
             <ion-item>
               <ion-label>Trees in my forest:</ion-label>
               <ion-text slot="end">{{config.trees}}</ion-text>
@@ -71,7 +72,7 @@
             </ion-button>
             <ion-list>
               <ng-container *ngFor="let gpsHistory of historyArray">
-                <ion-item *ngIf="gpsHistory.newTree">
+                <ion-item *ngIf="gpsHistory.newTree>0">
                   <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.coords.latitude}}
                     lon:{{gpsHistory.coords.longitude}}]</ion-label>
                   <ion-button slot="end"
@@ -95,6 +96,5 @@
       <ion-icon name="share-social" (click)="shareOptions()"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 
 </ion-content>

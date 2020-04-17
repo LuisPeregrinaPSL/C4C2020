@@ -7,10 +7,10 @@ import { ForestStatus } from '../forest-status.enum';
 import { AppStorageService } from './app-storage.service';
 import { UserConfiguration } from '../user-configuration';
 import { AlertController } from '@ionic/angular';
-import { LocalNotifications } from '@capacitor/core';
+import { LocalNotifications, Toast } from '@capacitor/core';
 import { GpsHistory } from '../gps-history';
 import { Eventfull } from '../eventfull';
-import { config } from 'rxjs';
+import { TreeCalculatorService } from './tree-calculator.service';
 import * as debounce from 'debounce-promise';
 
 @Injectable({
@@ -28,15 +28,18 @@ export class ForestWatcherService extends Eventfull {
   _countdown: CountdownComponent;
   status: ForestStatus;
   count: number;
-  earliestGrowingDate: Date;
-  calculateTrees = debounce(this._calculateTrees, 500);
+
+  /* calculate = debounce(this._calculateTrees, AppConfiguration.TIME_TO_GROW_TREE); */
 
   constructor(
     public gpsSvc: GpsService,
     public appStorageSvc: AppStorageService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public treeCalculator: TreeCalculatorService
   ) {
     super();
+
+    this.setInitialCount();
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
     gpsSvc.addListener(Events.GPS_BEACON, async (newHistory: GpsHistory) => {
 
@@ -51,70 +54,77 @@ export class ForestWatcherService extends Eventfull {
       if (newHistory.metersFromHome > AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
         // We are shrinking
         this.status = ForestStatus.SHRINKING;
-        this.earliestGrowingDate = null;
+        this.treeCalculator.earliestGrowingDate = null;
         this.deductTree();
-        this.notifyEvent(Events.SHRINKING, this.count);
       } else {
-        if (!this.earliestGrowingDate) {
+        if (!this.treeCalculator.earliestGrowingDate) {
           // We just started growing
-          this.earliestGrowingDate = newHistory.time;
+          this.treeCalculator.earliestGrowingDate = newHistory.time;
         } else {
           // We continue growing
           this.status = ForestStatus.GROWING;
-          let oldTreeCount = this.count;
-          this.calculateTrees(newHistory.time.getTime()).then(treeCount => {
-            this.count = treeCount;
-            if (this.count > oldTreeCount) {
-              console.log('Old:' + oldTreeCount + ', new: ' + this.count);
-              this.notifyEvent(Events.GROWING, this.count);
-            }
-          });
-
+          /* this.treeCalculator.calculate(newHistory.time); */
         }
-
       }
-
     });
   }
 
+  /**
+   * Set the cached count starting from the last number.
+   */
+  private async setInitialCount() {
+    this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
+      this.count = config.trees;
+    });
+  }
+  /**
+   * Should return the new number of trees and save that to the configuration
+   * 
+   * @param fromDate 
+   */
+  public calculate(fromDate: Date): number {
+    let newTrees = this.treeCalculator.calculate(fromDate);
+    if (newTrees > 0) {
+      this.count += newTrees;
+      this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
+        config.trees = this.count;
+        this.appStorageSvc.setConfiguration(config).then(() => {
+          this.notifyUser('Stay@home!', 'You have ' + newTrees + ' new tree' + (newTrees > 1 ? 's' : '') + '. Nice!');
+          this.notifyEvent(Events.GROWING, this.count);
+        });
+      });
+    }
+    return newTrees;
+  }
+
+  /**
+   * Deducts a tree from the cache and configuration and saves the configuration.
+   * Notifies the user and listeners.
+   */
   private deductTree() {
     this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
       if (config.trees > 0) {
         config.trees--;
+        this.count--;
+        this.notifyEvent(Events.SHRINKING, this.count);
         this.appStorageSvc.setConfiguration(config);
+        this.notifyUser('Return home!', 'You have one tree less now.');
       }
     })
   }
 
-  public async _calculateTrees(upTo: number): Promise<number> {
-    let timeSpan = upTo - this.earliestGrowingDate.getTime();
-    let conf = await this.appStorageSvc.getConfiguration();
-    let newTreeCount = Math.floor(timeSpan / AppConfiguration.TIME_TO_GROW_TREE);
-    if (newTreeCount > 0) {
-      conf.trees += newTreeCount
-      console.log('Added ' + newTreeCount + ' trees');
-      this.appStorageSvc.setConfiguration(conf);
-      this.earliestGrowingDate = new Date();
-    }
-    return conf.trees;
-  }
-
-  private async showAlert(header: string, message: string) {
-    const alert = await this.alertCtrl.create({
-      header: header,
-      message: message,
-      buttons: ['OK']
-    });
-    alert.present()
-  }
-
-
+  /**
+   * Sends either a push notification if in background or a local notification if in foreground.
+   * @param header string
+   * @param message string
+   */
   private notifyUser(header: string, message: string) {
     if (this.gpsSvc.backgroundMode) {
       this.showLocalNotification(header, message);
     }
     else {
-      this.showAlert(header, message);
+      /* this.showAlert(header, message); */
+      this.showToast(header, message);
     }
   }
 
@@ -134,6 +144,18 @@ export class ForestWatcherService extends Eventfull {
     });
   }
 
+  private async showToast(header: string, message: string) {
+    await Toast.show({
+      text: header + ': ' + message
+    });
+  }
 
-
+  private async showAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    alert.present()
+  }
 }

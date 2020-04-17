@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { UserConfiguration } from '../user-configuration';
 import { Storage } from '@ionic/storage';
 import { Constants } from '../constants';
-import * as debounce from 'debounce-promise';
 import { GpsHistory } from '../gps-history';
+import * as debounce from 'debounce-promise';
 
 @Injectable({
   providedIn: 'root'

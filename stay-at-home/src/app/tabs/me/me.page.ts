@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core'; // Don't remove ElementRef
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
 import { AppStorageService } from 'src/app/services/app-storage.service';
@@ -13,10 +13,8 @@ import { Constants } from 'src/app/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 import { Events } from 'src/app/events.enum';
-
-import * as debounce from 'debounce-promise';
 import { ForestStatus } from 'src/app/forest-status.enum';
-
+import * as confetti from 'canvas-confetti';
 
 const { Device, Share } = Plugins;
 
@@ -35,7 +33,11 @@ export class MePage implements OnInit, AfterViewInit {
   countdownHack = false;
   @ViewChild('imageCanvas', { static: false }) canvas: any;
   canvasElement: any;
+  @ViewChild('confetti', { static: false }) confetti: any;
+  confettiElement: any;
 
+  pageWidth: number;
+  pageHeight: number;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -44,38 +46,55 @@ export class MePage implements OnInit, AfterViewInit {
     public configService: AppStorageService,
     public screenshot: Screenshot,
     public restApi: RestApiService,
-    public forestWatcher: ForestWatcherService
+    public forestWatcher: ForestWatcherService,
+    public platform: Platform
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
-
     forestWatcher.addListener(Events.GROWING, (trees: number) => {
-      if (this.countdown.left == 0 && !this.countdownHack) {
-        this.countdownHack = true;
-        this.restartCountdown();
-      }
+      // Don't base the numebrs from here, do it when restarting the countdown.
     })
     forestWatcher.addListener(Events.SHRINKING, (trees: number) => {
       this.countdown.stop();
     })
-
   }
 
   ngOnInit() {
+    this.pageWidth = this.platform.width();
+    this.pageHeight = this.platform.height();
   }
 
-  // Debounced because the actual timer might get restarted and we could also restart from the listener
-  private restartCountdown() {
+  private async restartCountdown() {
+
     if (this.countdown.left == 0 && this.forestWatcher.status == ForestStatus.GROWING) {
-      this.forestWatcher.calculateTrees(new Date().getTime());
-      this.countdown.restart();
+      // Get new tree count from right now.
+      let newTrees = await this.forestWatcher.calculate(new Date());
+      if (newTrees > 0) {
+        console.warn('Restarting countdown');
+        this.countdown.restart();
+      }
     }
     setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE + 1000); // One more second as timeleft doest count miliseconds.
   }
 
   ngAfterViewInit() {
     this.canvasElement = this.canvas.nativeElement;
+    this.confettiElement = this.confetti.nativeElement;
+
+    this.restartCountdown();
+
+
+
+    confetti.create(this.confettiElement)({
+      angle: this.getRandomInt(60, 120),
+      spread: this.getRandomInt(10, 50),
+      particleCount: this.getRandomInt(40, 50),
+      origin: {
+        y: 0.6
+      }
+    });
   }
+
 
   async loadFormData() {
     this.loader = await this.loadingCtrl.create({
@@ -181,18 +200,17 @@ export class MePage implements OnInit, AfterViewInit {
 
     treeImage.onload = () => {
       for (let i = 0; i < this.config.trees; i++) {
-        let randomX = this.getRandomInt(this.canvasElement.width);
-        let randomY = this.getRandomInt(this.canvasElement.height)
+        let randomX = this.getRandomInt(0, this.canvasElement.width);
+        let randomY = this.getRandomInt(0, this.canvasElement.height)
         ctx.drawImage(treeImage, randomX, randomY, treeImage.width, treeImage.height);
       }
 
     }
   }
 
-  private getRandomInt(max: number) {
-    return Math.floor(Math.random() * Math.floor(max));
+  private getRandomInt(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
 
 
 }
