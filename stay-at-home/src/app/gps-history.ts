@@ -5,12 +5,11 @@ export class GpsHistory {
     public time: Date;
     public coords: SimpleCoordinates;
     public status: ForestStatus;
-    public newTree: boolean
+    public metersFromHome: number
 
-    constructor(coords?: SimpleCoordinates, time?: Date, status?: ForestStatus, newTree?: boolean) {
+    constructor(coords?: SimpleCoordinates, time?: Date, metersFromHome?: number) {
         this.coords = coords;
         this.time = time;
-        this.status = status;
-        this.newTree = newTree || false;
+        this.metersFromHome = metersFromHome || 0;
     }
 }

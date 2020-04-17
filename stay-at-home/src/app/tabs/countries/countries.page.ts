@@ -3,6 +3,8 @@ import { GpsService } from '../../services/gps.service';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
 import { GpsHistory } from 'src/app/gps-history';
 import { AppStorageService } from 'src/app/services/app-storage.service';
+import { Events } from 'src/app/events.enum';
+import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 
 @Component({
   selector: 'app-countries',
@@ -12,13 +14,16 @@ import { AppStorageService } from 'src/app/services/app-storage.service';
 export class CountriesPage {
 
   historyArray: Array<GpsHistory>;
-  
-  constructor(public gps:GpsService, public configService: AppStorageService) { 
-    gps.addListener(GpsService.IS_AT_HOME_EVENT, (data: SimpleCoordinates)=> {
+
+  constructor(
+    public configService: AppStorageService,
+    public forestWatcher: ForestWatcherService
+  ) {
+    forestWatcher.addListener(Events.GROWING, (data: SimpleCoordinates) => {
       console.log('Is At Home!!!', data.latitude);
     });
 
-    gps.addListener(GpsService.AWAY_FROM_HOME_EVENT, (data: SimpleCoordinates)=> {
+    forestWatcher.addListener(Events.SHRINKING, (data: SimpleCoordinates) => {
       console.log('Is far from Home!!!', data.latitude);
     });
 

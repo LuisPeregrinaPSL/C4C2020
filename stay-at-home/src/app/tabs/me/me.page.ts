@@ -8,10 +8,14 @@ import { GpsHistory } from 'src/app/gps-history';
 import { Plugins, DeviceInfo } from '@capacitor/core';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { CountdownComponent } from 'ngx-countdown';
-import { SimpleCoordinates } from 'src/app/simple-coordinates';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { Constants } from 'src/app/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
+import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
+import { Events } from 'src/app/events.enum';
+
+import * as debounce from 'debounce-promise';
+import { ForestStatus } from 'src/app/forest-status.enum';
 
 
 const { Device, Share } = Plugins;
@@ -22,15 +26,16 @@ const { Device, Share } = Plugins;
   styleUrls: ['./me.page.scss'],
 })
 export class MePage implements OnInit, AfterViewInit {
-  config: UserConfiguration = new UserConfiguration();
+  private config: UserConfiguration = new UserConfiguration();
   configForm: FormGroup;
   loader: any;
   historyArray: Array<GpsHistory>;
   timeToGrowTree = AppConfiguration.TIME_TO_GROW_TREE / 1000;
-  status;
   @ViewChild('countdown', { static: false }) countdown: CountdownComponent;
+  countdownHack = false;
   @ViewChild('imageCanvas', { static: false }) canvas: any;
   canvasElement: any;
+
 
   constructor(
     public formBuilder: FormBuilder,
@@ -38,19 +43,34 @@ export class MePage implements OnInit, AfterViewInit {
     public gpsSvc: GpsService,
     public configService: AppStorageService,
     public screenshot: Screenshot,
-    public restApi: RestApiService
+    public restApi: RestApiService,
+    public forestWatcher: ForestWatcherService
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
 
-    gpsSvc.addListener(GpsService.IS_AT_HOME_EVENT, (data: SimpleCoordinates) => {
-      if (this.countdown.left == 0) {
-        setTimeout(() => this.countdown.restart(), 1000);
+    forestWatcher.addListener(Events.GROWING, (trees: number) => {
+      if (this.countdown.left == 0 && !this.countdownHack) {
+        this.countdownHack = true;
+        this.restartCountdown();
       }
-    });
+    })
+    forestWatcher.addListener(Events.SHRINKING, (trees: number) => {
+      this.countdown.stop();
+    })
+
   }
 
   ngOnInit() {
+  }
+
+  // Debounced because the actual timer might get restarted and we could also restart from the listener
+  private restartCountdown() {
+    if (this.countdown.left == 0 && this.forestWatcher.status == ForestStatus.GROWING) {
+      this.forestWatcher.calculateTrees(new Date().getTime());
+      this.countdown.restart();
+    }
+    setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE + 1000); // One more second as timeleft doest count miliseconds.
   }
 
   ngAfterViewInit() {
@@ -67,7 +87,7 @@ export class MePage implements OnInit, AfterViewInit {
       this.configService.getConfiguration().then(
         (newConfig: UserConfiguration) => {
           this.config = newConfig;
-        }, (error: any) => {
+        }, () => {
           this.config = new UserConfiguration();
         }).finally(() => {
           Device.getInfo().then((info: DeviceInfo) => {
@@ -148,7 +168,6 @@ export class MePage implements OnInit, AfterViewInit {
   }
 
   private drawForest() {
-    var canvasPosition = this.canvasElement.getBoundingClientRect();
     var treeImage = new Image(12, 20);
     treeImage.src = './assets/icon/tree.svg';
     let ctx = this.canvasElement.getContext('2d');
