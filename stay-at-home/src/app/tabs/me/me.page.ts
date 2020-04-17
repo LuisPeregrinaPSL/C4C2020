@@ -68,7 +68,7 @@ export class MePage implements OnInit, AfterViewInit {
 
     if (this.countdown.left == 0 && this.forestWatcher.status == ForestStatus.GROWING) {
       // Get new tree count from right now.
-      let newTrees = await this.forestWatcher.calculate(new Date());
+      let newTrees = this.forestWatcher.calculate(new Date());
       if (newTrees > 0) {
         console.warn('Restarting countdown');
         this.countdown.restart();
@@ -87,8 +87,8 @@ export class MePage implements OnInit, AfterViewInit {
 
     confetti.create(this.confettiElement)({
       angle: this.getRandomInt(60, 120),
-      spread: this.getRandomInt(10, 50),
-      particleCount: this.getRandomInt(40, 50),
+      spread: this.getRandomInt(10, 200),
+      particleCount: this.getRandomInt(100, 500),
       origin: {
         y: 0.6
       }
