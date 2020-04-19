@@ -2,9 +2,9 @@
   "name": "staying-at-home-server",
   "version": "1.0.0",
   "description": "Server-side of Staying@home",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "author": "Luis Antonio Peregrina Andrade",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "cfenv": "^1.2.2",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
+    "express-handlebars": "^4.0.3",
     "jimp": "^0.10.2",
-    "pug": "^2.0.4",
     "tmp": "^0.1.0"
   },
   "engines": {

@@ -4,41 +4,53 @@ const http = require('http');
 const app = express();
 const path = require('path')
 const fileUpload = require('express-fileupload');
+const exphbs = require('express-handlebars');
 const tmp = require('tmp');
 const fs = require('fs');
 const Jimp = require('jimp');
 const cfenv = require("cfenv");
 
+// Need a temporary directory to save an image.
 var tmpDir = tmp.dirSync();
-var imageExtension = 'jpg';
+var previewImageExtension = 'jpg';
+var previewImageURL = '/image';
 
+// Handlebards
+app.set('view engine', '.html');
+app.set('views', path.join(__dirname, 'views'));
+app.engine('.html', exphbs({
+    extname: 'html',
+    defaultLayout: 'default'
+}));
 
-app.set('view engine', 'pug');
+// Express-FileUpload
 app.use(fileUpload({
     useTempFiles: true,
     tempFileDir: tmpDir.name,
     debug: false
 }));
+
+// Ionic CORS
 app.use(function (request, response, next) {
-    // Instead of "*" you should enable only specific origins
     response.header('Access-Control-Allow-Origin', '*');
-    // Supported HTTP verbs
-    response.header('Access-Control-Allow-Methods', 'HEAD,GET,PUT,POST,DELETE');
-    // Other custom headers
+    response.header('Access-Control-Allow-Methods', 'GET,POST');
     response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 
 
-// load local VCAP configuration  and service credentials
+var titleShort = 'Staying@home';
+var titleLong = titleShort;
+
+// IBM VCAP usage
 var vcapLocal;
 try {
     vcapLocal = require('./vcap-local.json');
     console.log("Loaded local VCAP", vcapLocal);
-} catch (e) { }
-
+} catch (e) {
+    console.error(e);
+}
 const appEnvOpts = vcapLocal ? { vcap: vcapLocal } : {}
-
 const appEnv = cfenv.getAppEnv(appEnvOpts);
 
 
@@ -47,8 +59,8 @@ const appEnv = cfenv.getAppEnv(appEnvOpts);
 
 
 // Save images as tmpDir/id
-app.post('/image', function (req, res) {
-    var newFilePath = path.join(tmpDir.name, req.query.id) + '.' + imageExtension;
+app.post(previewImageURL, function (req, res) {
+    var newFilePath = path.join(tmpDir.name, req.query.id) + '.' + previewImageExtension;
     Jimp.read(req.files.image.tempFilePath, (err, img) => {
         if (err) throw err;
         // We are only interested in turning portait to square or landscape
@@ -65,15 +77,28 @@ app.post('/image', function (req, res) {
 
 })
 // Serve images from the temp dir
-app.use('/image', express.static(tmpDir.name))
+app.use(previewImageURL, express.static(tmpDir.name))
+// Serve css and js
+app.use(express.static(path.join(__dirname, 'public')));
 
+var standardRequest = function (req, res, opts) {
+    var fileName = req.query.id == undefined ? 'default' : req.query.id;
+    opts.imageFileName = previewImageURL + '/' + fileName + '.' + previewImageExtension;
+    opts.titleLong = titleLong;
+    opts.titleShort = titleShort;
+    res.render(req.params.page, opts)
+}
 
 // Serve index but change ig:image to ?id=___
 app.get('/', (req, res) => {
-    var fileName = req.query.id == undefined ? 'default' : req.query.id;
-    res.render('index', { imageFileName: '/image/' + fileName + '.' + imageExtension })
+    req.params = { page: 'main' };
+    standardRequest(req, res, {});
+})
+app.get('/:page', (req, res) => {
+    standardRequest(req, res, {});
 })
 
 var port = process.env.PORT || 3000
 http.createServer(app).listen(port);
 //https.createServer(options, app).listen(443);
+console.log('Port is ' + port);
