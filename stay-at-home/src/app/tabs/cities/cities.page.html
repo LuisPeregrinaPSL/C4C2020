@@ -1,50 +1,12 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      My Home
-    </ion-title>
+    <ion-title>VRLauncher</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()"><ion-icon name="close" slot="icon-only"></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card>
-
-    <ion-card-header>
-      <ion-card-title>My challenges</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-list>
-        <ng-container>
-          <ion-item>
-            <ion-label>Do exercise</ion-label>
-            <ion-button slot="end"
-              href="#"
-              target="_blank">
-              <ion-icon name="checkmark-done-outline">
-              </ion-icon>
-            </ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-label>Cook a good meal</ion-label>
-            <ion-button slot="end"
-              href="#"
-              target="_blank">
-              <ion-icon name="checkmark-done-outline">
-              </ion-icon>
-            </ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-label>Find a virtual item with the GPS</ion-label>
-            <ion-button slot="end"
-              href="#"
-              target="_blank">
-              <ion-icon name="checkmark-outline">
-              </ion-icon>
-            </ion-button>
-          </ion-item>
-        </ng-container>
-      </ion-list>
-    </ion-card-content>
-
-  </ion-card>
+<ion-content>
+    <iframe id="iFrame" src="/assets/aframe.html" (load)="iframeLoaded();"></iframe>
 </ion-content>

@@ -1,12 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-states',
   templateUrl: 'states.page.html',
-  styleUrls: ['states.page.scss']
+  styleUrls: ['states.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class StatesPage {
+export class StatesPage implements OnInit {
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) { }
 
+  ngOnInit() {
+
+  }
+
+  close(){
+    this.modalCtrl.dismiss();
+  }
+  
 }
