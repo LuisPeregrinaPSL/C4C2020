@@ -9,9 +9,7 @@ import { UserConfiguration } from '../user-configuration';
 import { AlertController } from '@ionic/angular';
 import { LocalNotifications, Toast } from '@capacitor/core';
 import { GpsHistory } from '../gps-history';
-import { Eventfull } from '../eventfull';
 import { TreeCalculatorService } from './tree-calculator.service';
-import * as debounce from 'debounce-promise';
 
 @Injectable({
   providedIn: 'root'
