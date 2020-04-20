@@ -47,7 +47,7 @@ export class CitiesPage implements OnInit, AfterViewInit {
     this.forestWatcher.addListener(Events.GROWING, (trees: number) => {
       console.log('Listener Events.GROWING');
       this.fRenderer.setTreeCount(trees);
-      this.fRenderer.addTree();
+      this.fRenderer.addTree(true);
     });
   }
 
