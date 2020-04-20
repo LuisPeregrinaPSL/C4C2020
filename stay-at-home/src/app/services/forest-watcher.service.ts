@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { GpsService } from './gps.service';
 import { Events } from '../events.enum';
 import { CountdownComponent } from 'ngx-countdown';
@@ -23,11 +23,13 @@ import * as debounce from 'debounce-promise';
  *    * How long until we get a new tree
  * 
  */
-export class ForestWatcherService extends Eventfull {
+export class ForestWatcherService {
   timeToGrowANewTree = AppConfiguration.TIME_TO_GROW_TREE;
   _countdown: CountdownComponent;
   status: ForestStatus;
   count: number;
+  grow = new EventEmitter<number>();
+  shrink = new EventEmitter<number>();
 
   /* calculate = debounce(this._calculateTrees, AppConfiguration.TIME_TO_GROW_TREE); */
 
@@ -37,11 +39,9 @@ export class ForestWatcherService extends Eventfull {
     public alertCtrl: AlertController,
     public treeCalculator: TreeCalculatorService
   ) {
-    super();
-
     this.setInitialCount();
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
-    gpsSvc.addListener(Events.GPS_BEACON, async (newHistory: GpsHistory) => {
+    gpsSvc.beacon.subscribe(async (newHistory: GpsHistory) => {
 
       /* 
         * We are in house, we should be gaining trees. 
@@ -90,7 +90,7 @@ export class ForestWatcherService extends Eventfull {
         config.trees = this.count;
         this.appStorageSvc.setConfiguration(config).then(() => {
           this.notifyUser('Stay@home!', 'You have ' + newTrees + ' new tree' + (newTrees > 1 ? 's' : '') + '. Nice!');
-          this.notifyEvent(Events.GROWING, this.count);
+          this.shrink.emit(this.count);
         });
       });
     }
@@ -106,7 +106,7 @@ export class ForestWatcherService extends Eventfull {
       if (config.trees > 0) {
         config.trees--;
         this.count--;
-        this.notifyEvent(Events.SHRINKING, this.count);
+        this.shrink.emit(this.count);
         this.appStorageSvc.setConfiguration(config);
         this.notifyUser('Return home!', 'You have one tree less now.');
       }

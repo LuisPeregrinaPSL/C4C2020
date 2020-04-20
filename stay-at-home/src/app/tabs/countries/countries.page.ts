@@ -19,11 +19,11 @@ export class CountriesPage {
     public configService: AppStorageService,
     public forestWatcher: ForestWatcherService
   ) {
-    forestWatcher.addListener(Events.GROWING, (data: SimpleCoordinates) => {
+    forestWatcher.grow.subscribe((data: SimpleCoordinates) => {
       console.log('Is At Home!!!', data.latitude);
     });
 
-    forestWatcher.addListener(Events.SHRINKING, (data: SimpleCoordinates) => {
+    forestWatcher.shrink.subscribe((data: SimpleCoordinates) => {
       console.log('Is far from Home!!!', data.latitude);
     });
 

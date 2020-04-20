@@ -18,8 +18,8 @@ export class CitiesPage implements OnInit, AfterViewInit {
   private document: any;
   private fRenderer: ForestRenderer;
 
-  constructor(private modalCtrl: ModalController, public forestWatcher: ForestWatcherService) { 
-    
+  constructor(private modalCtrl: ModalController, public forestWatcher: ForestWatcherService) {
+
   }
 
   iframeLoaded() {
@@ -27,16 +27,16 @@ export class CitiesPage implements OnInit, AfterViewInit {
     var frame: any = document.querySelector('#iFrame');
     console.log(window[0]);
     console.log('iframeLoaded: Setting tree number: ' + this.config.trees);
-    
+
   }
 
   ngAfterViewInit(): void {
-    
+
   }
 
   ngOnInit() {
     console.log('Setting events');
-    window.addEventListener('onVRLoaded', (e:any) => {
+    window.addEventListener('onVRLoaded', (e: any) => {
       console.log('Getting onVRLoaded');
       this.fRenderer = new ForestRenderer(e.document);
       this.fRenderer.setInitialAmount(500);
@@ -44,14 +44,14 @@ export class CitiesPage implements OnInit, AfterViewInit {
 
     }, false);
 
-    this.forestWatcher.addListener(Events.GROWING, (trees: number) => {
+    this.forestWatcher.grow.subscribe((trees: number) => {
       console.log('Listener Events.GROWING');
       this.fRenderer.setTreeCount(trees);
       this.fRenderer.addTree();
     });
   }
 
-  close(){
+  close() {
     this.modalCtrl.dismiss();
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Plugins, Capacitor, CallbackID, GeolocationPosition, AppState } from '@capacitor/core';
 import { AlertController } from '@ionic/angular';
 import { SimpleCoordinates } from '../simple-coordinates';
@@ -18,16 +18,15 @@ const { Geolocation, App, BackgroundTask, LocalNotifications } = Plugins;
 @Injectable({
   providedIn: 'root'
 })
-export class GpsService extends Eventfull {
+export class GpsService {
   backgroundMode: boolean = false;
   lastCoords: SimpleCoordinates;
-
+  beacon = new EventEmitter<GpsHistory>();
 
   constructor(
     public appStorageSvc: AppStorageService,
     public treeCalculator: TreeCalculatorService
   ) {
-    super();
     Plugins.Geolocation.requestPermissions().then((permission: PermissionsRequestResult) => {
       if (permission) {
         this.setEvent();
@@ -84,7 +83,7 @@ export class GpsService extends Eventfull {
           let newTrees = this.treeCalculator.calculate(new Date());
           let newHistory = new GpsHistory(newCoords, new Date(), meters, newTrees);
           this.appStorageSvc.addHistory(newHistory);
-          this.notifyEvent(Events.GPS_BEACON, newHistory);
+          this.beacon.emit(newHistory);
         }
       }).catch((e) => { console.error(e) });
     }).catch((e) => {

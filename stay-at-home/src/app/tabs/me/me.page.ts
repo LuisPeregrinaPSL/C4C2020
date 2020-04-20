@@ -51,10 +51,10 @@ export class MePage implements OnInit, AfterViewInit {
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
-    forestWatcher.addListener(Events.GROWING, (trees: number) => {
+    forestWatcher.grow.subscribe((trees: number) => {
       // Don't base the numebrs from here, do it when restarting the countdown.
     })
-    forestWatcher.addListener(Events.SHRINKING, (trees: number) => {
+    forestWatcher.shrink.subscribe((trees: number) => {
       this.countdown.stop();
     })
   }
