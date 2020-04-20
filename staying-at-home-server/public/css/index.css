@@ -1,0 +1,56 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    padding-bottom: 20px;
+}
+
+.container {
+    padding-top: 80px;
+}
+
+.jumbotron {
+    padding-top: 8em;
+}
+
+#portrait {
+    border-radius: 90%;
+    margin-bottom: 2em;
+}
+
+.date {
+    text-align: right;
+}
+
+.arrow_container {
+    width: 100%;
+    font-size: 2em;
+    text-align: center;
+}
+
+.arrow_container:hover {
+    animation: suggest 1s 2;
+}
+
+.arrow_container_container:hover {
+    background-color: #dddddd67;
+}
+
+.arrow_container:hover>a>.arrow {
+    opacity: 1;
+}
+
+.arrow_container>a {
+    width: 100%;
+    display: inline-block;
+}
+
+@keyframes suggest {
+    0%, 20%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(1em);
+    }
+}

@@ -10,6 +10,8 @@ import { UserConfiguration } from '../user-configuration';
 import { Events } from '../events.enum';
 import { PermissionsRequestResult } from '@capacitor/core/dist/esm/definitions';
 import { Eventfull } from '../eventfull';
+import { ForestWatcherService } from './forest-watcher.service';
+import { TreeCalculatorService } from './tree-calculator.service';
 
 const { Geolocation, App, BackgroundTask, LocalNotifications } = Plugins;
 
@@ -22,7 +24,9 @@ export class GpsService extends Eventfull {
 
 
   constructor(
-    public appStorageSvc: AppStorageService) {
+    public appStorageSvc: AppStorageService,
+    public treeCalculator: TreeCalculatorService
+  ) {
     super();
     Plugins.Geolocation.requestPermissions().then((permission: PermissionsRequestResult) => {
       if (permission) {
@@ -77,13 +81,15 @@ export class GpsService extends Eventfull {
         if (config.home) {
           this.lastCoords = newCoords;
           let meters = this.convertToMeters(config.home.latitude, config.home.longitude, newCoords.latitude, newCoords.longitude);
-          let newHistory = new GpsHistory(newCoords, new Date(), meters);
+          let newTrees = this.treeCalculator.calculate(new Date());
+          let newHistory = new GpsHistory(newCoords, new Date(), meters, newTrees);
           this.appStorageSvc.addHistory(newHistory);
           this.notifyEvent(Events.GPS_BEACON, newHistory);
         }
-      }).catch((e) => { console.error('Error') });
-    }).catch(() => {
+      }).catch((e) => { console.error(e) });
+    }).catch((e) => {
       // No config, do not do anything as the geolocation might not be set.
+      console.error(e);
     });
 
     setTimeout(() => {
