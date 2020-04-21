@@ -1,28 +1,31 @@
 import { Injectable } from '@angular/core';
-import { AppConfiguration } from '../app-configuration';
-import { UserConfiguration } from '../user-configuration';
+import { AppConfiguration } from './app-configuration';
+import { UserConfiguration } from './user-configuration';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class GameRulesService {
-  earliestGrowingDate: Date;
+export class GameRules {
+  /**
+   * Used by calculateNewTrees.
+   */
+  static earliestGrowingDate: Date;
 
+  /**
+   * Maybe we should make it static?
+   */
   constructor() { }
 
   /**
    * This should answer how many trees since the last time it was calculated.
-   * If there are new trees, the earliestGrowingDate is now.
+   * If there are new trees, the earliestGrowingDate is 'now'.
+   * Ideally this should only be called from ForestWatcherService
    * @param upTo Date to calculate since earliestGrowingDate
    */
-  public calculateNewTrees(upTo: Date): number {
-    this.earliestGrowingDate = this.earliestGrowingDate || upTo;
-    let timeSpan = upTo.getTime() - this.earliestGrowingDate.getTime();
-    console.log('Difference: ' + timeSpan);
+  static calculateNewTrees(upTo: Date): number {
+    GameRules.earliestGrowingDate = GameRules.earliestGrowingDate || upTo;
+    let timeSpan = upTo.getTime() - GameRules.earliestGrowingDate.getTime();
     let newTrees = Math.floor(timeSpan / AppConfiguration.TIME_TO_GROW_TREE);
     if (newTrees > 0) {
       console.log('New trees: ' + newTrees);
-      this.earliestGrowingDate = new Date();
+      GameRules.earliestGrowingDate = new Date();
     }
     return newTrees
   }
@@ -31,7 +34,7 @@ export class GameRulesService {
    * Should this app be working in the background all day and all night?
    * We think it's better to not work during certain hours.
    */
-  public shouldAppBeRunning(): boolean {
+  static shouldAppBeRunning(): boolean {
     let rightNow = new Date();
     return (rightNow > AppConfiguration.WORKING_HOURS.start && rightNow < AppConfiguration.WORKING_HOURS.end);
   }
@@ -39,7 +42,7 @@ export class GameRulesService {
   /**
    * Should return the current level. Here we decide what level is the user.
    */
-  public getPlayerLevel(config: UserConfiguration) {
+  static getPlayerLevel(config: UserConfiguration) {
     let trees = config.trees;
     let level = 0;
     switch (true) {

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GameRulesService } from './game-rules.service';
+import { GameRulesService } from './game-rules';
 
 describe('TreeCalculatorService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

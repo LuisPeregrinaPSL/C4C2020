@@ -12,9 +12,10 @@ import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { Constants } from 'src/app/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
-import { Events } from 'src/app/events.enum';
 import { ForestStatus } from 'src/app/forest-status.enum';
 import * as confetti from 'canvas-confetti';
+import { SimpleCoordinates } from 'src/app/simple-coordinates';
+import { Utils } from 'src/app/utils';
 
 const { Device, Share } = Plugins;
 
@@ -42,7 +43,6 @@ export class MePage implements OnInit, AfterViewInit {
   constructor(
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
-    public gpsSvc: GpsService,
     public configService: AppStorageService,
     public screenshot: Screenshot,
     public restApi: RestApiService,
@@ -51,27 +51,33 @@ export class MePage implements OnInit, AfterViewInit {
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
-    forestWatcher.grow.subscribe((trees: number) => {
-      // Don't base the numebrs from here, do it when restarting the countdown.
+    forestWatcher.grow.subscribe((newTrees: number) => {
+      this.config.trees += newTrees;
     })
-    forestWatcher.shrink.subscribe((trees: number) => {
+    forestWatcher.shrink.subscribe((newTrees: number) => {
+      this.config.trees -= newTrees;
       this.countdown.stop();
     })
   }
 
   ngOnInit() {
+    // These are required to get the actual window dimentions so canvas is not pixelated.
     this.pageWidth = this.platform.width();
     this.pageHeight = this.platform.height();
   }
 
+  /**
+   * Restars the countdown and redraws forest. If we have a new tree, save the config.
+   */
   private async restartCountdown() {
-
-    if (this.countdown.left == 0 && this.forestWatcher.status == ForestStatus.GROWING) {
+    if (this.countdown.left < 1 && this.forestWatcher.status == ForestStatus.GROWING) {
       // Get new tree count from right now.
-      let newTrees = this.forestWatcher.calculate(new Date());
+      let newTrees = await this.forestWatcher.calculate(new Date());
       if (newTrees > 0) {
         console.warn('Restarting countdown');
         this.countdown.restart();
+        this.drawForest();
+        this.updateConfig();
       }
     }
     setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE + 1000); // One more second as timeleft doest count miliseconds.
@@ -83,18 +89,16 @@ export class MePage implements OnInit, AfterViewInit {
 
     this.restartCountdown();
 
-
-
+    // Fancy confetti
     confetti.create(this.confettiElement)({
-      angle: this.getRandomInt(60, 120),
-      spread: this.getRandomInt(10, 200),
-      particleCount: this.getRandomInt(100, 500),
+      angle: Utils.getRandomInt(60, 120),
+      spread: Utils.getRandomInt(10, 200),
+      particleCount: Utils.getRandomInt(100, 500),
       origin: {
         y: 0.6
       }
     });
   }
-
 
   async loadFormData() {
     this.loader = await this.loadingCtrl.create({
@@ -123,26 +127,29 @@ export class MePage implements OnInit, AfterViewInit {
     });
   }
 
-  public async setHome() {
-    let newCoords = await this.gpsSvc.getCurrentPosition();
-    if (this.config && (this.config.home == undefined || newCoords.latitude != this.config.home.latitude || newCoords.longitude != this.config.home.longitude)) {
-      this.config.home = newCoords;
-      this.updateConfig();
-    }
+  public setHome() {
+    GpsService.getCurrentPosition().then((newCoords: SimpleCoordinates) => {
+      if (this.config && (this.config.home == undefined || newCoords.latitude != this.config.home.latitude || newCoords.longitude != this.config.home.longitude)) {
+        this.config.home = newCoords;
+        this.updateConfig();
+      }
+    });
   }
 
+  /**
+   * Links the configuration so that onChanges() works.
+   * @param formData UserConfiguration
+   */
   public prefillAndValidateForm(formData: UserConfiguration) {
     this.configForm = this.formBuilder.group({
-      vendor: [{ value: formData.vendor, disabled: false }, Validators.compose([
-        Validators.minLength(5),
-        Validators.maxLength(20),
-        Validators.required
-      ])],
       geolocationEnabled: [formData.geolocationEnabled]
     })
     this.onChanges();
   }
 
+  /**
+   * Changes this.config based on changes on the form. Namely the geopositioning.
+   */
   private onChanges(): void {
     this.configForm.valueChanges.subscribe(formVal => {
       console.log(formVal);
@@ -161,8 +168,9 @@ export class MePage implements OnInit, AfterViewInit {
   }
 
   public async loadHistory() {
-    this.historyArray = await this.configService.getHistory();
-    console.log(this.historyArray.length);
+    this.configService.getHistory().then((history: Array<GpsHistory>) => {
+      this.historyArray
+    });
   }
 
   public async deleteHistory() {
@@ -175,7 +183,7 @@ export class MePage implements OnInit, AfterViewInit {
   }
 
   public async shareOptions() {
-    this.screenshot.URI(50).then(async resolved => {
+    this.screenshot.URI(50).then(resolved => {
       this.restApi.uploadImage(this.config.deviceId, resolved.URI);
     });
     Share.share({
@@ -200,17 +208,15 @@ export class MePage implements OnInit, AfterViewInit {
 
     treeImage.onload = () => {
       for (let i = 0; i < this.config.trees; i++) {
-        let randomX = this.getRandomInt(0, this.canvasElement.width);
-        let randomY = this.getRandomInt(0, this.canvasElement.height)
+        let randomX = Utils.getRandomInt(this.canvasElement.width);
+        let randomY = Utils.getRandomInt(this.canvasElement.height)
         ctx.drawImage(treeImage, randomX, randomY, treeImage.width, treeImage.height);
       }
 
     }
   }
 
-  private getRandomInt(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
+
 
 
 }

@@ -1,6 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { GpsService } from './gps.service';
-import { Events } from '../events.enum';
 import { CountdownComponent } from 'ngx-countdown';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { ForestStatus } from '../forest-status.enum';
@@ -8,8 +7,9 @@ import { AppStorageService } from './app-storage.service';
 import { UserConfiguration } from '../user-configuration';
 import { AlertController } from '@ionic/angular';
 import { LocalNotifications, Toast } from '@capacitor/core';
-import { GpsHistory } from '../gps-history';
-import { TreeCalculatorService } from './tree-calculator.service';
+import { SimpleCoordinates } from '../simple-coordinates';
+import { Utils } from '../utils';
+import { GameRules } from '../game-rules';
 
 @Injectable({
   providedIn: 'root'
@@ -24,75 +24,61 @@ import { TreeCalculatorService } from './tree-calculator.service';
 export class ForestWatcherService {
   timeToGrowANewTree = AppConfiguration.TIME_TO_GROW_TREE;
   _countdown: CountdownComponent;
-  status: ForestStatus;
-  count: number;
+  status: ForestStatus = ForestStatus.GROWING;
   grow = new EventEmitter<number>();
   shrink = new EventEmitter<number>();
 
-  /* calculate = debounce(this._calculateTrees, AppConfiguration.TIME_TO_GROW_TREE); */
+
 
   constructor(
     public gpsSvc: GpsService,
     public appStorageSvc: AppStorageService,
-    public alertCtrl: AlertController,
-    public treeCalculator: TreeCalculatorService
+    public alertCtrl: AlertController
   ) {
-    this.setInitialCount();
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
-    gpsSvc.beacon.subscribe(async (newHistory: GpsHistory) => {
-
-      /* 
-        * We are in house, we should be gaining trees. 
-        * How is this calculated?
-        * The gps is always adding new history every ${AppConfiguration.TIME_TO_GROW_TREE}.
-        * Since this is an event based system, we should add tree by tree every time the gps sends new history.
-        * But the times vary (time of gps beakon and time to grow a tree), 
-        * so we should calculate the number of trees by difference.
-        */
-      if (newHistory.metersFromHome > AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
-        // We are shrinking
-        this.status = ForestStatus.SHRINKING;
-        this.treeCalculator.earliestGrowingDate = null;
-        this.deductTree();
-      } else {
-        if (!this.treeCalculator.earliestGrowingDate) {
-          // We just started growing
-          this.treeCalculator.earliestGrowingDate = newHistory.time;
+    gpsSvc.beacon.subscribe(async (newCoords: SimpleCoordinates) => {
+      this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
+        let metersFromHome = Utils.convertToMeters(config.home.latitude, config.home.longitude, newCoords.latitude, newCoords.longitude);
+        if (metersFromHome > AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
+          // We are shrinking
+          this.status = ForestStatus.SHRINKING;
+          GameRules.earliestGrowingDate = null;
+          this.deductTree();
+          this.shrink.emit(config.trees);
         } else {
-          // We continue growing
-          this.status = ForestStatus.GROWING;
-          /* this.treeCalculator.calculate(newHistory.time); */
+          let now = new Date();
+          if (!GameRules.earliestGrowingDate) {
+            // We just started growing
+            GameRules.earliestGrowingDate = now;
+          } else {
+            // We continue growing
+            this.status = ForestStatus.GROWING;
+            this.calculate(now);
+          }
         }
-      }
+      });
+
     });
   }
 
   /**
-   * Set the cached count starting from the last number.
-   */
-  private async setInitialCount() {
-    this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
-      this.count = config.trees;
-    });
-  }
-  /**
-   * Should return the new number of trees and save that to the configuration
+   * Should update the configuration and return the number.
+   * Ideally this is th eonly entry point to edit the config.
+   * Make it sync, to throttle.
    * 
    * @param fromDate 
    */
-  public calculate(fromDate: Date): number {
-    let newTrees = this.treeCalculator.calculate(fromDate);
-    if (newTrees > 0) {
-      this.count += newTrees;
-      this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
-        config.trees = this.count;
-        this.appStorageSvc.setConfiguration(config).then(() => {
-          this.notifyUser('Stay@home!', 'You have ' + newTrees + ' new tree' + (newTrees > 1 ? 's' : '') + '. Nice!');
-          this.shrink.emit(this.count);
-        });
-      });
+  public async calculate(fromDate: Date): Promise<number> {
+    let newTreeCount = GameRules.calculateNewTrees(fromDate);
+    if (newTreeCount > 0) {
+      this.notifyUser('Stay@home!', 'You have ' + newTreeCount + ' new tree' + (newTreeCount > 1 ? 's' : '') + '. Nice!');
+      let config = await this.appStorageSvc.getConfiguration();
+      config.trees += newTreeCount;
+      await this.appStorageSvc.setConfiguration(config);
+      this.grow.emit(newTreeCount);
+      console.log('Config.trees=' + config.trees);
     }
-    return newTrees;
+    return newTreeCount;
   }
 
   /**
@@ -103,8 +89,6 @@ export class ForestWatcherService {
     this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
       if (config.trees > 0) {
         config.trees--;
-        this.count--;
-        this.shrink.emit(this.count);
         this.appStorageSvc.setConfiguration(config);
         this.notifyUser('Return home!', 'You have one tree less now.');
       }

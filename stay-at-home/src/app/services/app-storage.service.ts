@@ -11,7 +11,15 @@ import * as debounce from 'debounce-promise';
 export class AppStorageService {
   debounceTimeSet = 2000;
   debounceTimeGet = 200;
+  /**
+   * @debounced
+   * @borrows _setConfiguration as setConfiguration
+   */
   setConfiguration = debounce(this._setConfiguration, this.debounceTimeSet);
+  /**
+   * @debounced
+   * @borrows _getConfiguration as getConfiguration
+   */
   getConfiguration = debounce(this._getConfiguration, this.debounceTimeGet);
   cachedConfig: UserConfiguration;
   cachedLastHistory: GpsHistory;
@@ -20,8 +28,11 @@ export class AppStorageService {
     public storage: Storage
   ) { }
 
+  /**
+   * Cached. Returns a promise of UserConfiguration
+   */
   public async _getConfiguration(): Promise<UserConfiguration> {
-    console.log("Getting config");
+    console.debug("Getting config");
     return new Promise((resolve, reject) => {
       if (this.cachedConfig != null) {
         resolve(this.cachedConfig);
@@ -38,14 +49,19 @@ export class AppStorageService {
     });
   }
 
+  /**
+   * Cached
+   * @param config UserConfiguration
+   */
   public async _setConfiguration(config: UserConfiguration) {
-    console.log("Saving config");
+    console.debug("Saving config:");
+    console.debug(config);
     await this.storage.set(Constants.CONFIGURATION, JSON.stringify(config));
     this.cachedConfig = config;
   }
 
   public async getHistory(): Promise<Array<GpsHistory>> {
-    console.log("Getting history");
+    console.debug("Getting history");
     return new Promise((resolve, reject) => {
       this.storage.get(Constants.GPS_HISTORY).then(
         (gpsHistories: string) => {
@@ -77,14 +93,14 @@ export class AppStorageService {
   }
 
   public async deleteHistory(): Promise<Array<GpsHistory>> {
-    console.log("Deleting history");
+    console.debug("Deleting history");
     return new Promise((resolve, reject) => {
       this.storage.set(Constants.GPS_HISTORY, JSON.stringify([]));
     });
   }
 
   public async addHistory(newHistory: GpsHistory) {
-    console.log("Adding to history");
+    console.debug("Adding to history");
     let gpsHistories: Array<GpsHistory> = [];
     this.getHistory().then((fetchedGpsHistories: Array<GpsHistory>) => {
       gpsHistories = fetchedGpsHistories;

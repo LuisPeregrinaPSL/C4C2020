@@ -29,11 +29,10 @@ export class AppConfiguration {
      * Working hours, in ms, time being from 0:00 to 23:59.
      */
     static get WORKING_HOURS() {
-        let today = new Date();
-        today.setHours(0, 0, 0);
-        let start = today;
-        today.setHours(23, 59, 59);
-        let end = today;
+        let start = new Date();
+        start.setHours(0, 0, 0);
+        let end = new Date();
+        end.setHours(23, 59, 59);
         return { start: start, end: end };
     }
 }

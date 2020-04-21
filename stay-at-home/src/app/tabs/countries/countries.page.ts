@@ -3,7 +3,6 @@ import { GpsService } from '../../services/gps.service';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
 import { GpsHistory } from 'src/app/gps-history';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { Events } from 'src/app/events.enum';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 
 @Component({

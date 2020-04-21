@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
-import { Events } from 'src/app/events.enum';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { ForestRenderer } from 'src/app/forest-renderer';
 

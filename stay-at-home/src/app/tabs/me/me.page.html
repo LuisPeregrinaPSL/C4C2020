@@ -72,15 +72,11 @@
             </ion-button>
             <ion-list>
               <ng-container *ngFor="let gpsHistory of historyArray">
-                <ion-item *ngIf="gpsHistory.newTree>0">
-                  <ion-label>{{gpsHistory.time}}: [lat:{{gpsHistory.coords.latitude}}
-                    lon:{{gpsHistory.coords.longitude}}]</ion-label>
-                  <ion-button slot="end"
-                    href="https://www.google.com.mx/maps/search/{{gpsHistory.coords.latitude}},{{gpsHistory.coords.longitude}}"
-                    target="_blank">
-                    <ion-icon name="open-outline">
-                    </ion-icon>
-                  </ion-button>
+                <ion-item *ngIf="gpsHistory.newTrees>0">
+                  <ion-label *ngIf="gpsHistory.newTrees==1">{{gpsHistory.time | date:'short'}}: 1 tree.</ion-label>
+                  <ion-label *ngIf="gpsHistory.newTrees>1">{{gpsHistory.time | date:'short'}}:
+                    {{gpsHistory.newTrees}} trees.
+                  </ion-label>
                 </ion-item>
               </ng-container>
             </ion-list>
