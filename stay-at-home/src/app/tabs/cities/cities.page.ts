@@ -3,6 +3,8 @@ import { ModalController } from '@ionic/angular';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { ForestRenderer } from 'src/app/forest-renderer';
+import { AppStorageService } from 'src/app/services/app-storage.service';
+import { LoadingController, Platform } from '@ionic/angular';
 
 
 
@@ -16,9 +18,10 @@ export class CitiesPage implements OnInit, AfterViewInit {
   private config: UserConfiguration = new UserConfiguration();
   private document: any;
   private fRenderer: ForestRenderer;
+  loader: any;
 
-  constructor(private modalCtrl: ModalController, public forestWatcher: ForestWatcherService) {
-
+  constructor(private modalCtrl: ModalController, public forestWatcher: ForestWatcherService, public loadingCtrl: LoadingController, public configService: AppStorageService) {
+    this.loadFormData();
   }
 
   iframeLoaded() {
@@ -37,16 +40,16 @@ export class CitiesPage implements OnInit, AfterViewInit {
     console.log('Setting events');
     window.addEventListener('onVRLoaded', (e: any) => {
       console.log('Getting onVRLoaded');
-      this.fRenderer = new ForestRenderer(e.document);
+      this.fRenderer = new ForestRenderer(e.document, e.vector);
       this.fRenderer.setInitialAmount(500);
-      this.fRenderer.setTreeCount(this.config.trees);
+      this.fRenderer.setTreeCount(this.config.trees, false);
 
     }, false);
 
     this.forestWatcher.grow.subscribe((trees: number) => {
       console.log('Listener Events.GROWING');
-      this.fRenderer.setTreeCount(trees);
-      this.fRenderer.addTree(true);
+      this.config.trees+=trees;
+      this.fRenderer.setTreeCount(this.config.trees, true);
     });
   }
 
@@ -54,4 +57,21 @@ export class CitiesPage implements OnInit, AfterViewInit {
     this.modalCtrl.dismiss();
   }
 
+  async loadFormData() {
+    this.loader = await this.loadingCtrl.create({
+      message: 'Loading configuration...',
+      backdropDismiss: true
+    });
+    this.loader.present().then(() => {
+      // Load the ones set by admin
+      this.configService.getConfiguration().then(
+        (newConfig: UserConfiguration) => {
+          this.config = newConfig;
+        }, () => {
+          this.config = new UserConfiguration();
+        }).finally(() => {
+          this.loader.dismiss();
+        })
+      });
+  }
 }

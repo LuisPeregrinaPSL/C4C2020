@@ -8,8 +8,12 @@
       function sendLoad(){
         console.log('sendLoad');
         var event = new CustomEvent('onVRLoaded');
+        var vector = new THREE.Vector3( 0.28, 0.22, -0.23 );
+        console.log(vector);
+        var fVector = document.querySelector('a-scene').object3D.localToWorld(vector);
+        console.log(fVector);
         event.document = document;
-        console.log( 'Sending event');
+        event.vector = fVector;
         window.parent.dispatchEvent(event);
       }
     </script>
@@ -17,21 +21,27 @@
 
   </head>
   <body onload="sendLoad()">
-    <a-scene pool__entity="mixin: entity; size: 10">
+    <a-scene pool__red="mixin: laser; size: 10">
+      <!--a-entity camera look-controls position="1381652 5,812,351‬ 2,226,235‬"></a-entity-->
         <a-assets>
             <img id="tree" src="/assets/tree.png">
             <a-asset-item id="fox" src="/assets/gltf/Fox.gltf"></a-asset-item>
             <a-asset-item id="tree" src="/assets/gltf/tree3.glb"></a-asset-item>
             <a-asset-item id="tree2" src="/assets/gltf/tree4.glb"></a-asset-item>
+            <a-mixin id="red" material="color: red"></a-mixin>
+            <a-mixin id="blue" material="color: blue"></a-mixin>
+            <a-mixin id="cube" geometry="primitive: box"></a-mixin>
           </a-assets>
         <!--a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box-->
         <!--a-image src="#tree" position="0 2 -5" width="3" height="3"></a-image-->
-        <a-text id="treeNumber" value="" position='-1 3 -5'></a-text>
+        <a-text id="treeNumber" value="Calculating..." position='-1 3 -5'></a-text>
         <!--a-gltf-model src="#fox" animation-mixer position="-0.060 -0.041 -7.616" rotation="-0.570 -14.060 0" scale="0 0.020 0.060"></a-gltf-model-->
-        <a-entity gltf-model="/assets/gltf/tree3.glb" scale="0.34 0.23 -0.23" position="-0.0705 0.68454 -4.138"></a-entity>
+        <a-entity id="master" gltf-model="/assets/gltf/tree3.glb" scale="0.34 0.23 -0.23" position="-0.0705 0.68454 -4.138"></a-entity>
         <a-entity gltf-model="/assets/gltf/tree4.glb" scale="0.28 0.22 -0.23" position="-0.40456 0.68454 -2.138"></a-entity>
-        <a-entity gltf-model="/assets/gltf/tree4.glb" scale="0.28 0.22 -0.23" position="0.5294 0.64632 -2.62589"></a-entity>
-        <a-tree></a-tree>
+        <a-entity gltf-model="#tree2" scale="0.28 0.22 -0.23" position="0.5294 0.64632 -2.62589"></a-entity>
+        <a-entity mixin="red cube" position="-1.40456 0.68454 -2.138"></a-entity>
+        <a-entity mixin="blue cube" position="1.40456 0.68454 -2.138"></a-entity>
+        <video src="https://www.youtube.com/watch?v=pEHThzPsbrU" position="-1.00000 0.68454 preload="auto"></video>
         <!-- Out of the box environment! -->
         <a-entity id="env" environment="preset: forest; dressing: trees; dressingAmount: 200; sunPosition: 0 5 0; lighting: distant; skyType: atmosphere"></a-entity>
       </a-scene>
