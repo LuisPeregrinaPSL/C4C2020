@@ -1,17 +1,28 @@
-import { Injectable } from '@angular/core';
 import { AppConfiguration } from './app-configuration';
 import { UserConfiguration } from './user-configuration';
+import { Plugins, AppState } from '@capacitor/core';
 
+const { App } = Plugins;
 export class GameRules {
   /**
    * Used by calculateNewTrees.
    */
   static earliestGrowingDate: Date;
+  static _isActive: boolean;
 
-  /**
-   * Maybe we should make it static?
-   */
-  constructor() { }
+  static get isActive(){
+    if (GameRules._isActive== undefined){
+      App.addListener('appStateChange', (state: AppState) => {
+        GameRules._isActive= state.isActive;
+      });
+      // Assume cold start
+      return true;
+    } else {
+      return GameRules._isActive;
+    }
+    
+  }
+
 
   /**
    * This should answer how many trees since the last time it was calculated.
@@ -56,4 +67,4 @@ export class GameRules {
     }
     return level;
   }
-}
+};

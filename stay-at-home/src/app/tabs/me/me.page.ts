@@ -16,6 +16,8 @@ import { ForestStatus } from 'src/app/forest-status.enum';
 import * as confetti from 'canvas-confetti';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
 import { Utils } from 'src/app/utils';
+import { GameRules } from 'src/app/game-rules';
+import { BackgroundGeolocation, ServiceStatus } from '@ionic-native/background-geolocation/ngx';
 
 const { Device, Share } = Plugins;
 
@@ -47,12 +49,16 @@ export class MePage implements OnInit, AfterViewInit {
     public screenshot: Screenshot,
     public restApi: RestApiService,
     public forestWatcher: ForestWatcherService,
-    public platform: Platform
+    public platform: Platform,
+    public backgroundGeolocation: BackgroundGeolocation
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
     forestWatcher.grow.subscribe((newTrees: number) => {
-      this.config.trees += newTrees;
+      if (!GameRules.isActive) {
+        console.log('Adding tree in background');
+        this.config.trees += newTrees;
+      }
     })
     forestWatcher.shrink.subscribe((newTrees: number) => {
       this.config.trees -= newTrees;
@@ -70,17 +76,17 @@ export class MePage implements OnInit, AfterViewInit {
    * Restars the countdown and redraws forest. If we have a new tree, save the config.
    */
   private async restartCountdown() {
-    if (this.countdown.left < 1 && this.forestWatcher.status == ForestStatus.GROWING) {
+    if (this.countdown.left < 1 && this.forestWatcher.status == ForestStatus.GROWING && GameRules.isActive) {
       // Get new tree count from right now.
       let newTrees = await this.forestWatcher.calculate(new Date());
       if (newTrees > 0) {
-        console.warn('Restarting countdown');
+        console.log('Adding tree in foreground');
         this.countdown.restart();
         this.drawForest();
         this.updateConfig();
       }
     }
-    setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE + 1000); // One more second as timeleft doest count miliseconds.
+    setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE); 
   }
 
   ngAfterViewInit() {
@@ -179,6 +185,21 @@ export class MePage implements OnInit, AfterViewInit {
   }
 
   private updateConfig() {
+    if (this.config.geolocationEnabled) {
+      this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
+        if(!status.isRunning){
+          console.debug('Starting background geolocation')
+          this.backgroundGeolocation.start();
+        }
+      });
+    } else {
+      this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
+        if(status.isRunning){
+          console.debug('Stopping background geolocation')
+          this.backgroundGeolocation.stop();
+        }
+      });
+    }
     this.configService.setConfiguration(this.config);
   }
 

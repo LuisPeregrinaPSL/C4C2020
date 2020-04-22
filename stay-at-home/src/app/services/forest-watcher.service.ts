@@ -29,7 +29,6 @@ export class ForestWatcherService {
   shrink = new EventEmitter<number>();
 
 
-
   constructor(
     public gpsSvc: GpsService,
     public appStorageSvc: AppStorageService,
@@ -76,7 +75,6 @@ export class ForestWatcherService {
       config.trees += newTreeCount;
       await this.appStorageSvc.setConfiguration(config);
       this.grow.emit(newTreeCount);
-      console.log('Config.trees=' + config.trees);
     }
     return newTreeCount;
   }
@@ -101,17 +99,16 @@ export class ForestWatcherService {
    * @param message string
    */
   private notifyUser(header: string, message: string) {
-    if (this.gpsSvc.backgroundMode) {
+    if (!GameRules.isActive) {
       this.showLocalNotification(header, message);
     }
     else {
-      /* this.showAlert(header, message); */
       this.showToast(header, message);
     }
   }
 
   private showLocalNotification(header: string, message: string) {
-    const notifs = LocalNotifications.schedule({
+    LocalNotifications.schedule({
       notifications: [
         {
           title: header,
@@ -139,5 +136,9 @@ export class ForestWatcherService {
       buttons: ['OK']
     });
     alert.present()
+  }
+
+  public async getCount(){
+    return (await this.appStorageSvc.getConfiguration()).trees;
   }
 }

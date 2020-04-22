@@ -1,4 +1,5 @@
 import { CoordRanges, TreeScale } from 'src/app/forest.enum';
+import { Utils } from './utils';
 
 export class ForestRenderer {
     private document: Document;
@@ -80,9 +81,9 @@ export class ForestRenderer {
 
     public addTree(animation: boolean){
         //console.log('Adding new tree...');
-        var x = this.generateRandomNumber(CoordRanges.xMin, CoordRanges.xMax);
-        var y = this.generateRandomNumber(CoordRanges.yMin, CoordRanges.yMax);
-        var z = this.generateRandomNumber(CoordRanges.zMin, CoordRanges.zMax);
+        var x = Utils.getRandomInt(CoordRanges.xMin, CoordRanges.xMax);
+        var y = Utils.getRandomInt(CoordRanges.yMin, CoordRanges.yMax);
+        var z = Utils.getRandomInt(CoordRanges.zMin, CoordRanges.zMax);
         var entity = this.document.createElement('a-entity');
         entity.setAttribute('id', 'tree');
         entity.setAttribute('scale', TreeScale.x + ' ' + TreeScale.y + ' ' + TreeScale.z);
@@ -93,12 +94,6 @@ export class ForestRenderer {
         else entity.setAttribute('position', x + ' ' + y + ' ' + z);
         entity.setAttribute('gltf-model', '#tree2');
         this.scene.appendChild(entity);
-    }
-
-    private generateRandomNumber(min: number, max: number) {
-        var randomNumber = (Math.random() * (max - min) + min).toFixed(5);
-        
-        return randomNumber;
     }
 
     private resetLandscape() {

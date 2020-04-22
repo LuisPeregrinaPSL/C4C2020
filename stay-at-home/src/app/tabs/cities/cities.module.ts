@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CitiesPage } from './cities.page';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { CitiesPage } from './cities.page';
     FormsModule,
     RouterModule.forChild([{ path: '', component: CitiesPage }])
   ],
-  declarations: [CitiesPage]
+  declarations: [CitiesPage],
+  providers: [ScreenOrientation]
 })
 export class CitiesPageModule { }
