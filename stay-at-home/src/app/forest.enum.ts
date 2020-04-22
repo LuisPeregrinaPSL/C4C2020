@@ -1,6 +1,6 @@
 export enum CoordRanges {
-    xMin = -100,
-    xMax = 100,
+    xMin = -3,
+    xMax = 3,
     yMin = 0.30000,
     yMax = 0.90000,
     zMin = -2,

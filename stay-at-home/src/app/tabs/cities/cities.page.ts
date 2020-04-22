@@ -41,14 +41,14 @@ export class CitiesPage implements OnInit, AfterViewInit {
     window.addEventListener('onVRLoaded', (e: any) => {
       console.log('Getting onVRLoaded');
       this.fRenderer = new ForestRenderer(e.document, e.vector);
-      this.fRenderer.setInitialAmount(500);
       this.fRenderer.setTreeCount(this.config.trees, false);
 
     }, false);
 
     this.forestWatcher.grow.subscribe((trees: number) => {
-      console.log('Listener Events.GROWING');
-      this.config.trees+=trees;
+      console.log('Listener Events.GROWING', trees);
+      console.log('this.config.trees', this.config.trees);
+      //this.config.trees+=trees;
       this.fRenderer.setTreeCount(this.config.trees, true);
     });
   }
