@@ -70,5 +70,5 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
+  "description": "Gamifying the quarantine need by providing goals and rewards for staying at home."
 }
