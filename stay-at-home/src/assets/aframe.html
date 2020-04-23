@@ -4,6 +4,7 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-click-drag-component"></script>
     <script>
       function sendLoad(){
         console.log('sendLoad');
@@ -51,9 +52,9 @@
         <!--a-entity id="master" gltf-model="/assets/gltf/tree3.glb" scale="0.34 0.23 -0.23" position="-0.0705 0.68454 -4.138"></a-entity>
         <a-entity gltf-model="/assets/gltf/tree4.glb" scale="0.28 0.22 -0.23" position="-0.40456 0.68454 -2.138"></a-entity>
         <a-entity gltf-model="#tree2" scale="0.28 0.22 -0.23" position="0.5294 0.64632 -2.62589"></a-entity-->
-        <a-entity mixin="red cube" position="-1.40456 0.68454 -2.138"></a-entity>
+        <!--a-entity mixin="red cube" position="-1.40456 0.68454 -2.138"></a-entity>
         <a-entity mixin="blue cube" position="1.40456 0.68454 -2.138"></a-entity>
-        <video src="https://www.youtube.com/watch?v=pEHThzPsbrU" position="-1.00000 0.68454 preload="auto"></video>
+        <video src="https://www.youtube.com/watch?v=pEHThzPsbrU" position="-1.00000 0.68454 preload="auto"></video-->
         <!-- Out of the box environment! -->
         <a-entity id="env" environment="preset: forest; dressing: trees; dressingAmount: 200; sunPosition: 0 5 0; lighting: distant; skyType: atmosphere"></a-entity>
       </a-scene>

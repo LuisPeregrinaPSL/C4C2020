@@ -8,6 +8,14 @@ export class Utils {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
+    static getRandomFloat(min: number, max?: number) {
+        if (!max) {
+            max = min;
+            min = 0;
+        }
+        return (Math.random() * (max - min) + min).toFixed(5);
+    }
+
     public static convertToMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
         var R = 6378.137; // Radius of earth in KM
         var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;

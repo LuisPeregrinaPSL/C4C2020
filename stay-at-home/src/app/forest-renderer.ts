@@ -81,9 +81,10 @@ export class ForestRenderer {
 
     public addTree(animation: boolean){
         //console.log('Adding new tree...');
-        var x = Utils.getRandomInt(CoordRanges.xMin, CoordRanges.xMax);
-        var y = Utils.getRandomInt(CoordRanges.yMin, CoordRanges.yMax);
-        var z = Utils.getRandomInt(CoordRanges.zMin, CoordRanges.zMax);
+        var x = Utils.getRandomFloat(CoordRanges.xMin, CoordRanges.xMax);
+        //var y = Utils.getRandomInt(CoordRanges.yMin, CoordRanges.yMax);
+        var y = 0;
+        var z = Utils.getRandomFloat(CoordRanges.zMin, CoordRanges.zMax);
         var entity = this.document.createElement('a-entity');
         entity.setAttribute('id', 'tree');
         entity.setAttribute('scale', TreeScale.x + ' ' + TreeScale.y + ' ' + TreeScale.z);
@@ -92,7 +93,21 @@ export class ForestRenderer {
             entity.setAttribute('animation', 'property: object3D.position.y; to: ' + y + '; dir: alternate; dur: 2000; loop: false');
         }
         else entity.setAttribute('position', x + ' ' + y + ' ' + z);
+
+        entity.setAttribute('rotation', '0 0 0');
         entity.setAttribute('gltf-model', '#tree2');
+        
+
+        var animEntity = this.document.createElement('a-animation');
+        animEntity.setAttribute('begin', 'click');
+        animEntity.setAttribute('attribute', 'rotation');
+        animEntity.setAttribute('to', '0 360 0');
+        animEntity.setAttribute('easing', 'linear');
+        animEntity.setAttribute('dur', '2000');
+        animEntity.setAttribute('fill', 'backwards');
+
+        entity.appendChild(animEntity);
+        
         this.scene.appendChild(entity);
     }
 
