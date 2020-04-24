@@ -57,12 +57,14 @@ export class CitiesPage implements OnInit, AfterViewInit {
 
 
     this.screenOrientation.onChange().subscribe(() => {
-      if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY) {
+      if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY ||
+        this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.PORTRAIT) {
         StatusBar.show();
         this.tabsSvc.showTabs();
       }
 
-      if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY) {
+      if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ||
+        this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE) {
         StatusBar.hide();
         this.tabsSvc.hideTabs();
       }
