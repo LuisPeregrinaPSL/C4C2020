@@ -10,6 +10,10 @@
     <param name="android-package" value="com.darktalker.cordova.screenshot.Screenshot"/>
   </feature>
 
+  <feature name="NativeAudio">
+    <param name="android-package" value="com.rjfun.cordova.plugin.nativeaudio.NativeAudio"/>
+  </feature>
+
   <feature name="CDVOrientation">
     <param name="android-package" value="cordova.plugins.screenorientation.CDVOrientation"/>
   </feature>

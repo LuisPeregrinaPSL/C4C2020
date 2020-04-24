@@ -17,6 +17,7 @@ import { GpsService } from './services/gps.service';
 import { AppConfiguration } from './app-configuration';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
+import { NativeAudio } from '@ionic-native/native-audio/ngx';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx'
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Screenshot,
-    BackgroundGeolocation
+    BackgroundGeolocation,
+    NativeAudio
   ],
   bootstrap: [AppComponent]
 })
