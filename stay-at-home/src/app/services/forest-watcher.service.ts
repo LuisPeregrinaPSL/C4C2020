@@ -84,7 +84,7 @@ export class ForestWatcherService {
   public async calculate(fromDate: Date): Promise<number> {
     let newTreeCount = GameRules.calculateNewTrees(fromDate);
     if (newTreeCount > 0) {
-      this.notifyUser('Stay@home!', 'You have ' + newTreeCount + ' new tree' + (newTreeCount > 1 ? 's' : '') + '. Nice!');
+      //this.notifyUser('Stay@home!', 'You have ' + newTreeCount + ' new tree' + (newTreeCount > 1 ? 's' : '') + '. Nice!');
       let config = await this.appStorageSvc.getConfiguration();
       config.trees += newTreeCount;
       this.audio.play('new-tree');
