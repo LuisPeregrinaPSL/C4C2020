@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core'; // Don't remove ElementRef
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoadingController, Platform } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
@@ -13,11 +13,11 @@ import { Constants } from 'src/app/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 import { ForestStatus } from 'src/app/forest-status.enum';
-import * as confetti from 'canvas-confetti';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
 import { Utils } from 'src/app/utils';
 import { GameRules } from 'src/app/game-rules';
 import { BackgroundGeolocation, ServiceStatus } from '@ionic-native/background-geolocation/ngx';
+import { ConfettiUtil } from 'src/app/confetti-util';
 
 const { Device, Share } = Plugins;
 
@@ -37,7 +37,7 @@ export class MePage implements OnInit, AfterViewInit {
   @ViewChild('imageCanvas', { static: false }) canvas: any;
   canvasElement: any;
   @ViewChild('confetti', { static: false }) confetti: any;
-  confettiElement: any;
+  confettiUtil: ConfettiUtil;
 
   pageWidth: number;
   pageHeight: number;
@@ -54,16 +54,20 @@ export class MePage implements OnInit, AfterViewInit {
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
+    // This is useful in background only
     forestWatcher.grow.subscribe((newTrees: number) => {
-      if (!GameRules.isActive) {
+      if (!GameRules.isInForeground()) {
         console.log('Adding tree in background');
         this.config.trees += newTrees;
       }
-    })
+    });
     forestWatcher.shrink.subscribe((newTrees: number) => {
       this.config.trees -= newTrees;
       this.countdown.stop();
-    })
+    });
+    forestWatcher.level.subscribe((newLevel: number) => {
+
+    });
   }
 
   ngOnInit() {
@@ -76,7 +80,12 @@ export class MePage implements OnInit, AfterViewInit {
    * Restars the countdown and redraws forest. If we have a new tree, save the config.
    */
   private async restartCountdown() {
-    if (this.countdown.left < 1 && this.forestWatcher.status == ForestStatus.GROWING && GameRules.isActive) {
+    if (
+      this.countdown.left < 1 &&
+      this.forestWatcher.status == ForestStatus.GROWING &&
+      GameRules.isInForeground() &&
+      GameRules.shouldAppBeRunning()
+    ) {
       // Get new tree count from right now.
       let newTrees = await this.forestWatcher.calculate(new Date());
       if (newTrees > 0) {
@@ -84,26 +93,18 @@ export class MePage implements OnInit, AfterViewInit {
         this.countdown.restart();
         this.drawForest();
         this.updateConfig();
+        this.confettiUtil.standard();
       }
     }
-    setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE); 
+    setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE);
   }
 
   ngAfterViewInit() {
     this.canvasElement = this.canvas.nativeElement;
-    this.confettiElement = this.confetti.nativeElement;
-
+    this.confettiUtil = new ConfettiUtil(this.confetti.nativeElement)
     this.restartCountdown();
 
-    // Fancy confetti
-    confetti.create(this.confettiElement)({
-      angle: Utils.getRandomInt(60, 120),
-      spread: Utils.getRandomInt(10, 200),
-      particleCount: Utils.getRandomInt(100, 500),
-      origin: {
-        y: 0.6
-      }
-    });
+    this.confettiUtil.standard();
   }
 
   async loadFormData() {
@@ -187,14 +188,14 @@ export class MePage implements OnInit, AfterViewInit {
   private updateConfig() {
     if (this.config.geolocationEnabled) {
       this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
-        if(!status.isRunning){
+        if (!status.isRunning) {
           console.debug('Starting background geolocation')
           this.backgroundGeolocation.start();
         }
       });
     } else {
       this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
-        if(status.isRunning){
+        if (status.isRunning) {
           console.debug('Stopping background geolocation')
           this.backgroundGeolocation.stop();
         }
@@ -236,8 +237,4 @@ export class MePage implements OnInit, AfterViewInit {
 
     }
   }
-
-
-
-
 }
