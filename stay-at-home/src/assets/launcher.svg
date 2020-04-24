@@ -8,9 +8,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="512"
-   height="512"
-   viewBox="0 0 512 512"
+   width="108"
+   height="108"
+   viewBox="0 0 108 108"
    version="1.1"
    id="svg3751"
    sodipodi:docname="launcher.svg"
@@ -26,6 +26,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>ionicons-v5-i</dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -41,7 +42,7 @@
          id="use4582"
          width="100%"
          height="100%"
-         transform="matrix(1.1833815,0,0,1.1315068,-142.29625,46.509803)" />
+         transform="matrix(1.1833815,0,0,1.1315068,-296.07693,627.72296)" />
     </clipPath>
   </defs>
   <sodipodi:namedview
@@ -58,9 +59,9 @@
      id="namedview3753"
      showgrid="false"
      inkscape:snap-global="true"
-     inkscape:zoom="0.32593203"
-     inkscape:cx="-822.1025"
-     inkscape:cy="-31.067208"
+     inkscape:zoom="3.6875"
+     inkscape:cx="33.263107"
+     inkscape:cy="52.730204"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -69,16 +70,16 @@
      id="title3745">ionicons-v5-i</title>
   <rect
      id="rect3759"
-     width="514.16949"
-     height="512"
-     x="-2.1694915"
+     width="108"
+     height="108"
+     x="0"
      y="0"
-     style="fill-opacity:1;fill:#9dc648" />
+     style="fill:#9dc648;fill-opacity:1;stroke-width:0.210492" />
   <g
      style="fill:#143828;fill-opacity:1"
      id="g4576"
      inkscape:label="Clip"
-     transform="matrix(0.74529152,0,0,0.77945985,89.060031,38.330826)">
+     transform="matrix(0.12798445,0,0,0.13385197,26.007367,16.282403)">
     <path
        inkscape:connector-curvature="0"
        d="m 261.56,101.28 a 8,8 0 0 0 -11.06,0 L 66.4,277.15 a 8,8 0 0 0 -2.47,5.79 L 63.9,448 a 32,32 0 0 0 32,32 H 192 a 16,16 0 0 0 16,-16 V 328 a 8,8 0 0 1 8,-8 h 80 a 8,8 0 0 1 8,8 v 136 a 16,16 0 0 0 16,16 h 96.06 a 32,32 0 0 0 32,-32 V 282.94 a 8,8 0 0 0 -2.47,-5.79 z"
@@ -92,7 +93,7 @@
   </g>
   <g
      id="g4645"
-     transform="matrix(0.88196416,0,0,0.88196416,281.66007,130.88829)"
+     transform="matrix(0.15145442,0,0,0.15145442,59.081417,32.176737)"
      style="fill:#328e66;fill-opacity:1">
     <g
        id="g4588"
@@ -155,7 +156,7 @@
   </g>
   <g
      id="g4645-3"
-     transform="matrix(0.88196416,0,0,0.88196416,-165.50464,12.895978)"
+     transform="matrix(0.15145442,0,0,0.15145442,-17.707499,11.914625)"
      style="fill:#226046;fill-opacity:1">
     <g
        id="g4588-3"

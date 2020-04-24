@@ -13,8 +13,11 @@
    viewBox="0 0 108 108"
    version="1.1"
    id="svg3751"
-   sodipodi:docname="application-foreground.svg"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+   sodipodi:docname="launcher-foreground.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:export-filename="C:\Users\LuisAntonioPeregrina\Projects\C4C2020\stay-at-home\src\assets\launcher-superhigh.png"
+   inkscape:export-xdpi="55.119999"
+   inkscape:export-ydpi="55.119999">
   <metadata
      id="metadata3757">
     <rdf:RDF>
@@ -39,7 +42,7 @@
          id="use4582"
          width="100%"
          height="100%"
-         transform="matrix(1.1833815,0,0,1.1315068,-283.59583,613.12576)" />
+         transform="matrix(1.1833815,0,0,1.1315068,-296.07693,627.72296)" />
     </clipPath>
   </defs>
   <sodipodi:namedview
@@ -56,9 +59,9 @@
      id="namedview3753"
      showgrid="false"
      inkscape:snap-global="true"
-     inkscape:zoom="2.7265625"
-     inkscape:cx="19.600699"
-     inkscape:cy="88.861402"
+     inkscape:zoom="3.6875"
+     inkscape:cx="33.263107"
+     inkscape:cy="52.730204"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -69,7 +72,7 @@
      style="fill:#143828;fill-opacity:1"
      id="g4576"
      inkscape:label="Clip"
-     transform="matrix(0.14641215,0,0,0.15312451,21.221861,14.507525)">
+     transform="matrix(0.12798445,0,0,0.13385197,26.007367,16.282403)">
     <path
        inkscape:connector-curvature="0"
        d="m 261.56,101.28 a 8,8 0 0 0 -11.06,0 L 66.4,277.15 a 8,8 0 0 0 -2.47,5.79 L 63.9,448 a 32,32 0 0 0 32,32 H 192 a 16,16 0 0 0 16,-16 V 328 a 8,8 0 0 1 8,-8 h 80 a 8,8 0 0 1 8,8 v 136 a 16,16 0 0 0 16,16 h 96.06 a 32,32 0 0 0 32,-32 V 282.94 a 8,8 0 0 0 -2.47,-5.79 z"
@@ -83,7 +86,7 @@
   </g>
   <g
      id="g4645"
-     transform="matrix(0.17326143,0,0,0.17326143,59.058042,32.690396)"
+     transform="matrix(0.15145442,0,0,0.15145442,59.081417,32.176737)"
      style="fill:#328e66;fill-opacity:1">
     <g
        id="g4588"
@@ -146,7 +149,7 @@
   </g>
   <g
      id="g4645-3"
-     transform="matrix(0.17326143,0,0,0.17326143,-28.787246,9.5108619)"
+     transform="matrix(0.15145442,0,0,0.15145442,-17.707499,11.914625)"
      style="fill:#226046;fill-opacity:1">
     <g
        id="g4588-3"
