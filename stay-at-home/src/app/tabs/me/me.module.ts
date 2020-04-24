@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MePage } from './me.page';
 import { CountdownModule } from 'ngx-countdown';
+import { NativeAudio } from '@ionic-native/native-audio/ngx';
 
 @NgModule({
   imports: [

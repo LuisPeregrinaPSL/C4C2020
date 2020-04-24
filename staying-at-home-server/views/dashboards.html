@@ -1,1 +1,43 @@
-test
+<link rel="stylesheet" type="text/css" href="/css/radio.style.css">
+<link rel="stylesheet" type="text/css" href="/css/list.style.css">
+<div class="row">
+    <div class="wrapper">
+        <div class="toggle_radio" id="places-slider">
+            <input type="radio" checked class="toggle_option" id="countries-tab" name="toggle_option">
+            <input type="radio" class="toggle_option" id="states-tab" name="toggle_option">
+            <input type="radio" class="toggle_option" id="cities-tab" name="toggle_option">
+            <label for="countries-tab">
+                <p>Countries</p>
+            </label>
+            <label for="states-tab">
+                <p>States</p>
+            </label>
+            <label for="cities-tab">
+                <p>Cities</p>
+            </label>
+            <div class="toggle_option_slider"></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <form class="form-inline" id="search-place">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search" aria-label="Search">
+        </form>
+        <div id="show-places-list">
+            <ul class="nav flex-column nav-pills" id="list-countries" style="display: inline-flex;"></ul>
+            <ul class="nav flex-column nav-pills" id="list-states" style="display: none;"></ul>
+            <ul class="nav flex-column nav-pills" id="list-cities" style="display: none;"></ul>
+        </div>
+    </div>
+    <div class="col-md-9 well">
+        <div id="dashboard">
+            <iframe
+                src="http://173.193.122.97:32455/app/kibana#/visualize/edit/4d9461e0-84f7-11ea-8110-01c6c6b17fed?embed=true&_g=()"
+                height="550" width="800"></iframe>
+            <h1 id="not-av">Not Available :(</h1>
+        </div>
+    </div>
+</div>
+<script type="module" src="/js/dashboards.js"></script>

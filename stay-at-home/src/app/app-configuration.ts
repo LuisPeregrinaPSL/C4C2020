@@ -13,7 +13,7 @@ export class AppConfiguration {
     /**
      * Background timeout to trigger the GPS service.
      */
-    public static GPS_CHECK_POSITION_BACKGROUND_TIMEOUT: number = 300000;
+    public static GPS_CHECK_POSITION_BACKGROUND_TIMEOUT: number = 3000;
 
     /**
      * Distance, in meters, to trigger the status from Growing to Shrinking.

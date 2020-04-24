@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewEncapsulation, AfterViewInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { ForestRenderer } from 'src/app/forest-renderer';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { Plugins } from '@capacitor/core';
+import { TabsService } from 'src/app/services/tabs.service';
+import { LoadingController } from '@ionic/angular';
+
+const { StatusBar } = Plugins;
 
 
 
@@ -13,20 +18,22 @@ import { ForestRenderer } from 'src/app/forest-renderer';
   encapsulation: ViewEncapsulation.None
 })
 export class CitiesPage implements OnInit, AfterViewInit {
-  private config: UserConfiguration = new UserConfiguration();
   private document: any;
   private fRenderer: ForestRenderer;
+  loader: any;
 
-  constructor(private modalCtrl: ModalController, public forestWatcher: ForestWatcherService) {
-
+  constructor(
+    public forestWatcher: ForestWatcherService,
+    public screenOrientation: ScreenOrientation,
+    public tabsSvc: TabsService,
+    public loadingCtrl: LoadingController
+  ) {
   }
 
   iframeLoaded() {
     console.log('iframeLoaded');
     var frame: any = document.querySelector('#iFrame');
     console.log(window[0]);
-    console.log('iframeLoaded: Setting tree number: ' + this.config.trees);
-
   }
 
   ngAfterViewInit(): void {
@@ -35,23 +42,43 @@ export class CitiesPage implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log('Setting events');
-    window.addEventListener('onVRLoaded', (e: any) => {
+    window.addEventListener('onVRLoaded', async (e: any) => {
       console.log('Getting onVRLoaded');
-      this.fRenderer = new ForestRenderer(e.document);
-      this.fRenderer.setInitialAmount(500);
-      this.fRenderer.setTreeCount(this.config.trees);
-
+      let count = await this.forestWatcher.getCount();
+      this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
+      this.fRenderer.setCurrentView('gView');
+      this.fRenderer.setTreeCount(count, false);
     }, false);
 
-    this.forestWatcher.grow.subscribe((trees: number) => {
+    window.addEventListener('onVRChangeView', async (e: any) => {
+      console.log('Getting onVRChangeView');
+      if(this.fRenderer!=null) {
+        this.fRenderer.setCurrentView(e.view);
+      }
+      
+    }, false);
+
+    this.forestWatcher.grow.subscribe(async (trees: number) => {
       console.log('Listener Events.GROWING');
-      this.fRenderer.setTreeCount(trees);
-      this.fRenderer.addTree(true);
+      let count = await this.forestWatcher.getCount();
+      this.fRenderer.setTreeCount(count, true);
+    });
+
+
+    this.screenOrientation.onChange().subscribe(() => {
+      if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY ||
+        this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.PORTRAIT) {
+        StatusBar.show();
+        this.tabsSvc.showTabs();
+      }
+
+      if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ||
+        this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE) {
+        StatusBar.hide();
+        this.tabsSvc.hideTabs();
+      }
     });
   }
 
-  close() {
-    this.modalCtrl.dismiss();
-  }
 
 }

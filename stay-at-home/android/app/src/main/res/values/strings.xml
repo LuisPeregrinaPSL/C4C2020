@@ -1,7 +1,24 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">stay-at-home</string>
-    <string name="title_activity_main">stay-at-home</string>
-    <string name="package_name">com.persistent.c4c2020.mx</string>
-    <string name="custom_url_scheme">com.persistent.c4c2020.mx</string>
+	<string name="app_name"><![CDATA[
+		Stay@home
+	]]></string>
+	<string name="title_activity_main"><![CDATA[
+		Stay@home
+	]]></string>
+	<string name="package_name">
+		com.persistent.c4c2020.mx
+	</string>
+	<string name="custom_url_scheme">
+		com.persistent.c4c2020.mx
+	</string>
+	<string name="mauron85_bgloc_account_name">
+		$ACCOUNT_NAME
+	</string>
+	<string name="mauron85_bgloc_account_type">
+		$ACCOUNT_TYPE
+	</string>
+	<string name="mauron85_bgloc_content_authority">
+		$CONTENT_AUTHORITY
+	</string>
 </resources>

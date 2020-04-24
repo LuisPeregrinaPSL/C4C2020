@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GameRulesService } from './game-rules';
+import { TabsService } from './tabs.service';
 
-describe('TreeCalculatorService', () => {
+describe('TabsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: GameRulesService = TestBed.get(GameRulesService);
+    const service: TabsService = TestBed.get(TabsService);
     expect(service).toBeTruthy();
   });
 });

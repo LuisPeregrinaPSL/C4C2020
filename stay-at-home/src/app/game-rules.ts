@@ -1,17 +1,29 @@
-import { Injectable } from '@angular/core';
 import { AppConfiguration } from './app-configuration';
 import { UserConfiguration } from './user-configuration';
+import { Plugins, AppState } from '@capacitor/core';
 
+const { App } = Plugins;
 export class GameRules {
   /**
    * Used by calculateNewTrees.
    */
   static earliestGrowingDate: Date;
+  static _inForeground: boolean;
+  static isActive: boolean = true;
 
-  /**
-   * Maybe we should make it static?
-   */
-  constructor() { }
+  static isInForeground() {
+    if (GameRules._inForeground == undefined) {
+      App.addListener('appStateChange', (state: AppState) => {
+        GameRules._inForeground = state.isActive;
+      });
+      // Assume cold start
+      return true;
+    } else {
+      return GameRules._inForeground;
+    }
+
+  }
+
 
   /**
    * This should answer how many trees since the last time it was calculated.
@@ -36,7 +48,7 @@ export class GameRules {
    */
   static shouldAppBeRunning(): boolean {
     let rightNow = new Date();
-    return (rightNow > AppConfiguration.WORKING_HOURS.start && rightNow < AppConfiguration.WORKING_HOURS.end);
+    return (rightNow > AppConfiguration.WORKING_HOURS.start && rightNow < AppConfiguration.WORKING_HOURS.end && this.isActive);
   }
 
   /**
@@ -46,14 +58,24 @@ export class GameRules {
     let trees = config.trees;
     let level = 0;
     switch (true) {
-      case trees >= 2000: level++;
-      case trees >= 1000: level++;
-      case trees >= 500: level++;
       case trees >= 200: level++;
-      case trees >= 100: level++;
-      case trees >= 50: level++;
+      case trees >= 160: level++;
+      case trees >= 120: level++;
+      case trees >= 80: level++;
+      case trees >= 40: level++;
+      case trees >= 20: level++;
       case trees >= 10: level++;
     }
     return level;
   }
-}
+
+  /**
+   * We have to decide if we send it or not based on certain rules.
+   * As of today we will not care if its growing or shrinking.
+   * 
+   * @param growing we may change stance if its not growing.
+   */
+  static shouldSendPosition(growing: boolean) {
+    return true;
+  }
+};

@@ -10,6 +10,8 @@ import { LocalNotifications, Toast } from '@capacitor/core';
 import { SimpleCoordinates } from '../simple-coordinates';
 import { Utils } from '../utils';
 import { GameRules } from '../game-rules';
+import { NativeAudio } from '@ionic-native/native-audio/ngx';
+import { RestApiService } from './rest-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,15 +27,16 @@ export class ForestWatcherService {
   timeToGrowANewTree = AppConfiguration.TIME_TO_GROW_TREE;
   _countdown: CountdownComponent;
   status: ForestStatus = ForestStatus.GROWING;
-  grow = new EventEmitter<number>();
-  shrink = new EventEmitter<number>();
-
-
+  grow: EventEmitter<number> = new EventEmitter<number>();
+  shrink: EventEmitter<number> = new EventEmitter<number>();
+  level: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(
     public gpsSvc: GpsService,
     public appStorageSvc: AppStorageService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public audio: NativeAudio,
+    public restApi: RestApiService
   ) {
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
     gpsSvc.beacon.subscribe(async (newCoords: SimpleCoordinates) => {
@@ -44,6 +47,7 @@ export class ForestWatcherService {
           this.status = ForestStatus.SHRINKING;
           GameRules.earliestGrowingDate = null;
           this.deductTree();
+          this.restApi.postLocation(newCoords);
           this.shrink.emit(config.trees);
         } else {
           let now = new Date();
@@ -59,6 +63,13 @@ export class ForestWatcherService {
       });
 
     });
+
+    // Preload audio
+    ['new-tree', 'first-start', 'lose-tree', 'new-level'].forEach((fileName: string) => audio.preloadSimple(fileName, 'assets/sounds/' + fileName + '.mp3').then(fulfilled => {
+      console.log('Preloaded audio.');
+    }, rejected => {
+      console.error('Couldn\'t preload audio.')
+    }));
   }
 
   /**
@@ -66,17 +77,25 @@ export class ForestWatcherService {
    * Ideally this is th eonly entry point to edit the config.
    * Make it sync, to throttle.
    * 
+   * Notice the important parts are in GameRules.
+   * 
    * @param fromDate 
    */
   public async calculate(fromDate: Date): Promise<number> {
     let newTreeCount = GameRules.calculateNewTrees(fromDate);
     if (newTreeCount > 0) {
-      this.notifyUser('Stay@home!', 'You have ' + newTreeCount + ' new tree' + (newTreeCount > 1 ? 's' : '') + '. Nice!');
+      //this.notifyUser('Stay@home!', 'You have ' + newTreeCount + ' new tree' + (newTreeCount > 1 ? 's' : '') + '. Nice!');
       let config = await this.appStorageSvc.getConfiguration();
       config.trees += newTreeCount;
-      await this.appStorageSvc.setConfiguration(config);
+      this.audio.play('new-tree');
       this.grow.emit(newTreeCount);
-      console.log('Config.trees=' + config.trees);
+      let level = GameRules.getPlayerLevel(config);
+      if (level > config.level) {
+        config.level = level;
+        this.notifyUser('Congratulations', 'You have increased your forest level to ' + level + '!');
+        this.level.emit(level);
+      }
+      await this.appStorageSvc.setConfiguration(config);
     }
     return newTreeCount;
   }
@@ -101,17 +120,16 @@ export class ForestWatcherService {
    * @param message string
    */
   private notifyUser(header: string, message: string) {
-    if (this.gpsSvc.backgroundMode) {
+    if (!GameRules.isInForeground()) {
       this.showLocalNotification(header, message);
     }
     else {
-      /* this.showAlert(header, message); */
-      this.showToast(header, message);
+      this.showAlert(header, message);
     }
   }
 
   private showLocalNotification(header: string, message: string) {
-    const notifs = LocalNotifications.schedule({
+    LocalNotifications.schedule({
       notifications: [
         {
           title: header,
@@ -133,11 +151,22 @@ export class ForestWatcherService {
   }
 
   private async showAlert(header: string, message: string) {
-    const alert = await this.alertCtrl.create({
+    GameRules.isActive = false;
+    this.alertCtrl.create({
       header: header,
       message: message,
       buttons: ['OK']
+    }).then((alert: HTMLIonAlertElement) => {
+      alert.present().then(result => {
+        alert.onDidDismiss().then(event => {
+          console.log('Dismissed, user is active again.');
+          GameRules.isActive = true;
+        })
+      });
     });
-    alert.present()
+  }
+
+  public async getCount() {
+    return (await this.appStorageSvc.getConfiguration()).trees;
   }
 }

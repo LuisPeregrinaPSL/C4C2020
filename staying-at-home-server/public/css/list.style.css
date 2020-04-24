@@ -1,0 +1,21 @@
+#search-place {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#show-places-list>ul {
+	height: 530px;
+	width: 250px;
+	overflow-y: hidden;
+	overflow-x: scroll;
+}
+
+#dashboard {
+	margin-top: 10px;
+}
+
+h1 {
+	position: relative;
+	top: 200px;
+	left: 250px;
+}
