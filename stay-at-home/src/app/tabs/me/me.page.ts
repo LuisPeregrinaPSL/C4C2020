@@ -66,7 +66,7 @@ export class MePage implements OnInit, AfterViewInit {
       this.countdown.stop();
     });
     forestWatcher.level.subscribe((newLevel: number) => {
-
+      this.confettiUtil.fanfare();
     });
   }
 

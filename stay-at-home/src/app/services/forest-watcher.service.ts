@@ -92,6 +92,7 @@ export class ForestWatcherService {
       let level = GameRules.getPlayerLevel(config);
       if (level > config.level) {
         config.level = level;
+        this.notifyUser('Congratulations', 'You have increased your forest level to ' + level + '!');
         this.level.emit(level);
       }
       await this.appStorageSvc.setConfiguration(config);
