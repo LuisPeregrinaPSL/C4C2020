@@ -169,4 +169,11 @@ export class ForestWatcherService {
   public async getCount() {
     return (await this.appStorageSvc.getConfiguration()).trees;
   }
+
+  public async getCurrentLevel() {
+    let config = await this.appStorageSvc.getConfiguration();
+    let level = GameRules.getPlayerLevel(config);
+    
+    return level;
+  }
 }

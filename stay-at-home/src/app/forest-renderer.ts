@@ -1,4 +1,6 @@
 import { CoordRanges, TreeScale } from 'src/app/forest.enum';
+import { getTreeModel, getTreeModelByLevel, TreeModel } from 'src/app/forest.types';
+import { GameRules } from 'src/app/game-rules';
 import { Utils } from './utils';
 
 export class ForestRenderer {
@@ -12,8 +14,11 @@ export class ForestRenderer {
     private countInfo: Element;
     private currentView: Element;
     private treeCount: number = 0;
-    private treeLimit: number = 200; //It will reset the landscape every treeLimit
+    private treeLimit: number = 40; //It will reset the landscape every treeLimit
     private backCount: number = 0;
+    private frontCount: number = 0;
+    private level: number = 1;
+    private model: TreeModel;
     
 
     constructor(document?: Document, aframe?: any, three?: any) {
@@ -30,6 +35,8 @@ export class ForestRenderer {
         this.countInfo = this.infoBlock.querySelector('#tree_count');
 
         this.setEvents();
+
+        this.setLevel(0);
 
         /*
         console.log('Calling pool');
@@ -48,8 +55,8 @@ export class ForestRenderer {
             },
         
             init: function () {
-            console.log('INIT');
-            console.log(this);
+            //console.log('INIT');
+            //console.log(this);
               var data = this.data;
               var el = this.el;  // <a-entity>
               //var defaultColor = el.getAttribute('material').color;
@@ -58,10 +65,6 @@ export class ForestRenderer {
               el.addEventListener('mouseenter', function () {
                 info.innerHTML = data.text;
                 //el.setAttribute('color', data.color);
-                console.log('Testing!!!!', data.text);
-                console.log(el.parentNode.parentNode);
-                console.log(info);
-                //alert(data.text);
               });
         
               el.addEventListener('mouseleave', function () {
@@ -123,6 +126,29 @@ export class ForestRenderer {
         this.currentView = newView;
     }
 
+    public setLevel(level: number) {
+        console.log('Setting level to ', level);
+        this.level = level;
+        if(this.frontCount == 0) {
+            this.frontCount = GameRules.getTreesByLevel(this.level);
+            console.log('Setting frontCount to', this.frontCount);
+        }
+        this.resetLandscape();
+        this.model = getTreeModelByLevel(this.level);
+    }
+
+    public setLastLevel(level: number, initialCount: number) {
+        console.log('Setting last level to', level);
+        this.level = level;
+        if(this.frontCount == 0) {
+            this.frontCount = GameRules.getTreesByLevel(this.level);
+            console.log('Setting frontCount to', this.frontCount);
+        }
+        this.model = getTreeModelByLevel(this.level);
+        this.resetLandscape();
+        this.setTreeCount(initialCount, false);
+    }
+
     public setTreeCount(count:number, animation: boolean) {
         console.log('Seeting tree count', count);
         //count = 1000;
@@ -152,6 +178,7 @@ export class ForestRenderer {
 
     private addNewTrees(diff: number, animation: boolean) {
         console.log('Adding ' + diff + ' new trees...');
+        this.frontCount+=diff;
         //diff=1;
         if(diff > 0) {
             for(var i = 0; i < diff; i++) {
@@ -161,25 +188,26 @@ export class ForestRenderer {
     }
 
     public addTree(animation: boolean){
-        //console.log('Adding new tree...');
+        console.log('Adding new tree...');
         var x = Utils.getRandomFloat(CoordRanges.xMin, CoordRanges.xMax);
         //var y = Utils.getRandomInt(CoordRanges.yMin, CoordRanges.yMax);
-        var y = 0.310;
+        //var y = 0.310;
+        var y = this.model.posY;
         var z = Utils.getRandomFloat(CoordRanges.zMin, CoordRanges.zMax);
         var entity = this.__document.createElement('a-entity');
-        entity.setAttribute('id', 'tree');
+        entity.setAttribute('id', this.model.id);
         entity.setAttribute('position', x + ' ' + y + ' ' + z);
-        entity.setAttribute('scale', TreeScale.x + ' ' + TreeScale.y + ' ' + TreeScale.z);
+        //entity.setAttribute('scale', model.scaleX + ' ' + model.scaleY + ' ' + model.scaleZ);
         if(animation) {
-            entity.setAttribute('scale', TreeScale.x + ' ' + 0 + ' ' + TreeScale.z);
-            entity.setAttribute('animation', 'property: object3D.scale.y; to: ' + TreeScale.y + '; dir: alternate; dur: 2000; loop: false');
+            entity.setAttribute('scale', this.model.scaleX + ' ' + this.model.minY + ' ' + this.model.scaleZ);
+            entity.setAttribute('animation', 'property: object3D.scale.y; to: ' + this.model.scaleY + '; dir: alternate; dur: 2000; loop: false');
         }
-        else entity.setAttribute('scale', TreeScale.x + ' ' + TreeScale.y + ' ' + TreeScale.z);
+        else entity.setAttribute('scale', this.model.scaleX + ' ' + this.model.scaleY + ' ' + this.model.scaleZ);
 
         entity.setAttribute('rotation', '0 0 0');
-        entity.setAttribute('gltf-model', '#pine');
-        entity.setAttribute('animation-mixer', 'clip: *;');
-        entity.setAttribute('show-three-info', 'text: Stay At Home');
+        entity.setAttribute('gltf-model', '#'+this.model.gltfModel);
+        entity.setAttribute('animation-mixer', '');
+        entity.setAttribute('show-three-info', 'text: I am a ' + this.model.name);
         
 
         var animEntity = this.__document.createElement('a-animation');
@@ -196,17 +224,21 @@ export class ForestRenderer {
     }
 
     private resetLandscape() {
-        this.backCount+=this.treeLimit;
-        this.countInfo.innerHTML='You have reached the count limit, reseting landscape....';
-        
-        var obj: any;
-        while(obj = this.scene.querySelector('a-entity#tree')) {
-            console.log('removing...');
-            console.log(obj);
-            this.scene.removeChild(obj);
-        }
+        console.log('frontCount', this.frontCount);
+        if(this.frontCount > 0) {
+            this.backCount+=this.frontCount;
+            this.countInfo.innerHTML='You have reached the count limit, reseting landscape....';
+            
+            var obj: any;
+            while(obj = this.scene.querySelector('a-entity#' + this.model.id)) {
+                console.log('removing...');
+                console.log(obj);
+                this.scene.removeChild(obj);
+            }
 
-        this.env.setAttribute('environment', 'dressingAmount:' + this.backCount);
+            this.frontCount = 0;
+            this.env.setAttribute('environment', 'dressingAmount:' + this.backCount);
+        }
     }
 
     

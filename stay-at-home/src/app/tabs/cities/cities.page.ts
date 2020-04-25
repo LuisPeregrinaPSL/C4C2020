@@ -48,6 +48,7 @@ export class CitiesPage implements OnInit, AfterViewInit {
       this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
       this.fRenderer.showInformationPane();
       this.fRenderer.setCurrentView('gView');
+      this.fRenderer.setLevel(await this.forestWatcher.getCurrentLevel());
       this.fRenderer.setTreeCount(count, false);
     }, false);
 
@@ -65,6 +66,10 @@ export class CitiesPage implements OnInit, AfterViewInit {
       this.fRenderer.setTreeCount(count, true);
     });
 
+    this.forestWatcher.level.subscribe((newLevel: number) => {
+      console.log('New Level!!!');
+      this.fRenderer.setLevel(newLevel);
+    });
 
     this.screenOrientation.onChange().subscribe(() => {
       if (this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY ||
