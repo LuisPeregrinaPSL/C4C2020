@@ -19,13 +19,17 @@
               <iframe id="vrWindow" src="/assets/aframe.html" width="100%" height="300vh"></iframe>
             </div>
             <ion-item>
+              <ion-label>Forest level:</ion-label>
+              <ion-text slot="end">{{config.level}}</ion-text>
+            </ion-item>
+            <ion-item>
               <ion-label>Trees in my forest:</ion-label>
               <ion-text slot="end">{{config.trees}}</ion-text>
             </ion-item>
             <ion-item>
               <ion-label>Next tree in:</ion-label>
               <ion-text slot="end">
-                <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'mm:ss' }">
+                <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'mm:ss', demand:true }">
                 </countdown>
               </ion-text>
             </ion-item>
@@ -37,18 +41,19 @@
         <ion-card>
 
           <ion-card-header>
-            <ion-card-title>My forest in time</ion-card-title>
+            <ion-card-title>Game rules</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ng-container *ngFor="let gpsHistory of historyArray">
-                <ion-item *ngIf="gpsHistory.trees>0">
-                  <ion-label *ngIf="gpsHistory.trees==1">{{gpsHistory.time | date:'short'}}: 1 tree.</ion-label>
-                  <ion-label *ngIf="gpsHistory.trees>1">{{gpsHistory.time | date:'short'}}:
-                    {{gpsHistory.trees}} trees.
-                  </ion-label>
-                </ion-item>
-              </ng-container>
+              <ion-item>
+                <ion-label>You grow one tree every {{timeToGrowTree }} seconds you stay at home.</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>You lose one tree every {{timeToGrowTree }} seconds you stay at home.</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>There are levels that you can achieve by growing a certain number of trees.</ion-label>
+              </ion-item>
             </ion-list>
           </ion-card-content>
         </ion-card>

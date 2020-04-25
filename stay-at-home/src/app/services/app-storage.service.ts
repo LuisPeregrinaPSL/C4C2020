@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { UserConfiguration } from '../user-configuration';
 import { Storage } from '@ionic/storage';
 import { Constants } from '../constants';
@@ -11,6 +11,9 @@ import * as debounce from 'debounce-promise';
 export class AppStorageService {
   debounceTimeSet = 2000;
   debounceTimeGet = 200;
+  update: EventEmitter<UserConfiguration> = new EventEmitter<UserConfiguration>();
+
+
   /**
    * @debounced
    * @borrows _setConfiguration as setConfiguration
@@ -58,6 +61,7 @@ export class AppStorageService {
     console.debug(config);
     await this.storage.set(Constants.CONFIGURATION, JSON.stringify(config));
     this.cachedConfig = config;
+    this.update.emit(config);
   }
 
   public async getHistory(): Promise<Array<GpsHistory>> {

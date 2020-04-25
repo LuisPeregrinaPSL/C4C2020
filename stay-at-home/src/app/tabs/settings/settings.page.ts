@@ -8,7 +8,7 @@ import { UserConfiguration } from 'src/app/user-configuration';
 import { Plugins, DeviceInfo } from '@capacitor/core';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
 
-const { Device } = Plugins;
+const { Device, Browser } = Plugins;
 
 @Component({
   selector: 'app-settings',
@@ -51,8 +51,8 @@ export class SettingsPage {
           Device.getInfo().then((info: DeviceInfo) => {
             if (info.uuid != this.config.deviceId) {
               this.config.deviceId = info.uuid;
-              this.updateConfig();
             }
+            this.updateConfig();
           }).finally(() => {
             this.prefillAndValidateForm(this.config);
             /* this.drawForest(); */
@@ -105,6 +105,7 @@ export class SettingsPage {
   }
 
   private updateConfig() {
+
     if (this.config.geolocationEnabled) {
       this.gpsService.start();
     } else {
@@ -113,6 +114,7 @@ export class SettingsPage {
     this.configService.setConfiguration(this.config);
   }
 
+
   public setHome() {
     GpsService.getCurrentPosition().then((newCoords: SimpleCoordinates) => {
       if (this.config && (this.config.home == undefined || newCoords.latitude != this.config.home.latitude || newCoords.longitude != this.config.home.longitude)) {
@@ -120,5 +122,9 @@ export class SettingsPage {
         this.updateConfig();
       }
     });
+  }
+
+  async open(url: string) {
+    await Browser.open({ url: url });
   }
 }

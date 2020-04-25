@@ -12,6 +12,7 @@ import { Utils } from '../utils';
 import { GameRules } from '../game-rules';
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
 import { RestApiService } from './rest-api.service';
+import { GpsHistory } from '../gps-history';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,7 @@ export class ForestWatcherService {
           this.status = ForestStatus.SHRINKING;
           GameRules.earliestGrowingDate = null;
           this.deductTree();
+          this.appStorageSvc.addHistory(new GpsHistory(newCoords, new Date(), -1));
           this.restApi.postLocation(newCoords);
           this.shrink.emit(config.trees);
         } else {
@@ -57,7 +59,7 @@ export class ForestWatcherService {
           } else {
             // We continue growing
             this.status = ForestStatus.GROWING;
-            this.calculate(now);
+            this.calculate(now, newCoords);
           }
         }
       });
@@ -65,7 +67,7 @@ export class ForestWatcherService {
     });
 
     // Preload audio
-    ['new-tree', 'first-start', 'lose-tree', 'new-level'].forEach((fileName: string) => audio.preloadSimple(fileName, 'assets/sounds/' + fileName + '.mp3').then(fulfilled => {
+    ['new-tree', 'first-start', 'lose-tree', 'new-level'].forEach((fileName: string) => audio.preloadSimple(fileName, '../public/assets/sounds/' + fileName + '.mp3').then(fulfilled => {
       console.log('Preloaded audio.');
     }, rejected => {
       console.error('Couldn\'t preload audio.')
@@ -81,21 +83,27 @@ export class ForestWatcherService {
    * 
    * @param fromDate 
    */
-  public async calculate(fromDate: Date): Promise<number> {
+  public async calculate(fromDate: Date, coords?: SimpleCoordinates): Promise<number> {
     let newTreeCount = GameRules.calculateNewTrees(fromDate);
     if (newTreeCount > 0) {
       //this.notifyUser('Stay@home!', 'You have ' + newTreeCount + ' new tree' + (newTreeCount > 1 ? 's' : '') + '. Nice!');
       let config = await this.appStorageSvc.getConfiguration();
-      config.trees += newTreeCount;
-      this.audio.play('new-tree');
-      this.grow.emit(newTreeCount);
-      let level = GameRules.getPlayerLevel(config);
-      if (level > config.level) {
-        config.level = level;
-        this.notifyUser('Congratulations', 'You have increased your forest level to ' + level + '!');
-        this.level.emit(level);
+      if (config.geolocationEnabled && config.home) {
+        config.trees += newTreeCount;
+        this.audio.play('new-tree');
+        this.grow.emit(newTreeCount);
+        let level = GameRules.getPlayerLevel(config);
+        if (level > config.level) {
+          config.level = level;
+          this.notifyUser('Congratulations', 'You have increased your forest level to ' + level + '!');
+          this.level.emit(level);
+        }
+        await this.appStorageSvc.setConfiguration(config);
+
+
       }
-      await this.appStorageSvc.setConfiguration(config);
+      // Save if its coming from the GPS 
+      if (coords) this.appStorageSvc.addHistory(new GpsHistory(coords, new Date(), newTreeCount));
     }
     return newTreeCount;
   }
@@ -173,7 +181,7 @@ export class ForestWatcherService {
   public async getCurrentLevel() {
     let config = await this.appStorageSvc.getConfiguration();
     let level = GameRules.getPlayerLevel(config);
-    
+
     return level;
   }
 }

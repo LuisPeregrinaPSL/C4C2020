@@ -7,7 +7,7 @@ export class GameRules {
   /**
    * Used by calculateNewTrees.
    */
-  static earliestGrowingDate: Date;
+  static earliestGrowingDate: Date = new Date();
   static _inForeground: boolean;
   static isActive: boolean = true;
 
@@ -69,19 +69,19 @@ export class GameRules {
     return level;
   }
 
-   /**
-   * Should return the number of trees at a particular level.
-   */
+  /**
+  * Should return the number of trees at a particular level.
+  */
   static getTreesByLevel(level: number) {
     let treeNumber = 0;
     switch (true) {
-      case level == 7: treeNumber+=200; break;
-      case level == 6: treeNumber+=160; break;
-      case level == 5 : treeNumber+=120; break;
-      case level == 4: treeNumber+=80; break;
-      case level == 3: treeNumber+=40; break;
-      case level == 2: treeNumber+=20; break;
-      case level == 1: treeNumber+=10; break;
+      case level == 7: treeNumber += 200; break;
+      case level == 6: treeNumber += 160; break;
+      case level == 5: treeNumber += 120; break;
+      case level == 4: treeNumber += 80; break;
+      case level == 3: treeNumber += 40; break;
+      case level == 2: treeNumber += 20; break;
+      case level == 1: treeNumber += 10; break;
     }
     return treeNumber;
   }

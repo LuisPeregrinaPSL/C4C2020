@@ -47,15 +47,14 @@ export class MePage implements OnInit, AfterViewInit {
 		public navCtrl: NavController,
 		public gpsService: GpsService
 	) {
-		// This is useful in background only
-		forestWatcher.grow.subscribe((newTrees: number) => {
-			if (!GameRules.isInForeground()) {
-				console.log('Adding tree in background');
-				this.config.trees += newTrees;
-			}
+		configService.update.subscribe((config: UserConfiguration) => {
+			this.config = config;
 		});
+
+		/* forestWatcher.grow.subscribe((newTrees: number) => {
+			this.updateConfig();
+		}); */
 		forestWatcher.shrink.subscribe((newTrees: number) => {
-			this.config.trees -= newTrees;
 			this.countdown.stop();
 		});
 		forestWatcher.level.subscribe(() => {
@@ -82,6 +81,7 @@ export class MePage implements OnInit, AfterViewInit {
 			let count = await this.forestWatcher.getCount();
 			this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
 			this.fRenderer.setCurrentView('gView');
+			this.fRenderer.setLevel(await this.forestWatcher.getCurrentLevel());
 			this.fRenderer.setTreeCount(count, false);
 		}, false);
 
@@ -98,7 +98,10 @@ export class MePage implements OnInit, AfterViewInit {
 			let count = await this.forestWatcher.getCount();
 			this.fRenderer.setTreeCount(count, true);
 		});
-
+		this.forestWatcher.level.subscribe((newLevel: number) => {
+			console.log('New Level!!!');
+			this.fRenderer.setLevel(newLevel);
+		});
 	}
 
 	/**
@@ -117,8 +120,7 @@ export class MePage implements OnInit, AfterViewInit {
 				if (newTrees > 0) {
 					console.log('Adding tree in foreground');
 					this.countdown.restart();
-					/* this.drawForest(); */
-					this.updateConfig();
+					this.countdown.begin();
 					this.confettiUtil.standard();
 				}
 			}
@@ -129,18 +131,16 @@ export class MePage implements OnInit, AfterViewInit {
 
 	ngAfterViewInit() {
 		this.confettiUtil = new ConfettiUtil(this.confetti.nativeElement)
+		// TODO: This should be hooked to an EventEmitter from the configService, like configChanged.
+		this.configService.getConfiguration().then((config: UserConfiguration) => {
+			this.config = config;
+			if (config.geolocationEnabled && config.home) {
+				this.countdown.begin();
+			}
+		});
 		this.restartCountdown();
 
 		setTimeout(() => { this.confettiUtil.fanfare() }, 1000);
-	}
-
-	private updateConfig() {
-		if (this.config.geolocationEnabled) {
-			this.gpsService.start();
-		} else {
-			this.gpsService.stop();
-		}
-		this.configService.setConfiguration(this.config);
 	}
 
 	public async shareOptions() {
