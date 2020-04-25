@@ -1,21 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MePage } from './me.page';
 import { CountdownModule } from 'ngx-countdown';
-import { NativeAudio } from '@ionic-native/native-audio/ngx';
+import { ShareModule } from '@ngx-share/core';
+import { HttpClientModule } from '@angular/common/http';
+import { Platform } from '@angular/cdk/platform';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild([{ path: '', component: MePage }]),
-    CountdownModule
+    CountdownModule,
+    ShareModule,
+    HttpClientModule
   ],
-  declarations: [MePage]
+  declarations: [MePage],
+  providers: [Platform]
 })
 export class MePageModule { }

@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Settings
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6">
+        <form [formGroup]="configForm" (ngSubmit)="processForm()" (keyup.enter)="processForm()">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Settings</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-label>Geolocation enabled</ion-label>
+                <ion-checkbox slot="end" formControlName="geolocationEnabled"></ion-checkbox>
+              </ion-item>
+
+              <ion-item>
+                <ion-label>Set current location as Home:</ion-label>
+                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()">
+                  <ion-icon name="home"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </form>
+      </ion-col>
+      <ion-col size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>My Forest in time</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button (click)="loadHistory()">
+              <ion-icon name="reload"></ion-icon>
+            </ion-button>
+            <ion-button color="warning" (click)="deleteHistory()">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+            <ion-list>
+              <ng-container *ngFor="let gpsHistory of historyArray">
+                <ion-item>
+                  <ion-label>{{gpsHistory.time}}<br>
+                    Latitude:{{gpsHistory.coords.latitude}}<br>
+                    Longitude:{{gpsHistory.coords.longitude}}</ion-label>
+                  <ion-button slot="end"
+                    href="https://www.google.com.mx/maps/search/{{gpsHistory.coords.latitude}},{{gpsHistory.coords.longitude}}"
+                    target="_blank">
+                    <ion-icon name="open-outline">
+                    </ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ng-container>
+            </ion-list>
+          </ion-card-content>
+
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+
+</ion-content>

@@ -35,4 +35,6 @@ export class AppConfiguration {
         end.setHours(23, 59, 59);
         return { start: start, end: end };
     }
+
+    static WELCOME_FANFARE_TIMEOUT = 1000;
 }

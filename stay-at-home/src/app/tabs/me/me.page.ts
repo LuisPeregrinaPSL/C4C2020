@@ -1,11 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core'; // Don't remove ElementRef
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { LoadingController, Platform } from '@ionic/angular';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'; // Don't remove ElementRef
+import { Platform, NavController } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { GpsHistory } from 'src/app/gps-history';
-import { Plugins, DeviceInfo } from '@capacitor/core';
+import { Plugins } from '@capacitor/core';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { CountdownComponent } from 'ngx-countdown';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
@@ -13,228 +11,159 @@ import { Constants } from 'src/app/constants';
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { ForestWatcherService } from 'src/app/services/forest-watcher.service';
 import { ForestStatus } from 'src/app/forest-status.enum';
-import { SimpleCoordinates } from 'src/app/simple-coordinates';
-import { Utils } from 'src/app/utils';
 import { GameRules } from 'src/app/game-rules';
-import { BackgroundGeolocation, ServiceStatus } from '@ionic-native/background-geolocation/ngx';
 import { ConfettiUtil } from 'src/app/confetti-util';
+import { ForestRenderer } from 'src/app/forest-renderer';
 
-const { Device, Share } = Plugins;
+
+const { Share } = Plugins;
 
 @Component({
-  selector: 'app-me',
-  templateUrl: './me.page.html',
-  styleUrls: ['./me.page.scss'],
+	selector: 'app-me',
+	templateUrl: './me.page.html',
+	styleUrls: ['./me.page.scss'],
 })
 export class MePage implements OnInit, AfterViewInit {
-  private config: UserConfiguration = new UserConfiguration();
-  configForm: FormGroup;
-  loader: any;
-  historyArray: Array<GpsHistory>;
-  timeToGrowTree = AppConfiguration.TIME_TO_GROW_TREE / 1000;
-  @ViewChild('countdown', { static: false }) countdown: CountdownComponent;
-  countdownHack = false;
-  @ViewChild('imageCanvas', { static: false }) canvas: any;
-  canvasElement: any;
-  @ViewChild('confetti', { static: false }) confetti: any;
-  confettiUtil: ConfettiUtil;
+	config: UserConfiguration = new UserConfiguration();
+	timeToGrowTree = AppConfiguration.TIME_TO_GROW_TREE / 1000;
+	@ViewChild('countdown', { static: false }) countdown: CountdownComponent;
+	countdownHack = false;
+	@ViewChild('confetti', { static: false }) confetti: any;
+	confettiUtil: ConfettiUtil;
 
-  pageWidth: number;
-  pageHeight: number;
+	pageWidth: number;
+	pageHeight: number;
 
-  constructor(
-    public formBuilder: FormBuilder,
-    public loadingCtrl: LoadingController,
-    public configService: AppStorageService,
-    public screenshot: Screenshot,
-    public restApi: RestApiService,
-    public forestWatcher: ForestWatcherService,
-    public platform: Platform,
-    public backgroundGeolocation: BackgroundGeolocation
-  ) {
-    this.prefillAndValidateForm(new UserConfiguration());
-    this.loadFormData();
-    // This is useful in background only
-    forestWatcher.grow.subscribe((newTrees: number) => {
-      if (!GameRules.isInForeground()) {
-        console.log('Adding tree in background');
-        this.config.trees += newTrees;
-      }
-    });
-    forestWatcher.shrink.subscribe((newTrees: number) => {
-      this.config.trees -= newTrees;
-      this.countdown.stop();
-    });
-    forestWatcher.level.subscribe((newLevel: number) => {
-      this.confettiUtil.fanfare();
-    });
-  }
+	private fRenderer: ForestRenderer;
 
-  ngOnInit() {
-    // These are required to get the actual window dimentions so canvas is not pixelated.
-    this.pageWidth = this.platform.width();
-    this.pageHeight = this.platform.height();
-  }
+	iFrameDetection: any;
 
-  /**
-   * Restars the countdown and redraws forest. If we have a new tree, save the config.
-   */
-  private async restartCountdown() {
-    if (
-      this.countdown.left < 1 &&
-      this.forestWatcher.status == ForestStatus.GROWING &&
-      GameRules.isInForeground() &&
-      GameRules.shouldAppBeRunning()
-    ) {
-      // Get new tree count from right now.
-      let newTrees = await this.forestWatcher.calculate(new Date());
-      if (newTrees > 0) {
-        console.log('Adding tree in foreground');
-        this.countdown.restart();
-        this.drawForest();
-        this.updateConfig();
-        this.confettiUtil.standard();
-      }
-    }
-    setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE);
-  }
+	constructor(
+		public configService: AppStorageService,
+		public screenshot: Screenshot,
+		public restApi: RestApiService,
+		public forestWatcher: ForestWatcherService,
+		public platform: Platform,
+		public navCtrl: NavController,
+		public gpsService: GpsService
+	) {
+		// This is useful in background only
+		forestWatcher.grow.subscribe((newTrees: number) => {
+			if (!GameRules.isInForeground()) {
+				console.log('Adding tree in background');
+				this.config.trees += newTrees;
+			}
+		});
+		forestWatcher.shrink.subscribe((newTrees: number) => {
+			this.config.trees -= newTrees;
+			this.countdown.stop();
+		});
+		forestWatcher.level.subscribe(() => {
+			this.confettiUtil.fanfare();
+		});
 
-  ngAfterViewInit() {
-    this.canvasElement = this.canvas.nativeElement;
-    this.confettiUtil = new ConfettiUtil(this.confetti.nativeElement)
-    this.restartCountdown();
+		// iFrame detection
+		this.iFrameDetection = setInterval(() => {
+			var elem = document.activeElement;
+			if (elem && elem.tagName == 'IFRAME' && elem.id == 'vrWindow') {
+				this.navCtrl.navigateForward('tabs/cities')
+				clearInterval(this.iFrameDetection);
+			}
+		}, 100);
+	}
 
-    this.confettiUtil.standard();
-  }
+	ngOnInit() {
+		// These are required to get the actual window dimentions so canvas is not pixelated.
+		this.pageWidth = this.platform.width();
+		this.pageHeight = this.platform.height();
 
-  async loadFormData() {
-    this.loader = await this.loadingCtrl.create({
-      message: 'Loading configuration...',
-      backdropDismiss: true
-    });
-    this.loader.present().then(() => {
-      // Load the ones set by admin
-      this.configService.getConfiguration().then(
-        (newConfig: UserConfiguration) => {
-          this.config = newConfig;
-        }, () => {
-          this.config = new UserConfiguration();
-        }).finally(() => {
-          Device.getInfo().then((info: DeviceInfo) => {
-            if (info.uuid != this.config.deviceId) {
-              this.config.deviceId = info.uuid;
-              this.updateConfig();
-            }
-          }).finally(() => {
-            this.prefillAndValidateForm(this.config);
-            this.drawForest();
-            this.loader.dismiss();
-          });
-        });
-    });
-  }
+		window.addEventListener('onVRLoaded', async (e: any) => {
+			console.log('Getting onVRLoaded');
+			let count = await this.forestWatcher.getCount();
+			this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
+			this.fRenderer.setCurrentView('gView');
+			this.fRenderer.setTreeCount(count, false);
+		}, false);
 
-  public setHome() {
-    GpsService.getCurrentPosition().then((newCoords: SimpleCoordinates) => {
-      if (this.config && (this.config.home == undefined || newCoords.latitude != this.config.home.latitude || newCoords.longitude != this.config.home.longitude)) {
-        this.config.home = newCoords;
-        this.updateConfig();
-      }
-    });
-  }
+		window.addEventListener('onVRChangeView', async (e: any) => {
+			console.log('Getting onVRChangeView');
+			if (this.fRenderer != null) {
+				this.fRenderer.setCurrentView(e.view);
+			}
 
-  /**
-   * Links the configuration so that onChanges() works.
-   * @param formData UserConfiguration
-   */
-  public prefillAndValidateForm(formData: UserConfiguration) {
-    this.configForm = this.formBuilder.group({
-      geolocationEnabled: [formData.geolocationEnabled]
-    })
-    this.onChanges();
-  }
+		}, false);
 
-  /**
-   * Changes this.config based on changes on the form. Namely the geopositioning.
-   */
-  private onChanges(): void {
-    this.configForm.valueChanges.subscribe(formVal => {
-      console.log(formVal);
-      let changed = false;
-      for (let item in formVal) {
-        if (this.config[item] != undefined && this.config[item] != formVal[item] && formVal[item] != undefined) {
-          this.config[item] = formVal[item];
-          console.log("Updated this.config[" + item + "] to \"" + this.config[item] + "\"")
-          changed = true;
-        }
-      }
-      if (changed) {
-        this.updateConfig();
-      }
-    });
-  }
+		this.forestWatcher.grow.subscribe(async () => {
+			console.log('Listener Events.GROWING');
+			let count = await this.forestWatcher.getCount();
+			this.fRenderer.setTreeCount(count, true);
+		});
 
-  public async loadHistory() {
-    this.configService.getHistory().then((history: Array<GpsHistory>) => {
-      this.historyArray
-    });
-  }
+	}
 
-  public async deleteHistory() {
-    this.historyArray = [];
-    this.configService.deleteHistory();
-  }
+	/**
+	 * Restars the countdown and redraws forest. If we have a new tree, save the config.
+	 */
+	private async restartCountdown() {
+		if (this.config) {
+			if (
+				this.countdown.left < 1 &&
+				this.forestWatcher.status == ForestStatus.GROWING &&
+				GameRules.isInForeground() &&
+				GameRules.shouldAppBeRunning()
+			) {
+				// Get new tree count from right now.
+				let newTrees = await this.forestWatcher.calculate(new Date());
+				if (newTrees > 0) {
+					console.log('Adding tree in foreground');
+					this.countdown.restart();
+					/* this.drawForest(); */
+					this.updateConfig();
+					this.confettiUtil.standard();
+				}
+			}
+		}
 
-  private updateConfig() {
-    if (this.config.geolocationEnabled) {
-      this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
-        if (!status.isRunning) {
-          console.debug('Starting background geolocation')
-          this.backgroundGeolocation.start();
-        }
-      });
-    } else {
-      this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
-        if (status.isRunning) {
-          console.debug('Stopping background geolocation')
-          this.backgroundGeolocation.stop();
-        }
-      });
-    }
-    this.configService.setConfiguration(this.config);
-  }
+		setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE);
+	}
 
-  public async shareOptions() {
-    this.screenshot.URI(50).then(resolved => {
-      this.restApi.uploadImage(this.config.deviceId, resolved.URI);
-    });
-    Share.share({
-      title: 'Stay@home',
-      text: 'I have ' + this.config.trees + ' trees in my forest. Can you beat my record?',
-      url: Constants.SERVER + '?id=' + this.config.deviceId,
-      dialogTitle: 'Share with buddies'
-    });
-  }
+	ngAfterViewInit() {
+		this.confettiUtil = new ConfettiUtil(this.confetti.nativeElement)
+		this.restartCountdown();
 
-  private drawForest() {
-    var treeImage = new Image(12, 20);
-    treeImage.src = './assets/icon/tree.svg';
-    let ctx = this.canvasElement.getContext('2d');
-    ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+		setTimeout(() => { this.confettiUtil.fanfare() }, 1000);
+	}
 
-    var gradient = ctx.createLinearGradient(0, 0, this.canvasElement.width, this.canvasElement.height);
-    gradient.addColorStop(0, '#9dc648');
-    gradient.addColorStop(1, '#308963');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+	private updateConfig() {
+		if (this.config.geolocationEnabled) {
+			this.gpsService.start();
+		} else {
+			this.gpsService.stop();
+		}
+		this.configService.setConfiguration(this.config);
+	}
 
-    treeImage.onload = () => {
-      for (let i = 0; i < this.config.trees; i++) {
-        let randomX = Utils.getRandomInt(this.canvasElement.width);
-        let randomY = Utils.getRandomInt(this.canvasElement.height)
-        ctx.drawImage(treeImage, randomX, randomY, treeImage.width, treeImage.height);
-      }
+	public async shareOptions() {
+		try {
+			this.screenshot.URI(50).then(resolved => {
+				this.restApi.uploadImage(this.config.deviceId, resolved.URI);
+			});
+		} catch (e) { }
 
-    }
-  }
+		Share.share({
+			title: 'Stay@home',
+			text: 'I have ' + this.config.trees + ' trees in my forest. Can you beat my record?',
+			url: Constants.SERVER + '?id=' + this.config.deviceId,
+			dialogTitle: 'Share with buddies'
+		});
+
+	}
+
+	public goToForestTab() {
+		this.navCtrl.navigateForward('tabs/cities');
+	}
+
+	private isBrowser() {
+		return this.platform.is('desktop');
+	}
 }
