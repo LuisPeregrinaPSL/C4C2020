@@ -44,7 +44,7 @@ export class ForestRenderer {
     private setEvents() {
         this.__aframe.registerComponent('show-three-info', {
             schema: {
-              color: {default: 'red'}
+              
             },
         
             init: function () {
@@ -152,6 +152,7 @@ export class ForestRenderer {
 
     private addNewTrees(diff: number, animation: boolean) {
         console.log('Adding ' + diff + ' new trees...');
+        //diff=1;
         if(diff > 0) {
             for(var i = 0; i < diff; i++) {
                 this.addTree(animation);
@@ -163,19 +164,20 @@ export class ForestRenderer {
         //console.log('Adding new tree...');
         var x = Utils.getRandomFloat(CoordRanges.xMin, CoordRanges.xMax);
         //var y = Utils.getRandomInt(CoordRanges.yMin, CoordRanges.yMax);
-        var y = 0;
+        var y = 0.310;
         var z = Utils.getRandomFloat(CoordRanges.zMin, CoordRanges.zMax);
         var entity = this.__document.createElement('a-entity');
         entity.setAttribute('id', 'tree');
+        entity.setAttribute('position', x + ' ' + y + ' ' + z);
         entity.setAttribute('scale', TreeScale.x + ' ' + TreeScale.y + ' ' + TreeScale.z);
         if(animation) {
-            entity.setAttribute('position', x + ' ' + 2.2 + ' ' + z);
-            entity.setAttribute('animation', 'property: object3D.position.y; to: ' + y + '; dir: alternate; dur: 2000; loop: false');
+            entity.setAttribute('scale', TreeScale.x + ' ' + 0 + ' ' + TreeScale.z);
+            entity.setAttribute('animation', 'property: object3D.scale.y; to: ' + TreeScale.y + '; dir: alternate; dur: 2000; loop: false');
         }
-        else entity.setAttribute('position', x + ' ' + y + ' ' + z);
+        else entity.setAttribute('scale', TreeScale.x + ' ' + TreeScale.y + ' ' + TreeScale.z);
 
         entity.setAttribute('rotation', '0 0 0');
-        entity.setAttribute('gltf-model', '#tree2');
+        entity.setAttribute('gltf-model', '#pine');
         entity.setAttribute('animation-mixer', 'clip: *;');
         entity.setAttribute('show-three-info', 'text: Stay At Home');
         
