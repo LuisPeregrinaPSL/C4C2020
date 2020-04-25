@@ -46,6 +46,7 @@ export class CitiesPage implements OnInit, AfterViewInit {
       console.log('Getting onVRLoaded');
       let count = await this.forestWatcher.getCount();
       this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
+      this.fRenderer.showInformationPane();
       this.fRenderer.setCurrentView('gView');
       this.fRenderer.setTreeCount(count, false);
     }, false);

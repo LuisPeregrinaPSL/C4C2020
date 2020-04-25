@@ -8,7 +8,7 @@ export class ForestRenderer {
     private scene: any;
     private txt: Element;
     private env: Element;
-    private infoBlock: Element;
+    private infoBlock: any;
     private countInfo: Element;
     private currentView: Element;
     private treeCount: number = 0;
@@ -84,6 +84,10 @@ export class ForestRenderer {
         this.env.setAttribute('environment', 'dressingAmount:' + this.backCount);
         var diff = this.treeCount - this.backCount;
         return diff;
+    }
+
+    public showInformationPane() {
+        this.infoBlock.style.visibility = 'visible';
     }
 
     public setCurrentView(view: string) {
