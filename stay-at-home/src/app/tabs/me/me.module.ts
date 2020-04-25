@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MePage } from './me.page';
-import { CountdownModule } from 'ngx-countdown';
+import { CountdownModule, CountdownGlobalConfig } from 'ngx-countdown';
 import { ShareModule } from '@ngx-share/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Platform } from '@angular/cdk/platform';
@@ -18,6 +18,9 @@ import { Platform } from '@angular/cdk/platform';
     HttpClientModule
   ],
   declarations: [MePage],
-  providers: [Platform]
+  providers: [
+    Platform,
+    CountdownGlobalConfig
+  ]
 })
 export class MePageModule { }

@@ -163,7 +163,7 @@ export class MePage implements OnInit, AfterViewInit {
 		this.navCtrl.navigateForward('tabs/cities');
 	}
 
-	private isBrowser() {
+	public isBrowser() {
 		return this.platform.is('desktop');
 	}
 }
