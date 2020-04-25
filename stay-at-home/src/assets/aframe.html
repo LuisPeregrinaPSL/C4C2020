@@ -10,10 +10,10 @@
       function sendLoad(){
         console.log('sendLoad');
         var event = new CustomEvent('onVRLoaded');
-        var vector = new THREE.Vector3( 0.28, 0.22, -0.23 );
+        /*var vector = new THREE.Vector3( 0.28, 0.22, -0.23 );
         console.log(vector);
         var fVector = document.querySelector('a-scene').object3D.localToWorld(vector);
-        console.log(fVector);
+        console.log(fVector);*/
         event.document = document;
         event.aframe = AFRAME;
         event.three = THREE;
@@ -59,8 +59,8 @@
             <a-asset-item id="tree2" src="/assets/gltf/tree4.glb"></a-asset-item>
             <a-asset-item id="pine" src="/assets/gltf/pine.glb"></a-asset-item>
             <a-asset-item id="palm" src="/assets/gltf/palm.glb"></a-asset-item>
-            
             <a-asset-item id="bubinga" src="/assets/gltf/bubinga.glb"></a-asset-item>
+            <a-asset-item id="forest" src="/assets/gltf/forest.glb"></a-asset-item>
             <a-mixin id="red" material="color: red"></a-mixin>
             <a-mixin id="blue" material="color: blue"></a-mixin>
             <a-mixin id="cube" geometry="primitive: box"></a-mixin>
@@ -89,7 +89,7 @@
       <a-camera id="gView" active="false" keyboard-controls wasd-controls look-controls position="0 1.6 0"></a-camera>
     </a-entity>
 
-    <a-entity position="0 1.6 0">
+    <a-entity position="0 10 0">
       <a-camera id="aView" active="false" keyboard-controls wasd-controls look-controls></a-camera>
     </a-entity>
 

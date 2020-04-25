@@ -133,7 +133,13 @@ export class ForestRenderer {
             this.frontCount = GameRules.getTreesByLevel(this.level);
             console.log('Setting frontCount to', this.frontCount);
         }
-        this.resetLandscape();
+        else{
+            this.resetLandscape();
+            this.convertLastLevelIntoForest();
+        }
+        if(this.level > 0) {
+            this.convertLastLevelIntoForest();
+        }
         this.model = getTreeModelByLevel(this.level);
     }
 
@@ -241,5 +247,25 @@ export class ForestRenderer {
         }
     }
 
+    private convertLastLevelIntoForest() {
+        var forestModel = getTreeModel('forest');
+        var scaleFactor = this.level / 1.3;
+        var x = -27.074 * scaleFactor;
+        var y = forestModel.posY;
+        var z = -51.216 * scaleFactor;
+        var entity = this.__document.createElement('a-entity');
+        entity.setAttribute('id', forestModel.id);
+        entity.setAttribute('position', x + ' ' + y + ' ' + z);
+        //entity.setAttribute('scale', model.scaleX + ' ' + model.scaleY + ' ' + model.scaleZ);
+        entity.setAttribute('scale', (forestModel.scaleX * scaleFactor) + ' ' + forestModel.minY + ' ' + (forestModel.scaleZ * scaleFactor) );
+        entity.setAttribute('animation', 'property: object3D.scale.y; to: ' + (forestModel.scaleY * scaleFactor)  + '; dir: alternate; dur: 2000; loop: false');
+
+        entity.setAttribute('rotation', '0 0 0');
+        entity.setAttribute('gltf-model', '#'+forestModel.gltfModel);
+        entity.setAttribute('animation-mixer', '');
+        entity.setAttribute('show-three-info', 'text: I am a ' + forestModel.name);
+        
+        this.scene.appendChild(entity);
+    }
     
 }
