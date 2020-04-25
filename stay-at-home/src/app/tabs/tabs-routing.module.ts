@@ -17,8 +17,8 @@ const routes: Routes = [
         loadChildren: () => import('./states/states.module').then(m => m.StatesPageModule)
       },
       {
-        path: 'countries',
-        loadChildren: () => import('./countries/countries.module').then(m => m.CountriesPageModule)
+        path: 'settings',
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsPageModule)
       },
       {
         path: 'me',
