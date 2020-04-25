@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Staying@home</ion-title>
+    <ion-title>Stay@Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,8 +15,9 @@
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <!--img src="./assets/arboles/default.png" /-->
-            <canvas #imageCanvas (click)="drawForest()" id='forest'></canvas>
+            <div (click)="goToForestTab();">
+              <iframe id="vrWindow" src="/assets/aframe.html" width="100%" height="300vh"></iframe>
+            </div>
             <ion-item>
               <ion-label>Trees in my forest:</ion-label>
               <ion-text slot="end">{{config.trees}}</ion-text>
@@ -33,64 +34,48 @@
       </ion-col>
 
       <ion-col size-md="6">
-        <form [formGroup]="configForm" (ngSubmit)="processForm()" (keyup.enter)="processForm()">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Settings</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-item>
-                <ion-label>Geolocation enabled</ion-label>
-                <ion-checkbox slot="end" formControlName="geolocationEnabled"></ion-checkbox>
-              </ion-item>
-
-              <ion-item>
-                <ion-label>Set current location as Home:</ion-label>
-                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()">
-                  <ion-icon name="home"></ion-icon>
-                </ion-button>
-              </ion-item>
-            </ion-card-content>
-          </ion-card>
-        </form>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-
-      <ion-col size-md="12">
         <ion-card>
 
           <ion-card-header>
             <ion-card-title>My forest in time</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button (click)="loadHistory()">
-              <ion-icon name="reload"></ion-icon>
-            </ion-button>
-            <ion-button color="warning" (click)="deleteHistory()">
-              <ion-icon name="trash"></ion-icon>
-            </ion-button>
             <ion-list>
               <ng-container *ngFor="let gpsHistory of historyArray">
-                <ion-item *ngIf="gpsHistory.newTrees>0">
-                  <ion-label *ngIf="gpsHistory.newTrees==1">{{gpsHistory.time | date:'short'}}: 1 tree.</ion-label>
-                  <ion-label *ngIf="gpsHistory.newTrees>1">{{gpsHistory.time | date:'short'}}:
-                    {{gpsHistory.newTrees}} trees.
+                <ion-item *ngIf="gpsHistory.trees>0">
+                  <ion-label *ngIf="gpsHistory.trees==1">{{gpsHistory.time | date:'short'}}: 1 tree.</ion-label>
+                  <ion-label *ngIf="gpsHistory.trees>1">{{gpsHistory.time | date:'short'}}:
+                    {{gpsHistory.trees}} trees.
                   </ion-label>
                 </ion-item>
               </ng-container>
             </ion-list>
           </ion-card-content>
-
         </ion-card>
       </ion-col>
+
     </ion-row>
   </ion-grid>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
+    <ion-fab-button *ngIf="!isBrowser()">
       <ion-icon name="share-social" (click)="shareOptions()"></ion-icon>
     </ion-fab-button>
+    <ion-fab-button *ngIf="isBrowser()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list *ngIf="isBrowser()" side="start">
+      <ion-fab-button color="light" shareButton="facebook">
+        <ion-icon name="logo-facebook"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light" shareButton="twitter">
+        <ion-icon name="logo-twitter"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light" shareButton="linkedin">
+        <ion-icon name="logo-linkedin"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
   </ion-fab>
+
 
 </ion-content>
