@@ -58,12 +58,24 @@ export class AppStorageService {
    * @param config UserConfiguration
    */
   public async _setConfiguration(config: UserConfiguration) {
-    console.debug("Saving config:");
-    console.debug(config);
+    console.debug("Saving config");
     await this.storage.set(Constants.CONFIGURATION, JSON.stringify(config));
     this.cachedConfig = config;
     this.update.emit(config);
   }
+
+  /**
+ * Cached
+ * @param config UserConfiguration
+ */
+  public async deleteConfiguration() {
+    console.warn("Deleting config");
+    let config = new UserConfiguration()
+    await this.storage.set(Constants.CONFIGURATION, JSON.stringify(config));
+    this.cachedConfig = null;
+    this.update.emit(config);
+  }
+
 
   public async getHistory(): Promise<Array<GpsHistory>> {
     console.debug("Getting history");

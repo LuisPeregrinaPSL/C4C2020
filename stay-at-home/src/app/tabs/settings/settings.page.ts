@@ -8,7 +8,7 @@ import { UserConfiguration } from 'src/app/user-configuration';
 import { Plugins, DeviceInfo } from '@capacitor/core';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
 
-const { Device, Browser } = Plugins;
+const { Device, Browser, Modals } = Plugins;
 
 @Component({
   selector: 'app-settings',
@@ -126,5 +126,19 @@ export class SettingsPage {
 
   async open(url: string) {
     await Browser.open({ url: url });
+  }
+
+  public deleteSettings() {
+    Modals.confirm({
+      title: 'Confirm',
+      message: 'Are you sure you\'d like to press the red button?'
+    }).then(result => {
+      if (result) {
+        this.configService.deleteConfiguration();
+        this.config = new UserConfiguration();
+        this.loadFormData();
+      }
+
+    });
   }
 }

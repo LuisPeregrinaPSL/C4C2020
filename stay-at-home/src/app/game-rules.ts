@@ -58,9 +58,10 @@ export class GameRules {
     let trees = config.trees;
     let level = 0;
     switch (true) {
-      case trees >= 200: level++;
+      case trees >= 1280: level++;
+      case trees >= 640: level++;
+      case trees >= 320: level++;
       case trees >= 160: level++;
-      case trees >= 120: level++;
       case trees >= 80: level++;
       case trees >= 40: level++;
       case trees >= 20: level++;
@@ -68,16 +69,16 @@ export class GameRules {
     }
     return level;
   }
-
   /**
   * Should return the number of trees at a particular level.
   */
   static getTreesByLevel(level: number) {
     let treeNumber = 0;
     switch (true) {
-      case level == 7: treeNumber += 200; break;
-      case level == 6: treeNumber += 160; break;
-      case level == 5: treeNumber += 120; break;
+      case level == 8: treeNumber += 1280; break;
+      case level == 7: treeNumber += 640; break;
+      case level == 6: treeNumber += 320; break;
+      case level == 5: treeNumber += 160; break;
       case level == 4: treeNumber += 80; break;
       case level == 3: treeNumber += 40; break;
       case level == 2: treeNumber += 20; break;

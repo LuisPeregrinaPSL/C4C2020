@@ -22,9 +22,18 @@
               </ion-item>
 
               <ion-item>
-                <ion-label>Set current location as Home:</ion-label>
-                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()">
+                <ion-label>Set current location as Home</ion-label>
+                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()" style="width:10%;">
                   <ion-icon name="home"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-list-header>
+                <ion-label>Warning</ion-label>
+              </ion-list-header>
+              <ion-item>
+                <ion-label>Delete settings</ion-label>
+                <ion-button color="danger" (click)="deleteSettings()" style="width:10%;">
+                  <ion-icon name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-card-content>

@@ -53,6 +53,9 @@ export class MePage implements OnInit, AfterViewInit {
 			if (config.geolocationEnabled && config.home) {
 				this.countdown.begin();
 			}
+			if (config.trees > 1000) {
+				this.configService.deleteConfiguration();
+			}
 		});
 
 		/* forestWatcher.grow.subscribe((newTrees: number) => {
