@@ -235,12 +235,7 @@ export class ForestRenderer {
             this.backCount+=this.frontCount;
             this.countInfo.innerHTML='You have reached the count limit, reseting landscape....';
             
-            var obj: any;
-            while(obj = this.scene.querySelector('a-entity#' + this.model.id)) {
-                console.log('removing...');
-                console.log(obj);
-                this.scene.removeChild(obj);
-            }
+            this.removeItems(this.model.id);
 
             this.frontCount = 0;
             this.env.setAttribute('environment', 'dressingAmount:' + this.backCount);
@@ -249,10 +244,12 @@ export class ForestRenderer {
 
     private convertLastLevelIntoForest() {
         var forestModel = getTreeModel('forest');
-        var scaleFactor = this.level / 1.3;
+        this.removeItems(forestModel.id);
+
+        var scaleFactor = this.level / 1.1;
         var x = -27.074 * scaleFactor;
         var y = forestModel.posY;
-        var z = -51.216 * scaleFactor;
+        var z = -41.216 * scaleFactor;
         var entity = this.__document.createElement('a-entity');
         entity.setAttribute('id', forestModel.id);
         entity.setAttribute('position', x + ' ' + y + ' ' + z);
@@ -268,4 +265,14 @@ export class ForestRenderer {
         this.scene.appendChild(entity);
     }
     
+    private removeItems(itemId: string) {
+        console.log('removeItems');
+
+        var obj: any;
+        while(obj = this.scene.querySelector('a-entity#' + itemId)) {
+            console.log('removing...');
+            console.log(obj);
+            this.scene.removeChild(obj);
+        }
+    }
 }
