@@ -9,15 +9,22 @@
   <ion-grid>
     <ion-row>
       <ion-col size-md="6">
+        <ion-card id="vr">
+          <ion-card-content>
+            <div (click)="goToForestTab();">
+              <iframe id="vrWindow" src="/assets/aframe.html" style="width: 100%; height: 300pt" ></iframe>
+            </div>
+          </ion-card-content>
+        </ion-card>
+        </ion-col>
+
+      <ion-col size-md="6">
         <ion-card>
           <ion-card-header>
             <ion-card-title>My forest
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <div (click)="goToForestTab();">
-              <iframe id="vrWindow" src="/assets/aframe.html" width="100%" height="300vh"></iframe>
-            </div>
             <ion-item>
               <ion-label>Forest level:</ion-label>
               <ion-text slot="end">{{config.level}}</ion-text>
@@ -35,9 +42,6 @@
             </ion-item>
           </ion-card-content>
         </ion-card>
-      </ion-col>
-
-      <ion-col size-md="6">
         <ion-card>
 
           <ion-card-header>
