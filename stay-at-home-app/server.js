@@ -13,7 +13,10 @@ app.use(function (request, response, next) {
 });
 
 app.use(express.static(path.join(__dirname, 'www')));
-
+//Redirect for when refreshed.
+app.get('*', function (req, res) {
+    res.redirect('/');
+});
 var port = process.env.PORT || 3000
 http.createServer(app).listen(port);
 //https.createServer(options, app).listen(443);
