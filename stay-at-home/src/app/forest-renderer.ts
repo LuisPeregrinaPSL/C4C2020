@@ -37,30 +37,21 @@ export class ForestRenderer {
         this.setEvents();
 
         this.setLevel(0);
-
-        /*
-        console.log('Calling pool');
-        console.log(this.scene.components);
-        var el = this.scene.components.pool__red.requestEntity();
-        el.play();
-        this.scene.components.pool__red.returnEntity(el);
-        */
         
     }
 
     private setEvents() {
-        this.__aframe.registerComponent('show-three-info', {
+        this.__aframe.registerComponent('three-info', {
             schema: {
-              
             },
         
             init: function () {
-            //console.log('INIT');
-            //console.log(this);
               var data = this.data;
               var el = this.el;  // <a-entity>
               //var defaultColor = el.getAttribute('material').color;
               var info = el.parentNode.parentNode.querySelector('#info_block').querySelector('#content');
+              var info_tree = el.parentNode.parentNode.querySelector('#tree_info');
+              
 
               el.addEventListener('mouseenter', function () {
                 info.innerHTML = data.text;
@@ -69,13 +60,38 @@ export class ForestRenderer {
         
               el.addEventListener('mouseleave', function () {
                 info.innerHTML = '<br>';
+                info_tree.style.visibility = 'hidden';
                 //el.setAttribute('color', defaultColor);
               });
 
-              el.addEventListener('click', function (evt) {
-                info.innerHTML = 'You click on a tree!!!';
+              el.addEventListener('click', (evt) => {
+                //info.innerHTML = 'Alive since: ' + this.getElapsedTime(data.timestamp);
+                info_tree.style.visibility = 'visible';
+                info_tree.querySelector('#tree_name').innerHTML = '<h2>'+data.name+'</h2>';
+                info_tree.querySelector('#tree_time').innerHTML = 'Alive since <strong>'+this.getElapsedTime(data.timestamp)+'</strong>';
+                info_tree.querySelector('#tree_content').innerHTML = data.info;
                 //evt.detail.intersection.point;
               });
+            },
+            getElapsedTime: function(timestamp) {
+                var currentDate = new Date();
+                var time = currentDate.getTime() - timestamp;
+                var seconds =  time / 1000;
+                var resSeconds = (time % 1000)/1000;
+                seconds = seconds - resSeconds;
+                
+                var minutes = seconds / 60;
+                var resMinutes = seconds % 60;
+                minutes = minutes - (resMinutes/60);
+                seconds = resMinutes;
+
+                var hours = minutes / 60;
+                var resHours= minutes % 60;
+                hours = hours - (resHours/60);
+                minutes = resHours;
+
+                return Math.round(hours) + ' hrs ' + Math.round(minutes) + ' min ' + Math.round(seconds) + ' sec';
+
             }
           });
     }
@@ -168,17 +184,37 @@ export class ForestRenderer {
             console.log('setInitialAmount: ', diff);
         }
         console.log('diff: ', diff);
-        if(diff > 0){
-            if((this.treeCount - this.backCount) > this.treeLimit) {
-                this.resetLandscape();
-                diff = this.treeCount - this.backCount;
-                console.log('new diff', diff);
-                //this.treeCount = diff;
-            }
+        
+        //GROW
+        if(this.treeCount > previousCount) {
+            if(diff > 0){
+                if((this.treeCount - this.backCount) > this.treeLimit) {
+                    this.resetLandscape();
+                    diff = this.treeCount - this.backCount;
+                    console.log('new diff', diff);
+                    //this.treeCount = diff;
+                }
 
-            this.addNewTrees(diff, animation);
-            //this.txt.setAttribute('value', 'You have ' + this.treeCount + ' trees');
-            this.countInfo.innerHTML='You have ' + this.treeCount + ' trees';
+                this.addNewTrees(diff, animation);
+                //this.txt.setAttribute('value', 'You have ' + this.treeCount + ' trees');
+                this.countInfo.innerHTML='You have ' + this.treeCount + ' trees';
+            }
+        } //SHRINK
+        else if(this.treeCount < previousCount) {
+            diff = previousCount - this.treeCount;
+            if(diff > 0){
+                /*
+                if((this.treeCount - this.backCount) > this.treeLimit) {
+                    this.resetLandscape();
+                    diff = this.treeCount - this.backCount;
+                    console.log('new diff', diff);
+                    //this.treeCount = diff;
+                }
+                */
+                this.removeTrees(diff, animation);
+                //this.txt.setAttribute('value', 'You have ' + this.treeCount + ' trees');
+                this.countInfo.innerHTML='You have ' + this.treeCount + ' trees';
+            }
         }
     }
 
@@ -189,6 +225,17 @@ export class ForestRenderer {
         if(diff > 0) {
             for(var i = 0; i < diff; i++) {
                 this.addTree(animation);
+            }
+        }
+    }
+
+    private removeTrees(diff: number, animation: boolean) {
+        console.log('Removing ' + diff + ' new trees...');
+        this.frontCount+=diff;
+        //diff=1;
+        if(diff > 0) {
+            for(var i = 0; i < diff; i++) {
+                this.removeTree(this.model.id);
             }
         }
     }
@@ -210,11 +257,12 @@ export class ForestRenderer {
         }
         else entity.setAttribute('scale', this.model.scaleX + ' ' + this.model.scaleY + ' ' + this.model.scaleZ);
 
+        var createdDate: Date = new Date();
+
         entity.setAttribute('rotation', '0 0 0');
         entity.setAttribute('gltf-model', '#'+this.model.gltfModel);
         entity.setAttribute('animation-mixer', '');
-        entity.setAttribute('show-three-info', 'text: I am a ' + this.model.name);
-        
+        entity.setAttribute('three-info', 'name: ' + this.model.name + '; info: ' + this.model.info + '; text: I am a ' + this.model.name + '; created: ' + new Date() + '; timestamp: ' + createdDate.getTime() + '; model: ' + this.model.src);
 
         var animEntity = this.__document.createElement('a-animation');
         animEntity.setAttribute('begin', 'click');
@@ -270,6 +318,17 @@ export class ForestRenderer {
 
         var obj: any;
         while(obj = this.scene.querySelector('a-entity#' + itemId)) {
+            console.log('removing...');
+            console.log(obj);
+            this.scene.removeChild(obj);
+        }
+    }
+
+    private removeTree(itemId: string) {
+        console.log('removeTree');
+
+        var obj: any;
+        if(obj = this.scene.querySelector('a-entity#' + itemId)) {
             console.log('removing...');
             console.log(obj);
             this.scene.removeChild(obj);

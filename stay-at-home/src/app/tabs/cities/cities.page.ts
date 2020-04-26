@@ -74,6 +74,12 @@ export class CitiesPage implements OnInit, AfterViewInit {
       this.fRenderer.setTreeCount(count, true);
     });
 
+    this.forestWatcher.shrink.subscribe(async(newTrees: number) => {
+			console.log('Listener Events.SHRINK');
+      let count = await this.forestWatcher.getCount();
+      this.fRenderer.setTreeCount(count, true);
+    });
+    
     this.forestWatcher.level.subscribe((newLevel: number) => {
       console.log('New Level!!!');
       this.fRenderer.setLevel(newLevel);
