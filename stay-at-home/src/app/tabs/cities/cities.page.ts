@@ -28,6 +28,11 @@ export class CitiesPage implements OnInit, AfterViewInit {
     public tabsSvc: TabsService,
     public loadingCtrl: LoadingController
   ) {
+    console.log('contructor');
+    if(this.fRenderer != null) {
+      console.log('showInformationPane');
+      this.fRenderer.showInformationPane();
+    }
   }
 
   iframeLoaded() {
@@ -42,15 +47,18 @@ export class CitiesPage implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log('Setting events');
-    window.addEventListener('onVRLoaded', async (e: any) => {
-      console.log('Getting onVRLoaded');
+
+    var onVRMethod = async (e: any) => {
+			console.log('Getting onVRLoaded on cities');
       let count = await this.forestWatcher.getCount();
       this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
       this.fRenderer.showInformationPane();
       this.fRenderer.setCurrentView('gView');
       this.fRenderer.setLevel(await this.forestWatcher.getCurrentLevel());
       this.fRenderer.setTreeCount(count, false);
-    }, false);
+      };
+      
+    window.addEventListener('onVRLoaded', onVRMethod, false);
 
     window.addEventListener('onVRChangeView', async (e: any) => {
       console.log('Getting onVRChangeView');

@@ -76,22 +76,18 @@ export class MePage implements OnInit, AfterViewInit {
 		this.pageWidth = this.platform.width();
 		this.pageHeight = this.platform.height();
 
-		window.addEventListener('onVRLoaded', async (e: any) => {
-			console.log('Getting onVRLoaded');
+		var onVRMethod = async (e: any) => {
+			console.log('Getting onVRLoaded on me');
 			let count = await this.forestWatcher.getCount();
 			this.fRenderer = new ForestRenderer(e.document, e.aframe, e.three);
 			this.fRenderer.setCurrentView('gView');
 			this.fRenderer.setLevel(await this.forestWatcher.getCurrentLevel());
 			this.fRenderer.setTreeCount(count, false);
-		}, false);
 
-		window.addEventListener('onVRChangeView', async (e: any) => {
-			console.log('Getting onVRChangeView');
-			if (this.fRenderer != null) {
-				this.fRenderer.setCurrentView(e.view);
-			}
+			window.removeEventListener('onVRLoaded', onVRMethod, false);
+		  };
 
-		}, false);
+		window.addEventListener('onVRLoaded', onVRMethod, false);
 
 		this.forestWatcher.grow.subscribe(async () => {
 			console.log('Listener Events.GROWING');
