@@ -39,7 +39,7 @@ app.use(function (request, response, next) {
 });
 
 
-var titleShort = 'Staying@home';
+var titleShort = 'Stay@Home';
 var titleLong = titleShort;
 
 // IBM VCAP usage
@@ -82,8 +82,7 @@ app.use(previewImageURL, express.static(tmpDir.name))
 app.use(express.static(path.join(__dirname, 'public')));
 
 var standardRequest = function (req, res, opts) {
-    var fileName = req.query.id == undefined ? 'default' : req.query.id;
-    opts.imageFileName = previewImageURL + '/' + fileName + '.' + previewImageExtension;
+    opts.imageFileName = req.query.id == undefined ? '/icon/favicon.png' : previewImageURL + '/' + req.query.id + '.' + previewImageExtension;
     opts.titleLong = titleLong;
     opts.titleShort = titleShort;
     res.render(req.params.page, opts)
