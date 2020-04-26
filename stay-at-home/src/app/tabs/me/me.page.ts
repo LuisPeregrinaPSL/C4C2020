@@ -3,7 +3,7 @@ import { Platform, NavController } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { Plugins } from '@capacitor/core';
+import { Plugins, Toast } from '@capacitor/core';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { CountdownComponent } from 'ngx-countdown';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
@@ -49,12 +49,16 @@ export class MePage implements OnInit, AfterViewInit {
 	) {
 		configService.update.subscribe((config: UserConfiguration) => {
 			this.config = config;
+
+			if (config.geolocationEnabled && config.home) {
+				this.countdown.begin();
+			}
 		});
 
 		/* forestWatcher.grow.subscribe((newTrees: number) => {
 			this.updateConfig();
 		}); */
-		forestWatcher.shrink.subscribe((newTrees: number) => {
+		forestWatcher.shrink.subscribe(() => {
 			this.countdown.stop();
 		});
 		forestWatcher.level.subscribe(() => {
@@ -85,7 +89,7 @@ export class MePage implements OnInit, AfterViewInit {
 			this.fRenderer.setTreeCount(count, false);
 
 			window.removeEventListener('onVRLoaded', onVRMethod, false);
-		  };
+		};
 
 		window.addEventListener('onVRLoaded', onVRMethod, false);
 
@@ -117,7 +121,6 @@ export class MePage implements OnInit, AfterViewInit {
 					console.log('Adding tree in foreground');
 					this.countdown.restart();
 					this.countdown.begin();
-					this.confettiUtil.standard();
 				}
 			}
 		}
@@ -127,16 +130,13 @@ export class MePage implements OnInit, AfterViewInit {
 
 	ngAfterViewInit() {
 		this.confettiUtil = new ConfettiUtil(this.confetti.nativeElement)
-		// TODO: This should be hooked to an EventEmitter from the configService, like configChanged.
-		this.configService.getConfiguration().then((config: UserConfiguration) => {
-			this.config = config;
-			if (config.geolocationEnabled && config.home) {
-				this.countdown.begin();
-			}
-		});
 		this.restartCountdown();
 
-		setTimeout(() => { this.confettiUtil.fanfare() }, 1000);
+		setTimeout(() => { this.confettiUtil.standard() }, 500);
+		setTimeout(() => { this.confettiUtil.standard() }, 1000);
+		Toast.show({
+			text: 'Welcome back!'
+		});
 	}
 
 	public async shareOptions() {

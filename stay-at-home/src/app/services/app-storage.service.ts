@@ -42,12 +42,13 @@ export class AppStorageService {
       } else {
         this.storage.get(Constants.CONFIGURATION).then((config: string) => {
           if (config == null) {
-            reject();
+            reject('No configuration set.');
           } else {
             this.cachedConfig = JSON.parse(config);
+            this.update.emit(this.cachedConfig);
             resolve(this.cachedConfig)
           }
-        });
+        }).catch((reason) => console.warn(reason));
       }
     });
   }

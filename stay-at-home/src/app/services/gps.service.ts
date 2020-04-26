@@ -7,14 +7,17 @@ import { BackgroundGeolocation, BackgroundGeolocationEvents, BackgroundGeolocati
 import { GameRules } from '../game-rules';
 import { AppConfiguration } from '../app-configuration';
 import { PermissionsRequestResult } from '@capacitor/core/dist/esm/definitions';
+import { Platform } from '@ionic/angular';
 
-const { Geolocation, Device } = Plugins;
+const { Geolocation } = Plugins;
 
 @Injectable({
 	providedIn: 'root'
 })
 /**
  * This exists because https://github.com/ionic-team/capacitor/issues/769
+ * So we are using Capacitor when on web/pwa and the plugin when using a mobile
+ * 
  */
 export class GpsService {
 	beacon = new EventEmitter<SimpleCoordinates>();
@@ -27,9 +30,10 @@ export class GpsService {
 
 	constructor(
 		public appStorageSvc: AppStorageService,
-		public backgroundGeolocation: BackgroundGeolocation
+		public backgroundGeolocation: BackgroundGeolocation,
+		public platform: Platform
 	) {
-		this.setup();
+		this.appStorageSvc.update.subscribe((newConfig: UserConfiguration) => { this.setup() });
 	}
 
 	/**
@@ -37,8 +41,7 @@ export class GpsService {
 	 * Web/Electron can't run in background though.
 	 */
 	public async setup() {
-		let platform = (await Device.getInfo()).platform;
-		this.isBrowser = platform == 'web' || platform == 'electron';
+		this.isBrowser = this.platform.is('desktop') || this.platform.is('electron');
 		if (this.isBrowser) {
 			this.setupBrowser();
 		} else {
@@ -46,20 +49,9 @@ export class GpsService {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public setupBrowser() {
-		Geolocation.requestPermissions().then((result: PermissionsRequestResult) => {
-			if (result) {
-				this.browserCallback();
-			}
-		});
-	}
-
 	public start() {
 		if (!this.running) {
-			console.debug('Starting background geolocation')
+			console.info('Starting background geolocation.');
 			if (this.isBrowser) {
 				this.browserCallback();
 				this.running = true;
@@ -71,6 +63,42 @@ export class GpsService {
 				});
 			}
 		}
+	}
+
+	public stop() {
+		if (this.running) {
+			console.info('Stopping background geolocation.');
+			if (this.isBrowser) {
+				Geolocation.clearWatch({ id: this.watchCallbackName }).then(() => this.running = false);
+				this.running = false;
+			} else {
+				this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
+					if (status.isRunning) {
+						this.backgroundGeolocation.stop().then(() => this.running = false);
+					}
+				});
+			}
+		}
+	}
+
+
+
+	/**
+	 * 
+	 */
+	public setupBrowser() {
+		Geolocation.requestPermissions().then((result: PermissionsRequestResult) => {
+			if (result) {
+				console.info('Using Capcitor GPS.');
+				this.canGetPosition().then(can => {
+					if (can) {
+						this.browserCallback();
+					} else {
+						this.browserCallback = null;
+					}
+				})
+			}
+		});
 	}
 
 	browserCallback() {
@@ -86,65 +114,54 @@ export class GpsService {
 		});
 	}
 
-	public stop() {
-		if (this.running) {
-			console.debug('Stopping background geolocation');
-			if (this.isBrowser) {
-				Geolocation.clearWatch({ id: this.watchCallbackName }).then(() => this.running = false);
-				this.running = false;
-			} else {
-				this.backgroundGeolocation.checkStatus().then((status: ServiceStatus) => {
-					if (status.isRunning) {
-						this.backgroundGeolocation.stop().then(() => this.running = false);
-					}
-				});
-			}
-		}
-	}
-
-
 	/**
 	 * This plugin can auto allocate itself, see interval in the config.
 	 */
 	public setupMobile() {
-		this.backgroundGeolocation.configure({
-			locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
-			desiredAccuracy: 10,
-			distanceFilter: 0,
-			interval: AppConfiguration.GPS_CHECK_POSITION_BACKGROUND_TIMEOUT,
-			fastestInterval: AppConfiguration.GPS_CHECK_POSITION_TIMEOUT,
-			notificationsEnabled: true,
-			notificationTitle: 'Background tracking',
-			notificationText: 'enabled',
-			debug: true
+		this.canGetPosition().then(can => {
+			if (can) {
+				this.backgroundGeolocation.configure({
+					locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
+					desiredAccuracy: 10,
+					distanceFilter: 0,
+					interval: AppConfiguration.GPS_CHECK_POSITION_BACKGROUND_TIMEOUT,
+					fastestInterval: AppConfiguration.GPS_CHECK_POSITION_TIMEOUT,
+					notificationsEnabled: true,
+					notificationTitle: 'Background tracking',
+					notificationText: 'enabled',
+					debug: true
+				});
+				console.info('Using mobile GPS.')
+				this.backgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location: BackgroundGeolocationResponse) => {
+					this.backgroundGeolocation.startTask().then((taskKey) => {
+						this.beacon.emit(new SimpleCoordinates(location.latitude, location.longitude));
+						this.backgroundGeolocation.endTask(taskKey);
+					});
+				});
+			}
 		});
-		this.backgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location: BackgroundGeolocationResponse) => {
-			this.backgroundGeolocation.startTask().then((taskKey) => {
-				this.mainLoop(new SimpleCoordinates(location.latitude, location.longitude));
-				this.backgroundGeolocation.endTask(taskKey);
-			});
-		});
+
 	}
 
-
-
-	public mainLoop(newCoords: SimpleCoordinates) {
-		if (GameRules.shouldAppBeRunning()) {
-			console.log('checking position...')
+	/**
+	 * 
+	 */
+	public canGetPosition(): Promise<boolean> {
+		return new Promise<boolean>((resolve) => {
 			this.appStorageSvc.getConfiguration().then(async (config: UserConfiguration) => {
 				// Get the newest position
 				if (!config.geolocationEnabled || !config.home) { throw new Error('Geolocalization and/or home not enabled yet.') }
-				if (config.home) {
-					GpsService.lastCoords = newCoords;
-					this.beacon.emit(newCoords);
+				if (config.home && GameRules.shouldAppBeRunning()) {
+					return true;
+				} else {
+					return false;
 				}
 			}).catch((e) => {
 				// No config, do not do anything as the geolocation might not be set.
 				console.error(e);
 			});
-		}
+		});
 	}
-
 
 	/**
 	 * Avoid using it as much as possible.
@@ -154,5 +171,4 @@ export class GpsService {
 			return new SimpleCoordinates(geoPos.coords.latitude, geoPos.coords.longitude);
 		});
 	}
-
 }
