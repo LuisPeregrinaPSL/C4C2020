@@ -125,7 +125,7 @@ export class MePage implements OnInit, AfterViewInit {
 			}
 		}
 
-		setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE);
+		setTimeout(() => this.restartCountdown(), AppConfiguration.TIME_TO_GROW_TREE + 1000);
 	}
 
 	ngAfterViewInit() {
