@@ -1,8 +1,13 @@
-Ciudades
-Estados
-Paises
+# Staying@Home
+## About
+This app uses Ionic and several modules to acreate a nice user experience.
 
 
-
-Iconos de:
-Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+## Building and delivering
+### Testing
+ionic serve
+ionic serve --prod  # Requires stricter directives, as PROD has these.
+ionic serve --ssl # In case you need an HTTPS version, e.g. Social Share.
+### Building
+ionic build # Regular
+ionic build --prod  # Produces a minified JS at www, use this and copy to staying-at-home-server and do "ibmcloud cf push"
