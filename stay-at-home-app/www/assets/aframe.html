@@ -1,0 +1,101 @@
+<!doctype HTML>
+<html>
+  <head>
+    <link rel="stylesheet" href="aframe.css">
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script>
+      function sendLoad(){
+        console.log('sendLoad');
+        var event = new CustomEvent('onVRLoaded');
+        /*var vector = new THREE.Vector3( 0.28, 0.22, -0.23 );
+        console.log(vector);
+        var fVector = document.querySelector('a-scene').object3D.localToWorld(vector);
+        console.log(fVector);*/
+        event.document = document;
+        event.aframe = AFRAME;
+        event.three = THREE;
+        window.parent.dispatchEvent(event);
+      }
+
+      function changeView(view){
+        console.log('changeView');
+        var event = new CustomEvent('onVRChangeView');
+        event.view = view;
+        window.parent.dispatchEvent(event);
+      }
+    </script>
+</head>
+
+  </head>
+  <body onload="sendLoad()">
+    <div id="info_block" style='position: fixed; top: 0px; width:100%; text-align: center; z-index: 1; visibility: hidden;'>
+      <div class="popup">
+        <div id="tree_count" style="width:100%; text-align: center;">Calculating...</div>
+        <div id="tree_count" style="width:100%; text-align: center;"><a href="#" onclick="changeView('gView')">Ground View</a> | <a href="#" onclick="changeView('aView')">Aereal View</a> | <a href="#" onclick="changeView('eView')">Edit View</a></div>
+        <div id="content" class="content">
+          <br>
+        </div>
+      </div>
+  </div>
+  
+    <a-scene pool__red="mixin: laser; size: 10">
+      <!--a-entity camera look-controls position="1381652 5,812,351‬ 2,226,235‬"></a-entity-->
+      <!--a-camera
+        spectator="true"
+        zoom="1"
+        cursor-visible="true"
+        cursor-scale="10"  
+        cursor-color="#0095DD"
+        cursor-opacity="0.5"
+        keyboard-controls="mode: fps">
+      </a-camera-->
+        <a-assets>
+            <img id="tree" src="/assets/tree.png">
+            <a-asset-item id="fox" src="/assets/gltf/Fox.gltf"></a-asset-item>
+            <a-asset-item id="tree" src="/assets/gltf/tree3.glb"></a-asset-item>
+            <a-asset-item id="tree2" src="/assets/gltf/tree4.glb"></a-asset-item>
+            <a-asset-item id="pine" src="/assets/gltf/pine.glb"></a-asset-item>
+            <a-asset-item id="palm" src="/assets/gltf/palm.glb"></a-asset-item>
+            <a-asset-item id="bubinga" src="/assets/gltf/bubinga.glb"></a-asset-item>
+            <a-asset-item id="forest" src="/assets/gltf/forest.glb"></a-asset-item>
+            <a-mixin id="red" material="color: red"></a-mixin>
+            <a-mixin id="blue" material="color: blue"></a-mixin>
+            <a-mixin id="cube" geometry="primitive: box"></a-mixin>
+          </a-assets>
+        <!--a-entity id="rig" movement-controls position="0 0 5">
+          <a-entity id="camera"
+                    camera
+                    position="0 1.6 0"
+                    look-controls="pointerLockEnabled: true"></a-entity>
+        </a-entity-->
+    
+        <a-light type="directional" color="#FFF" intensity="2.84" position="-1 1 2"> </a-light>
+        <a-text id="treeNumber" value="" position='-1 3 -5'></a-text>
+        <!--a-entity mixin="blue cube" position="1.40456 0.68454 -2.138"></a-entity>
+        <video src="https://www.youtube.com/watch?v=pEHThzPsbrU" position="-1.00000 0.68454 preload="auto"></video-->
+        <!-- Out of the box environment! -->
+        <a-entity id="env" environment="preset: forest; dressing: trees; dressingAmount: 200; sunPosition: 1 3 0; lighting: point; skyType: atmosphere;""></a-entity>
+        <!--a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"
+                event-set__enter="_event: mouseenter; _target: #cylinderText; visible: true"
+                event-set__leave="_event: mouseleave; _target: #cylinderText; visible: false">
+      <a-text id="cylinderText" value="Stay at Home!!!" align="center" color="#FFF" visible="false" position="0 -0.55 0.55"
+              geometry="primitive: plane; width: 1.75" material="color: #333"></a-text>
+    </a-cylinder-->
+
+    <a-entity >
+      <a-camera id="gView" active="false" keyboard-controls wasd-controls look-controls position="0 1.6 0"></a-camera>
+    </a-entity>
+
+    <a-entity position="0 10 0">
+      <a-camera id="aView" active="false" keyboard-controls wasd-controls look-controls></a-camera>
+    </a-entity>
+
+    <a-entity>
+      <a-camera id="eView" active="false" keyboard-controls wasd-controls look-controls position="0 1.6 0"></a-camera>
+    </a-entity>
+  </a-scene>
+  </body>
+</html>

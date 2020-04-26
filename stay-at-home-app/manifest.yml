@@ -1,0 +1,4 @@
+applications:
+  - name: stay-at-home-app
+    random-route: false
+    memory: 256M
