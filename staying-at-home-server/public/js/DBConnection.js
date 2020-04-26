@@ -13,7 +13,7 @@ class DBConnection {
 
 	async _getDB() {
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', 'http://localhost:3000/js/placesDB.json', true);
+		xhr.open('GET', '/js/placesDB.json', true);
 		xhr.send();
 		return new Promise((resolve, reject) => {
 			xhr.onload = function () {
