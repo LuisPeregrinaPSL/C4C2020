@@ -19,7 +19,7 @@ models['willow'] = {name: 'Willow', label: 'Willow', gltfModel: 'willow', id: 't
 models['apple'] = {name: 'Apple', label: 'Apple', gltfModel: 'apple', id: 'treeApple', src: '/assets/gltf/apple.glb', posY: 0.310, minY: 0, scaleX: 1, scaleY: 1, scaleZ: -1};
 models['sycamore'] = {name: 'Sycamore', label: 'Sycamore', gltfModel: 'sycamore', id: 'treeSycamore', src: '/assets/gltf/sycamore.glb', posY: 0.310, minY: 0, scaleX: 1, scaleY: 1, scaleZ: -1};
 models['common'] = {name: 'Common', label: 'Common', gltfModel: 'common', id: 'treeCommon', src: '/assets/gltf/common.glb', posY: 0.310, minY: 0, scaleX: 1, scaleY: 1, scaleZ: -1};
-models['palm'] = {name: 'Palm', label: 'Palm', gltfModel: 'palm', id: 'treePalm', src: '/assets/gltf/palm2.glb', posY: 0.310, minY: 0, scaleX: 1, scaleY: 1, scaleZ: -1};
+models['palm'] = {name: 'Palm', label: 'Palm', gltfModel: 'palm', id: 'treePalm', src: '/assets/gltf/palm.glb', posY: 0.310, minY: 0, scaleX: 1, scaleY: 1, scaleZ: -1};
 
 models['forest'] = {name: 'Forest', label: 'Forest', gltfModel: 'forest', id: 'treeForest', src: '/assets/gltf/forest.glb', posY: 0.310, minY: 0, scaleX: 3.150, scaleY: 3.270, scaleZ: -2.660};
 
@@ -51,6 +51,6 @@ export function getTreeModelByLevel(level: number) {
         level = levels.length-1;
     }
 
-    //level = 4;
+    //level = 2;
     return parseTreeModel(models[levels[level]]);
 }
