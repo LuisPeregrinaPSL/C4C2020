@@ -4,7 +4,7 @@ var db = new DBConnection();
 
 function updateDashboard(name, type) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://173.193.122.97:31247/getUrl', true);
+    xhr.open('POST', 'https://173.193.122.97:31247/getUrl', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
