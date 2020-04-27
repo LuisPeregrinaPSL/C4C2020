@@ -29,3 +29,6 @@ npm-debug.log*
 /platforms
 /plugins
 /www
+
+# Ignore this in .gitignore but not in .cfignore
+/public/stay-at-home.apk
