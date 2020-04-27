@@ -51,6 +51,7 @@ export class GpsService {
 
 	public start() {
 		if (!this.running) {
+			GameRules.earliestGrowingDate = new Date();
 			console.info('Starting background geolocation.');
 			if (this.isBrowser) {
 				this.browserCallback();

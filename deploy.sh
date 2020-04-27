@@ -1,29 +1,30 @@
 APP=stay-at-home
 WEB=staying-at-home-server
 BLUEMIX=stay-at-home-app
+CFPUSH="ibmcloud cf push"
+APK_BUILD="./app/build/outputs/apk/debug/app-debug.apk"
+APK_FINAL="public/stay-at-home.apk"
 
-# Build app and publish to bluemix
+# Build production app
 cd $APP
 ionic build --prod
+# Sync ./android
 ionic cap sync
+# Copy app www to bluemix instance
 cp -r www/ ../$BLUEMIX/
-# Build app
+# Android side
 cd android
 ./gradlew --stop
-rm ./app/build/outputs/apk/debug/app-debug.apk
+rm $APK_BUILD
 ./gradlew assembleDebug
-mv ./app/build/outputs/apk/debug/app-debug.apk ../../$WEB/public/stay-at-home.apk
-
+# Move it to the web so we can download
+mv $APK_BUILD ../../$WEB/$APK_FINAL
 cd ../../$BLUEMIX/
-ibmcloud cf push
+$CFPUSH
 # We don't care for the production build. We can't debug it. Use ionic serve --prod
 rm -r www
-
-#
-cd ..
-
-# Build website
-
+# Publish web
 cd ../$WEB
-ibmcloud cf push
-
+$CFPUSH
+# Neither care if it stays here, only in cloud foundry.
+rm $APK_FINAL
