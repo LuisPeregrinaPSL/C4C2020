@@ -7,15 +7,19 @@ ion-content {
   --background: var(--ion-color-secondary);
 }
 
-ion-card#vr,
-ion-card#vr > ion-card-content {
-  height: 95%;
+ion-card#vr {
+  height: 75vh;
 }
+ion-card#vr > ion-card-content {
+  height: 100%;
+}
+
 #vrWindow {
   border-radius: 1% !important;
   border: none;
   width: 100%;
-  height: 90%;
+  height: 85%;
+  max-height: inherit;
 }
 
 #confetti {
