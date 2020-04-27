@@ -230,8 +230,8 @@ export class ForestRenderer {
     }
 
     private removeTrees(diff: number, animation: boolean) {
-        console.log('Removing ' + diff + ' new trees...');
-        this.frontCount+=diff;
+        console.log('Removing ' + diff + ' trees...');
+        this.frontCount-=diff;
         //diff=1;
         if(diff > 0) {
             for(var i = 0; i < diff; i++) {
@@ -281,7 +281,7 @@ export class ForestRenderer {
         console.log('frontCount', this.frontCount);
         if(this.frontCount > 0) {
             this.backCount+=this.frontCount;
-            this.countInfo.innerHTML='You have reached the count limit, reseting landscape....';
+            //this.countInfo.innerHTML='You have reached the count limit, reseting landscape....';
             
             this.removeItems(this.model.id);
 
