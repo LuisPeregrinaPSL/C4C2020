@@ -41,7 +41,7 @@ By using gamification, the app allows the user to build a forest at their virtua
 - User can share his achievements on social networks
 - Using VR view, user gets a virtual experience on his home forest
 
-There is a GPS tracking component monitoring if the users leaves home to launch the corresponding events.
+There is a GPS tracking component monitoring if the users leave home to launch the corresponding events.
 
 **Analytics Dashboard:**
 Online platform receiving data and statistics about the time that people stays out of home on different areas. 
@@ -50,7 +50,7 @@ The platform uses kibana and elastic search to build real time graphs showing wh
 **Benefits**
 -	Motivate people to stay at home
 -	Help people to get some fun and track their time while staying home
--	Quick insights about the results of measures implemented for Stay at home initiatives 
+-	Quick insights about the results of measures implemented for Stay at Home initiatives 
 -	Help government to optimize resources utilization 
 
 
