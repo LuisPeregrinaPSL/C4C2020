@@ -2,6 +2,8 @@
 
 VR Mobile platform to track and analyze Stay@home behavior
 
+<a href="https://staying-at-home-server.mybluemix.net/">Staying@Home Project Website</a>
+
    ### Team members
    * Jaime de Alba (jaime_alba@persistent.com)
    * Guillermo Moreno (guillermo_moreno@persistent.com)
