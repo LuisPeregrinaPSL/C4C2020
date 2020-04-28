@@ -26,7 +26,7 @@ However, countries are facing challenges to motivate and control people to follo
 
 VR Mobile platform to track and analyze Stay@home behavior. The solution includes 2 main components:
 
-**VR Mobile application: **
+**VR Mobile application:**
 
 The VR application can be installed on any mobile device.
 The application allows the users to track how long they have stayed at home and sends statistics about his behavior to the Kibana Server.
@@ -54,7 +54,7 @@ The platform uses kibana and elastic search to build real time graphs showing wh
 
 ### Link to video:
 
-### Roadmap:
+### Roadmap: <a href="/docs/Staying@Home Roadmap.pdf">link</a>
 
 ### IBM Services and Open Sources components/services
 
