@@ -59,10 +59,10 @@ The platform uses kibana and elastic search to build real time graphs showing wh
 ### IBM Services and Open Sources components/services
 
 **Online Application Demo and website:**
-- Node.js & Cloudant application running on IBM Cloud.**
+- Node.js & Cloudant application running on IBM Cloud.
 
 **Kibana / Elastic Search**
-- Node.js & Cloudant application running on IBM Cloud.**
+- Node.js & Cloudant application running on IBM Cloud.
 
 **Ionic framework and A-Frame:**
 - Ionic 4 framework was used for application development; this framework uses Angular 7 with TypeScript for the code, CSS preprocessing using SASS. Ionic leverages the application building duties to Apache Cordova, which in turn uses Node.js as its backbone.
