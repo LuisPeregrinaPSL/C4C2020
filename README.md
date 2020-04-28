@@ -1,6 +1,6 @@
-# Staying@Home
+# Staying@Home for a Cause
 
-  Gamifying and analyzing People@home data to focus preventive virus spread measures
+VR Gaming platform to track and analyze Stay@home behavior
 
    ### Team members
    * Jaime de Alba (jaime_alba@persistent.com)
