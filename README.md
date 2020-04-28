@@ -56,7 +56,8 @@ The platform uses kibana and elastic search to build real time graphs showing wh
 
 ### Link to video:
 
-### Roadmap: <a href="/docs/Staying@Home Roadmap.pdf">link</a>
+### Roadmap: 
+<a href="/docs/Staying@Home Roadmap.pdf">Staying@Home Project Roadmap</a>
 
 ### IBM Services and Open Sources components/services
 
