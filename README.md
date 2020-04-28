@@ -1,6 +1,6 @@
 # Staying@Home for a Cause
 
-VR Gaming platform to track and analyze Stay@home behavior
+VR Mobile platform to track and analyze Stay@home behavior
 
    ### Team members
    * Jaime de Alba (jaime_alba@persistent.com)
@@ -12,40 +12,45 @@ VR Gaming platform to track and analyze Stay@home behavior
   ### Project Description
   
   **Problem solved:**
-  The most effective action to prevent the spread of the virus used on all countries is the lockdown and/or stay at home policy. 
-  
-  However, countries are facing big challenges to make sure people follow this policy. As a result, there are multiple actions implemented by governments to invite/force people to stay at home, these actions and policies are being applied to broad areas such as cities, states, countries:
-  
+The most effective action to prevent the spread of the viruses is the lockdown or stay at home policy. 
+
+However, countries are facing challenges to motivate and control people to follow this policies. As a result, there are multiple actions implemented by governments to motivate and force people to stay at home, these actions and policies are being applied to broad areas such as cities, states, countries:
   - Security checkpoints on streets
   - Policy patrols asking people to go Home
   - Multiple advertising and sensitization campaigns
   - Sanitizer tunnels in crowded places
-  
-  A more localized implementation of these measures could help to get better results and optimize resource utilization.
+ 
+ A more localized implementation of these measures could help to get faster results and optimize resource utilization.
 
-  **Proposed solution:** solution includes 2 main components:
+**Proposed solution:** 
 
-**Data analyzer:**
-Online platform receiving data and statistics about the time that people stays at home on different areas. 
+VR Mobile platform to track and analyze Stay@home behavior. The solution includes 2 main components:
+
+**VR Mobile application: **
+
+The VR application can be installed on any mobile device.
+The application allows the users to track how long they have stayed at home and sends statistics about his behavior to the Kibana Server.
+By using gamification, the app allows the user to build a forest at their virtual home and contribute to their community with the following genera rules:
+-	For each 6 consecutive hours at home, user gets a tree.
+-	For every 10, 20, 40, 80, and so on, the user is moved to the next Forest level.
+-	If User leaves home before the 6 hours needed to get a tree, then a new one starts growing from 0, and one is deleted from his forest.
+-  Once he gets back home, a new Tree starts growing from 0.
+-	As more trees are added to the forest, user can get additional items and go through different contribution levels.
+- User can share his achievements on social networks
+- Using VR view, user gets a virtual experience on his home forest
+
+There is a GPS tracking component monitoring if the users leaves home to launch the corresponding events.
+
+**Analytics Dashboard:**
+Online platform receiving data and statistics about the time that people stays out of home on different areas. 
 The platform uses kibana and elastic search to build real time graphs showing which areas better meet the stay at home restrictions.
 
-**Mobile application / Data collector:**
-The data collection is done using an app that the users will install on their mobile phones, this application allows the users to track how long they have stayed at home and sends the statistics to the data analyzer.
-
-By using gamification, the app allows the user to build a forest at their virtual home and contribute to their community as follows:
-
--	For each 6 consecutive hours at home, user will get a tree.
--	For every 3 trees that he gets, one is also added to his community forest.
--	If he leaves home before the 6 hours needed to get a tree, then a new one starts growing from 0 once he gets back home.
--	As more trees are added to the forest, user can get additional items and go through different contribution levels.
-
-There is a GPS tracking component monitoring if the users moves enough to consider that they leave home.
-
 **Benefits**
-- Government will be able to optimize resources utilization
-- Quick insights about the results of measures implemented for Stay at home initiatives
-- Better understanding of areas that may require more help
-- Motivate people to stay at home by allowing to track time in lockdown and recognizing them
+-	Motivate people to stay at home
+-	Help people to get some fun and track their time while staying home
+-	Quick insights about the results of measures implemented for Stay at home initiatives 
+-	Help government to optimize resources utilization 
+
 
 ### Link to video:
 
