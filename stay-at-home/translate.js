@@ -1,15 +1,7 @@
-const ini = require('ini');
 const fs = require('fs');
-
-const env = ini.parse(fs.readFileSync('./ibm-credentials.env', 'utf-8'));
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
-const { IamAuthenticator } = require('ibm-watson/auth');
 const languageTranslator = new LanguageTranslatorV3({
-    version: '2018-05-01',
-    authenticator: new IamAuthenticator({
-        apikey: env.LANGUAGE_TRANSLATOR_APIKEY,
-    }),
-    url: env.LANGUAGE_TRANSLATOR_URL,
+    version: '2018-05-01'
 });
 
 const LANGUAGES = ['es', 'ko', 'de', 'fr'];
