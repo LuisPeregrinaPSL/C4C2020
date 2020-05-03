@@ -1,0 +1,28 @@
+{
+  "HOME" : {
+    "FOREST" : "Mein Wald",
+    "DETAILS" : "Details:",
+    "FORESTLEVEL" : "Waldebene:",
+    "TREESINFOREST" : "Bäume in meinem Wald:",
+    "NEXTTREE" : "Nächste Baumstruktur in:",
+    "GAMERULES" : "Spielregeln für Demo",
+    "RULE1" : "Gehen Sie zu Einstellungen, klicken Sie auf \"Geolocation aktivieren\" und klicken Sie auf die Schaltfläche \"Aktuelle Lage als Startseite festlegen\".",
+    "RULE2" : "Ein Baum wächst alle {{var1}} Sekunden, die du zu Hause bleibst.",
+    "RULE3" : "Ein Baum wird alle {{var1}} Sekunden heruntergeschnitten, die Sie nicht zu Hause haben.",
+    "RULE4" : "Es gibt Ebenen, die Sie erreichen können, indem Sie eine bestimmte Anzahl von Bäumen wachsen: 10, 20, 40, 80, etc."
+  },
+  "SETTINGS" : {
+    "TITLE" : "Einstellungen",
+    "GEOLOC" : "Geolokation aktiviert",
+    "SETHOME" : "Aktuelle Position als Startseite festlegen",
+    "WARN" : "Warnung",
+    "DELETE" : "Einstellungen löschen",
+    "TIME" : "Mein Wald in der Zeit",
+    "NAME" : "Name",
+    "AUTHOR" : "Autor",
+    "LICENCE" : "Lizenz",
+    "IMAGES" : "Bilder",
+    "AUDIO" : "Audio",
+    "3DASSETS" : "3D-Assets"
+  }
+}

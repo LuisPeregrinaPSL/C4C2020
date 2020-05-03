@@ -1,8 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Settings
-    </ion-title>
+    <ion-title translate>SETTINGS.TITLE</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,25 +11,25 @@
         <form [formGroup]="configForm">
           <ion-card>
             <ion-card-header>
-              <ion-card-title>Settings</ion-card-title>
+              <ion-card-title translate>SETTINGS.TITLE</ion-card-title>
             </ion-card-header>
             <ion-card-content>
               <ion-item>
-                <ion-label>Geolocation enabled</ion-label>
+                <ion-label translate>SETTINGS.GEOLOC</ion-label>
                 <ion-checkbox slot="end" formControlName="geolocationEnabled"></ion-checkbox>
               </ion-item>
 
               <ion-item>
-                <ion-label>Set current location as Home</ion-label>
+                <ion-label translate>SETTINGS.SETHOME</ion-label>
                 <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()" style="width:10%;">
                   <ion-icon name="home"></ion-icon>
                 </ion-button>
               </ion-item>
               <ion-list-header>
-                <ion-label>Warning</ion-label>
+                <ion-label translate>SETTINGS.WARN</ion-label>
               </ion-list-header>
               <ion-item>
-                <ion-label>Delete settings</ion-label>
+                <ion-label translate>SETTINGS.DELETE</ion-label>
                 <ion-button color="danger" (click)="deleteSettings()" style="width:10%;">
                   <ion-icon name="trash"></ion-icon>
                 </ion-button>
@@ -43,7 +41,7 @@
       <ion-col size-md="6">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>My Forest in time</ion-card-title>
+            <ion-card-title translate>SETTINGS.TIME</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-button (click)="loadHistory()">
@@ -76,15 +74,15 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Images</ion-card-title>
+            <ion-card-title translate>SETTINGS.IMAGES</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
             <ion-grid>
               <ion-row>
-                <ion-col>Name</ion-col>
-                <ion-col>Author</ion-col>
-                <ion-col>Licence</ion-col>
+                <ion-col translate>SETTINGS.NAME</ion-col>
+                <ion-col translate>SETTINGS.AUTHOR</ion-col>
+                <ion-col translate>SETTINGS.LICENCE</ion-col>
               </ion-row>
               <ion-row>
                 <ion-col (click)="open('https://www.flaticon.com/free-icon/tree-black-silhouette-shape_41390')">Tree
@@ -100,15 +98,15 @@
 
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Audio</ion-card-title>
+            <ion-card-title translate>SETTINGS.AUDIO</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
             <ion-grid>
               <ion-row>
-                <ion-col>Name</ion-col>
-                <ion-col>Author</ion-col>
-                <ion-col>Licence</ion-col>
+                <ion-col translate>SETTINGS.NAME</ion-col>
+                <ion-col translate>SETTINGS.AUTHOR</ion-col>
+                <ion-col translate>SETTINGS.LICENCE</ion-col>
               </ion-row>
               <ion-row>
                 <ion-col (click)="open('https://freesound.org/people/SgtPepperArc360/sounds/347732/')">Samsung Galaxy S7
@@ -147,15 +145,15 @@
 
         <ion-card>
           <ion-card-header>
-            <ion-card-title>3D Assets</ion-card-title>
+            <ion-card-title translate>SETTINGS.3DASSETS</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
             <ion-grid>
               <ion-row>
-                <ion-col>Name</ion-col>
-                <ion-col>Author</ion-col>
-                <ion-col>Licence</ion-col>
+                <ion-col translate>SETTINGS.NAME</ion-col>
+                <ion-col translate>SETTINGS.AUTHOR</ion-col>
+                <ion-col translate>SETTINGS.LICENCE</ion-col>
               </ion-row>
               <ion-row>
                 <ion-col (click)="open('https://poly.google.com/view/ficLBIjGliK')">Queen Palm Tree</ion-col>

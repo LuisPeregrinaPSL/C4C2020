@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SettingsPage } from './settings.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -11,7 +12,8 @@ import { SettingsPage } from './settings.page';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{ path: '', component: SettingsPage }])
+    RouterModule.forChild([{ path: '', component: SettingsPage }]),
+    TranslateModule
   ],
   declarations: [SettingsPage]
 })

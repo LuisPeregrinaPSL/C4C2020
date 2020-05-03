@@ -14,6 +14,7 @@ import { ForestStatus } from 'src/app/forest-status.enum';
 import { GameRules } from 'src/app/game-rules';
 import { ConfettiUtil } from 'src/app/confetti-util';
 import { ForestRenderer } from 'src/app/forest-renderer';
+import { TranslateDirective, TranslateService } from '@ngx-translate/core';
 
 
 const { Share } = Plugins;
@@ -45,7 +46,8 @@ export class MePage implements OnInit, AfterViewInit {
 		public forestWatcher: ForestWatcherService,
 		public platform: Platform,
 		public navCtrl: NavController,
-		public gpsService: GpsService
+		public gpsService: GpsService,
+		public translate: TranslateService
 	) {
 		configService.update.subscribe((config: UserConfiguration) => {
 			this.config = config;

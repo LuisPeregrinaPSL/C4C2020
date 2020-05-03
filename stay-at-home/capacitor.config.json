@@ -1,6 +1,6 @@
 {
   "appId": "com.persistent.c4c2020.mx",
-  "appName": "stay-at-home",
+  "appName": "Stay at home",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

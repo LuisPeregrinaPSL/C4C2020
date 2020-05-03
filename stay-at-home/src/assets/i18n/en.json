@@ -1,0 +1,28 @@
+{
+  "HOME": {
+    "FOREST": "My forest",
+    "DETAILS": "Details:",
+    "FORESTLEVEL": "Forest level:",
+    "TREESINFOREST": "Trees in my forest:",
+    "NEXTTREE": "Next tree in:",
+    "GAMERULES": "Game rules for demo",
+    "RULE1": "Go to settings, click on \"Enable Geolocation\" and click on the button for \"Set Current location as Home\".",
+    "RULE2": "One tree grows every {{var1}} seconds you stay at home.",
+    "RULE3": "One tree is cut down every {{var1}} seconds you are not home.",
+    "RULE4": "There are levels that you can achieve by growing a certain number of trees: 10, 20, 40, 80, etc."
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "GEOLOC": "Geolocation enabled",
+    "SETHOME": "Set current location as Home",
+    "WARN": "Warning",
+    "DELETE": "Delete settings",
+    "TIME": "My Forest in time",
+    "NAME": "Name",
+    "AUTHOR": "Author",
+    "LICENCE": "Licence",
+    "IMAGES": "Images",
+    "AUDIO": "Audio",
+    "3DASSETS": "3D assets"
+  }
+}

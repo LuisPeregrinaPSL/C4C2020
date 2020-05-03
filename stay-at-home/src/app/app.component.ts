@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { Plugins } from '@capacitor/core';
+import { Plugins, DeviceLanguageCodeResult } from '@capacitor/core';
 import { TabsService } from './services/tabs.service';
-const { SplashScreen } = Plugins;
+const { SplashScreen, Device } = Plugins;
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 import { GpsService } from './services/gps.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -16,14 +17,19 @@ export class AppComponent {
     private platform: Platform,
     public tabs: TabsService,
     public gpsSvc: GpsService,
-    public backgroundGeolocation: BackgroundGeolocation
+    public backgroundGeolocation: BackgroundGeolocation,
+    public translate: TranslateService
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      SplashScreen.hide();
+      this.translate.setDefaultLang('en');
+      Device.getLanguageCode().then((language: DeviceLanguageCodeResult) => {
+        this.translate.use(language.value);
+        SplashScreen.hide();
+      });
     });
   }
 }

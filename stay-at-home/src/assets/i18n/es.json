@@ -1,0 +1,28 @@
+{
+  "HOME" : {
+    "FOREST" : "Mi bosque",
+    "DETAILS" : "Detalles:",
+    "FORESTLEVEL" : "Nivel de bosque:",
+    "TREESINFOREST" : "Árboles en mi bosque:",
+    "NEXTTREE" : "Árbol siguiente en:",
+    "GAMERULES" : "Reglas de juego para la demostración",
+    "RULE1" : "Vaya a la configuración, haga clic en \"Enable Geolocation\" y haga clic en el botón para \"Set Current location as Home\".",
+    "RULE2" : "Un árbol crece cada {{var1}} segundos que se quedan en casa.",
+    "RULE3" : "Un árbol se corta cada {{var1}} segundos que no está en casa.",
+    "RULE4" : "Hay niveles que se pueden lograr mediante el crecimiento de un cierto número de árboles: 10, 20, 40, 80, etc."
+  },
+  "SETTINGS" : {
+    "TITLE" : "Configuración",
+    "GEOLOC" : "Geolocalización habilitada",
+    "SETHOME" : "Establecer la ubicación actual como Inicio",
+    "WARN" : "Advertencia",
+    "DELETE" : "Suprimir valores",
+    "TIME" : "Mi bosque a tiempo",
+    "NAME" : "Nombre",
+    "AUTHOR" : "Autor",
+    "LICENCE" : "Licence",
+    "IMAGES" : "Imágenes",
+    "AUDIO" : "Audio",
+    "3DASSETS" : "Activos 3D"
+  }
+}

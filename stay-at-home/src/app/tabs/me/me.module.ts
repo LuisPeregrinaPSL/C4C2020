@@ -7,6 +7,7 @@ import { CountdownModule, CountdownGlobalConfig } from 'ngx-countdown';
 import { ShareModule } from '@ngx-share/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Platform } from '@angular/cdk/platform';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { Platform } from '@angular/cdk/platform';
     RouterModule.forChild([{ path: '', component: MePage }]),
     CountdownModule,
     ShareModule,
-    HttpClientModule
+    HttpClientModule,
+    TranslateModule
   ],
   declarations: [MePage],
   providers: [

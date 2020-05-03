@@ -1,0 +1,28 @@
+{
+  "HOME" : {
+    "FOREST" : "Ma forêt",
+    "DETAILS" : "Détails:",
+    "FORESTLEVEL" : "Niveau de la forêt:",
+    "TREESINFOREST" : "Les arbres dans ma forêt:",
+    "NEXTTREE" : "Arborescence suivante dans:",
+    "GAMERULES" : "Règles de jeu pour la démonstration",
+    "RULE1" : "Allez dans les paramètres, cliquez sur \"Activer la géolocalisation\" et cliquez sur le bouton \"Définir l'emplacement actuel en tant que maison\".",
+    "RULE2" : "Un arbre pousse toutes les {{var1}} secondes que vous restez à la maison.",
+    "RULE3" : "Un arbre est coupé toutes les {{var1}} secondes que vous n'êtes pas à la maison.",
+    "RULE4" : "Il y a des niveaux que vous pouvez atteindre en poussant un certain nombre d'arbres: 10, 20, 40, 80, etc."
+  },
+  "SETTINGS" : {
+    "TITLE" : "Paramètres",
+    "GEOLOC" : "Géolocalisation activée",
+    "SETHOME" : "Définir l'emplacement actuel en tant que répertoire principal",
+    "WARN" : "Avertissement",
+    "DELETE" : "Supprimer les paramètres",
+    "TIME" : "Ma forêt dans le temps",
+    "NAME" : "Nom",
+    "AUTHOR" : "Auteur",
+    "LICENCE" : "Licence",
+    "IMAGES" : "Images",
+    "AUDIO" : "Audio",
+    "3DASSETS" : "Actifs 3D"
+  }
+}

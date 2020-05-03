@@ -18,6 +18,8 @@ import { AppConfiguration } from './app-configuration';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { WebpackTranslateLoader } from './webpack-translate-loader';
 
 
 @NgModule({
@@ -32,6 +34,12 @@ import { NativeAudio } from '@ionic-native/native-audio/ngx';
     IonicStorageModule.forRoot({
       name: AppConfiguration.APP_DB_SCHEMA,
       driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: WebpackTranslateLoader,
+      }
     })
   ],
   providers: [
