@@ -55,20 +55,48 @@ function downloadFile(documentId, filePath) {
         });
 }
 
-LANGUAGES.forEach((language, index) => {
-    let filePath = TRANSLATION_FILES_PATH + '/' + language + '.json';
-    const translateDocumentParams = {
-        file: fs.createReadStream(SOURCE_FILE),
-        source: 'en',
-        target: language,
-        filename: 'en.json',
-    };
-    languageTranslator.translateDocument(translateDocumentParams)
+function clean() {
+    languageTranslator.listDocuments()
         .then(result => {
-            getStatus(result['result']['document_id'], filePath)
+            result['result']['documents'].forEach(document => {
+                documentId = document['document_id']
+                languageTranslator.deleteDocument({ documentId })
+                    .then(result => {
+                        console.log('Deleted ' + documentId)
+                    })
+                    .catch(err => {
+                        console.log('error:', err);
+                    });
+            })
         })
         .catch(err => {
             console.log('error:', err);
         });
-});
+}
 
+function main() {
+    LANGUAGES.forEach((language, index) => {
+        let filePath = TRANSLATION_FILES_PATH + '/' + language + '.json';
+        const translateDocumentParams = {
+            file: fs.createReadStream(SOURCE_FILE),
+            source: 'en',
+            target: language,
+            filename: 'en.json',
+        };
+        languageTranslator.translateDocument(translateDocumentParams)
+            .then(result => {
+                getStatus(result['result']['document_id'], filePath)
+            })
+            .catch(err => {
+                console.log('error:', err);
+            });
+    });
+}
+
+switch (process.argv.slice(2)[0]) {
+    case 'clean':
+        clean();
+        break;
+    default:
+        main();
+}

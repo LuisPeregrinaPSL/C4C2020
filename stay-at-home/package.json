@@ -11,7 +11,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "postinstall": "npx jetify",
-    "translate": "node translate.js"
+    "translate": "node translate.js",
+    "translate-clean": "node translate.js clean"
   },
   "private": true,
   "dependencies": {
