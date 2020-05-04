@@ -49,7 +49,10 @@
           </ion-card-header>
           <ion-card-content>
             <ion-item>
-              <ion-label class="ion-text-wrap" translate>HOME.RULE1</ion-label>
+              <ion-label class="ion-text-wrap" translate
+                [translateParams]="{val1:'SETTINGS.GEOLOC'| translate, val2: 'SETTINGS.SETHOME' | translate }">
+                HOME.RULE1
+              </ion-label>
             </ion-item>
             <ion-list>
               <ion-item>
