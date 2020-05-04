@@ -9,9 +9,9 @@ import { LocalNotifications } from '@capacitor/core';
 import { SimpleCoordinates } from '../simple-coordinates';
 import { Utils } from '../utils';
 import { GameRules } from '../game-rules';
-import { NativeAudio } from '@ionic-native/native-audio/ngx';
 import { RestApiService } from './rest-api.service';
 import { GpsHistory } from '../gps-history';
+import { AudioService } from './audio.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,8 @@ export class ForestWatcherService {
     public gpsSvc: GpsService,
     public appStorageSvc: AppStorageService,
     public alertCtrl: AlertController,
-    public audio: NativeAudio,
-    public restApi: RestApiService
+    public restApi: RestApiService,
+    public audio: AudioService
   ) {
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
     gpsSvc.beacon.subscribe(async (newCoords: SimpleCoordinates) => {
@@ -48,6 +48,7 @@ export class ForestWatcherService {
           this.appStorageSvc.addHistory(new GpsHistory(newCoords, new Date(), -1));
           this.restApi.postLocation(newCoords);
           this.shrink.emit(config.trees);
+          this.audio.play('lose-tree');
         } else {
           let now = new Date();
           if (!GameRules.earliestGrowingDate) {
@@ -64,11 +65,8 @@ export class ForestWatcherService {
     });
 
     // Preload audio
-    ['new-tree', 'first-start', 'lose-tree', 'new-level'].forEach((fileName: string) => audio.preloadSimple(fileName, '../public/assets/sounds/' + fileName + '.mp3').then(() => {
-      console.log('Preloaded audio.');
-    }, () => {
-      console.error('Couldn\'t preload audio.')
-    }));
+    ['new-tree', 'first-start', 'lose-tree', 'new-level'].forEach((fileName: string) => audio.preload(fileName, 'assets/sounds/' + fileName + '.mp3'));
+    this.audio.play('first-start');
   }
 
   /**
@@ -94,6 +92,7 @@ export class ForestWatcherService {
           if (level > config.level) {
             config.level = level;
             this.notifyUser('Congratulations', 'You have increased your forest level to ' + level + '!');
+            this.audio.play('new-level');
             this.level.emit(level);
           }
           this.appStorageSvc.setConfiguration(config);

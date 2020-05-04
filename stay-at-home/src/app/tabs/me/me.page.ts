@@ -14,7 +14,7 @@ import { ForestStatus } from 'src/app/forest-status.enum';
 import { GameRules } from 'src/app/game-rules';
 import { ConfettiUtil } from 'src/app/confetti-util';
 import { ForestRenderer } from 'src/app/forest-renderer';
-import { TranslateDirective, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 
 const { Share } = Plugins;
