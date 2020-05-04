@@ -4,7 +4,7 @@ const languageTranslator = new LanguageTranslatorV3({
     version: '2018-05-01'
 });
 
-const LANGUAGES = ['es', 'ko', 'de', 'fr'];
+const LANGUAGES = ['es', 'hi', 'de', 'fr', 'zh'];
 
 let TRANSLATION_FILES_PATH = './src/assets/i18n'
 let SOURCE_FILE = TRANSLATION_FILES_PATH + '/en.json';
@@ -35,6 +35,7 @@ function downloadFile(documentId, filePath) {
                 // Translation service adds spaces in handlebars
                 body = body.replace(/{ { /g, '{{')
                 body = body.replace(/ } }/g, '}}')
+                body = body.replace(/{{([0-9]+)}}/g, (a, b) => { return '{{val' + b + '}}' })
                 fs.writeFile(filePath, body, err => {
                     if (err) throw new Error(err)
                     console.log('File saved.')

@@ -6,9 +6,9 @@
     "TREESINFOREST" : "Bäume in meinem Wald:",
     "NEXTTREE" : "Nächste Baumstruktur in:",
     "GAMERULES" : "Spielregeln für Demo",
-    "RULE1" : "Wechseln Sie zu Einstellungen, klicken Sie auf \"{{val1}}\" und klicken Sie auf die Schaltfläche für \"{{val2}}\".",
-    "RULE2" : "Ein Baum wächst alle {{var1}} Sekunden, die du zu Hause bleibst.",
-    "RULE3" : "Ein Baum wird alle {{var1}} Sekunden heruntergeschnitten, die Sie nicht zu Hause haben.",
+    "RULE1" : "Rufen Sie die Einstellungen auf, klicken Sie auf \"{{val1}}\" und klicken Sie auf die Schaltfläche für \"{{val2}}\".",
+    "RULE2" : "Ein Baum wächst alle {{val1}} Sekunden, die du zu Hause bleibst.",
+    "RULE3" : "Ein Baum wird alle {{val1}} Sekunden heruntergeschnitten, die Sie nicht zu Hause sind.",
     "RULE4" : "Es gibt Ebenen, die Sie erreichen können, indem Sie eine bestimmte Anzahl von Bäumen wachsen: 10, 20, 40, 80, etc."
   },
   "SETTINGS" : {

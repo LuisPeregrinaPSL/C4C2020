@@ -6,9 +6,9 @@
     "TREESINFOREST" : "Árboles en mi bosque:",
     "NEXTTREE" : "Árbol siguiente en:",
     "GAMERULES" : "Reglas de juego para la demostración",
-    "RULE1" : "Vaya a la configuración, haga clic en \"{{val1}}\" y haga clic en el botón correspondiente a \"{{val2}}\".",
-    "RULE2" : "Un árbol crece cada {{var1}} segundos que se quedan en casa.",
-    "RULE3" : "Un árbol se corta cada {{var1}} segundos que no está en casa.",
+    "RULE1" : "Vaya a la configuración, haga clic en \"{{val1}}\" y haga clic en el botón para \"{{val2}}\".",
+    "RULE2" : "Un árbol crece cada {{val1}} segundos que se queda en casa.",
+    "RULE3" : "Se recortan un árbol cada {{val1}} segundos que no está en casa.",
     "RULE4" : "Hay niveles que se pueden lograr mediante el crecimiento de un cierto número de árboles: 10, 20, 40, 80, etc."
   },
   "SETTINGS" : {

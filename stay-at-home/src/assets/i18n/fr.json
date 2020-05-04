@@ -7,8 +7,8 @@
     "NEXTTREE" : "Arborescence suivante dans:",
     "GAMERULES" : "Règles de jeu pour la démonstration",
     "RULE1" : "Accédez aux paramètres, cliquez sur \"{{val1}}\" et cliquez sur le bouton \"{{val2}}\".",
-    "RULE2" : "Un arbre pousse toutes les {{var1}} secondes que vous restez à la maison.",
-    "RULE3" : "Un arbre est coupé toutes les {{var1}} secondes que vous n'êtes pas à la maison.",
+    "RULE2" : "Un arbre pousse toutes les {{val1}} secondes que vous restez à la maison.",
+    "RULE3" : "Un arbre est coupé toutes les {{val1}} secondes que vous n'êtes pas à la maison.",
     "RULE4" : "Il y a des niveaux que vous pouvez atteindre en poussant un certain nombre d'arbres: 10, 20, 40, 80, etc."
   },
   "SETTINGS" : {
