@@ -3,6 +3,7 @@ const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
 const languageTranslator = new LanguageTranslatorV3({
     version: '2018-05-01'
 });
+const Readable = require('stream').Readable;
 
 const LANGUAGES = ['es', 'hi', 'de', 'fr', 'zh'];
 
@@ -76,22 +77,36 @@ function clean() {
 }
 
 function main() {
-    LANGUAGES.forEach((language, index) => {
-        let filePath = TRANSLATION_FILES_PATH + '/' + language + '.json';
-        const translateDocumentParams = {
-            file: fs.createReadStream(SOURCE_FILE),
-            source: 'en',
-            target: language,
-            filename: 'en.json',
-        };
-        languageTranslator.translateDocument(translateDocumentParams)
-            .then(result => {
-                getStatus(result['result']['document_id'], filePath)
-            })
-            .catch(err => {
-                console.log('error:', err);
-            });
+    fs.readFile(SOURCE_FILE, 'utf8', function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        var readStream = new Readable.from(data.replace(/{{val([0-9]+)}}/g, (a, b) => { return '{{' + b + '}}' }))
+        LANGUAGES.forEach((language, index) => {
+
+
+
+
+            let filePath = TRANSLATION_FILES_PATH + '/' + language + '.json';
+            const translateDocumentParams = {
+                file: readStream,
+                source: 'en',
+                target: language,
+                filename: 'en.json',
+            };
+
+
+            languageTranslator.translateDocument(translateDocumentParams)
+                .then(result => {
+                    getStatus(result['result']['document_id'], filePath)
+                })
+                .catch(err => {
+                    console.log('error:', err);
+                });
+        });
+
     });
+
 }
 
 switch (process.argv.slice(2)[0]) {

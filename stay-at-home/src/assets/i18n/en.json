@@ -6,9 +6,9 @@
     "TREESINFOREST": "Trees in my forest:",
     "NEXTTREE": "Next tree in:",
     "GAMERULES": "Game rules for demo",
-    "RULE1": "Go to settings, click on \"{{1}}\" and click on the button for \"{{2}}\".",
-    "RULE2": "One tree grows every {{1}} seconds you stay at home.",
-    "RULE3": "One tree is cut down every {{1}} seconds you are not home.",
+    "RULE1": "Go to settings, click on \"{{val1}}\" and click on the button for \"{{val2}}\".",
+    "RULE2": "One tree grows every {{val1}} seconds you stay at home.",
+    "RULE3": "One tree is cut down every {{val1}} seconds you are not home.",
     "RULE4": "There are levels that you can achieve by growing a certain number of trees: 10, 20, 40, 80, etc."
   },
   "SETTINGS": {
