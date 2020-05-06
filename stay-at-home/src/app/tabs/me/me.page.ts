@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'; // Don't remove ElementRef
-import { Platform, NavController } from '@ionic/angular';
+import { Platform, NavController, ToastController } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { Plugins, Toast } from '@capacitor/core';
+import { Plugins } from '@capacitor/core';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { CountdownComponent } from 'ngx-countdown';
 import { Screenshot } from '@ionic-native/screenshot/ngx';
@@ -47,7 +47,8 @@ export class MePage implements OnInit, AfterViewInit {
 		public platform: Platform,
 		public navCtrl: NavController,
 		public gpsService: GpsService,
-		public translate: TranslateService
+		public translate: TranslateService,
+		public toastController: ToastController
 	) {
 		configService.update.subscribe((config: UserConfiguration) => {
 			this.config = config;
@@ -139,9 +140,13 @@ export class MePage implements OnInit, AfterViewInit {
 
 		setTimeout(() => { this.confettiUtil.standard() }, 500);
 		setTimeout(() => { this.confettiUtil.standard() }, 1000);
-		Toast.show({
-			text: 'Welcome back!'
-		});
+		this.translate.get('HOME.WELCOME').subscribe(message => {
+			this.toastController.create({
+				message,
+				duration: 2000
+			}).then((toast: HTMLIonToastElement) => { toast.present() });
+		})
+
 	}
 
 	public async shareOptions() {

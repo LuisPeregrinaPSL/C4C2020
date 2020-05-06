@@ -21,7 +21,7 @@
 
               <ion-item>
                 <ion-label translate>SETTINGS.SETHOME</ion-label>
-                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()" style="width:10%;">
+                <ion-button [disabled]="!config.geolocationEnabled" (click)="setHome()">
                   <ion-icon name="home"></ion-icon>
                 </ion-button>
               </ion-item>
@@ -30,7 +30,7 @@
               </ion-list-header>
               <ion-item>
                 <ion-label translate>SETTINGS.DELETE</ion-label>
-                <ion-button color="danger" (click)="deleteSettings()" style="width:10%;">
+                <ion-button color="danger" (click)="deleteSettings()">
                   <ion-icon name="trash"></ion-icon>
                 </ion-button>
               </ion-item>

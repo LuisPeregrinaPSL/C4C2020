@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { GpsService } from '../../services/gps.service';
 import { GpsHistory } from 'src/app/gps-history';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { Plugins, DeviceInfo } from '@capacitor/core';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
+import { YesNoModalPage } from '../../modals/yes-no-modal/yes-no-modal.page';
+import { TranslateService } from '@ngx-translate/core';
 
-const { Device, Browser, Modals } = Plugins;
+const { Device, Browser } = Plugins;
 
 @Component({
   selector: 'app-settings',
@@ -25,7 +27,9 @@ export class SettingsPage {
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public configService: AppStorageService,
-    public gpsService: GpsService
+    public gpsService: GpsService,
+    public modalCtrl: ModalController,
+    public translate: TranslateService
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
@@ -128,17 +132,22 @@ export class SettingsPage {
     await Browser.open({ url: url });
   }
 
-  public deleteSettings() {
-    Modals.confirm({
-      title: 'Confirm',
-      message: 'Are you sure you\'d like to press the red button?'
-    }).then(result => {
-      if (result) {
-        this.configService.deleteConfiguration();
-        this.config = new UserConfiguration();
-        this.loadFormData();
+  public async deleteSettings() {
+    this.modalCtrl.create({
+      component: YesNoModalPage,
+      componentProps: {
+        'title': 'SETTINGS.MODAL.TITLE',
+        'message': 'SETTINGS.MODAL.MESSAGE'
       }
-
+    }).then((modal: HTMLIonModalElement) => {
+      modal.onDidDismiss().then(result => {
+        if (result && result.data) {
+          this.configService.deleteConfiguration();
+          this.config = new UserConfiguration();
+          this.loadFormData();
+        }
+      });
+      modal.present();
     });
   }
 }

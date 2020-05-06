@@ -1,0 +1,9 @@
+ion-grid {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#first {
+    flex-grow: 1;
+}

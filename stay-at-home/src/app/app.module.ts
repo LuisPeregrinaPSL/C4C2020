@@ -20,11 +20,13 @@ import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx'
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { WebpackTranslateLoader } from './webpack-translate-loader';
+import { YesNoModalPageModule } from './modals/yes-no-modal/yes-no-modal.module';
+import { YesNoModalPage } from './modals/yes-no-modal/yes-no-modal.page';
 
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
+  entryComponents: [YesNoModalPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -40,7 +42,8 @@ import { WebpackTranslateLoader } from './webpack-translate-loader';
         provide: TranslateLoader,
         useClass: WebpackTranslateLoader,
       }
-    })
+    }),
+    YesNoModalPageModule
   ],
   providers: [
     StatusBar,
