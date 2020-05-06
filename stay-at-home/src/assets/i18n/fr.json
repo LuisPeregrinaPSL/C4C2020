@@ -1,5 +1,6 @@
 {
   "HOME" : {
+    "WELCOME" : "Bienvenue !",
     "FOREST" : "Ma forêt",
     "DETAILS" : "Détails:",
     "FORESTLEVEL" : "Niveau de la forêt:",
@@ -10,6 +11,16 @@
     "RULE2" : "Un arbre pousse toutes les {{val1}} secondes que vous restez à la maison.",
     "RULE3" : "Un arbre est coupé toutes les {{val1}} secondes que vous n'êtes pas à la maison.",
     "RULE4" : "Il y a des niveaux que vous pouvez atteindre en poussant un certain nombre d'arbres: 10, 20, 40, 80, etc."
+  },
+  "FOREST" : {
+    "NEWLEVEL" : {
+      "TITLE" : "Félicitations !",
+      "MESSAGE" : "Vous avez augmenté votre niveau de forêt jusqu'à {{val1}} !"
+    },
+    "LOSETREE" : {
+      "TITLE" : "Veuillez retourner à la maison",
+      "MESSAGE" : "Un arbre a été coupé."
+    }
   },
   "SETTINGS" : {
     "TITLE" : "Paramètres",
@@ -23,6 +34,10 @@
     "LICENCE" : "Licence",
     "IMAGES" : "Images",
     "AUDIO" : "Audio",
-    "3DASSETS" : "Actifs 3D"
+    "3DASSETS" : "Actifs 3D",
+    "MODAL" : {
+      "TITLE" : "Veuillez confirmer",
+      "MESSAGE" : "Etes-vous sûr de vouloir supprimer tous les paramètres?"
+    }
   }
 }

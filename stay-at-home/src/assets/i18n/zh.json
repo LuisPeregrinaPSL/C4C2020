@@ -1,5 +1,6 @@
 {
   "HOME" : {
+    "WELCOME" : "欢迎",
     "FOREST" : "我的森林",
     "DETAILS" : "详细信息 :",
     "FORESTLEVEL" : "森林级别:",
@@ -10,6 +11,16 @@
     "RULE2" : "每 {{val1}} 秒就会有一棵树在家里停留。",
     "RULE3" : "每 {{val1}} 秒就会减少一个树，您不在家。",
     "RULE4" : "可以通过增加一定数量的树来实现的级别 : 10，20，40，80 等等。"
+  },
+  "FOREST" : {
+    "NEWLEVEL" : {
+      "TITLE" : "恭喜 !",
+      "MESSAGE" : "您已将森林级别增加到 {{val1}}!"
+    },
+    "LOSETREE" : {
+      "TITLE" : "请返回主页",
+      "MESSAGE" : "一棵树被切断了"
+    }
   },
   "SETTINGS" : {
     "TITLE" : "设置",
@@ -23,6 +34,10 @@
     "LICENCE" : "牌照",
     "IMAGES" : "图像",
     "AUDIO" : "音频",
-    "3DASSETS" : "3D 资产"
+    "3DASSETS" : "3D 资产",
+    "MODAL" : {
+      "TITLE" : "请确认",
+      "MESSAGE" : "确定要删除所有设置吗 ?"
+    }
   }
 }

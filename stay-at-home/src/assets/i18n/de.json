@@ -1,5 +1,6 @@
 {
   "HOME" : {
+    "WELCOME" : "Willkommen!",
     "FOREST" : "Mein Wald",
     "DETAILS" : "Details:",
     "FORESTLEVEL" : "Waldebene:",
@@ -10,6 +11,16 @@
     "RULE2" : "Ein Baum wächst alle {{val1}} Sekunden, die du zu Hause bleibst.",
     "RULE3" : "Ein Baum wird alle {{val1}} Sekunden heruntergeschnitten, die Sie nicht zu Hause sind.",
     "RULE4" : "Es gibt Ebenen, die Sie erreichen können, indem Sie eine bestimmte Anzahl von Bäumen wachsen: 10, 20, 40, 80, etc."
+  },
+  "FOREST" : {
+    "NEWLEVEL" : {
+      "TITLE" : "Herzlichen Glückwunsch!",
+      "MESSAGE" : "Sie haben Ihre Waldebene auf {{val1}} erhöht!"
+    },
+    "LOSETREE" : {
+      "TITLE" : "Bitte zurück nach Hause",
+      "MESSAGE" : "Ein Baum wurde abgehauen."
+    }
   },
   "SETTINGS" : {
     "TITLE" : "Einstellungen",
@@ -23,6 +34,10 @@
     "LICENCE" : "Lizenz",
     "IMAGES" : "Bilder",
     "AUDIO" : "Audio",
-    "3DASSETS" : "3D-Assets"
+    "3DASSETS" : "3D-Assets",
+    "MODAL" : {
+      "TITLE" : "Bitte bestätigen",
+      "MESSAGE" : "Sind Sie sicher, dass Sie alle Einstellungen löschen möchten?"
+    }
   }
 }

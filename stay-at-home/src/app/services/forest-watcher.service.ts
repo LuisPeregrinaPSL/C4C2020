@@ -12,6 +12,7 @@ import { GameRules } from '../game-rules';
 import { RestApiService } from './rest-api.service';
 import { GpsHistory } from '../gps-history';
 import { AudioService } from './audio.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -28,14 +29,21 @@ export class ForestWatcherService {
   grow: EventEmitter<number> = new EventEmitter<number>();
   shrink: EventEmitter<number> = new EventEmitter<number>();
   level: EventEmitter<number> = new EventEmitter<number>();
+  strings: any = {};
 
   constructor(
     public gpsSvc: GpsService,
     public appStorageSvc: AppStorageService,
     public alertCtrl: AlertController,
     public restApi: RestApiService,
-    public audio: AudioService
+    public audio: AudioService,
+    public translate: TranslateService
   ) {
+    // Translate
+    this.translate.get('FOREST.NEWLEVEL.TITLE').subscribe(s => this.strings.newLevelTitle = s);
+    this.translate.get('FOREST.LOSETREE.TITLE').subscribe(s => this.strings.loseTreeTitle = s);
+    this.translate.get('FOREST.LOSETREE.MESSAGE').subscribe(s => this.strings.loseTreeMessage = s);
+
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
     gpsSvc.beacon.subscribe(async (newCoords: SimpleCoordinates) => {
       this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
@@ -91,7 +99,9 @@ export class ForestWatcherService {
           let level = GameRules.getPlayerLevel(config);
           if (level > config.level) {
             config.level = level;
-            this.notifyUser('Congratulations', 'You have increased your forest level to ' + level + '!');
+            this.translate.get('FOREST.NEWLEVEL.MESSAGE', { val1: level }).subscribe(s =>
+              this.notifyUser(this.strings.newLevelTitle, s)
+            );
             this.audio.play('new-level');
             this.level.emit(level);
           }
@@ -118,7 +128,7 @@ export class ForestWatcherService {
       if (config.trees > 0) {
         config.trees--;
         this.appStorageSvc.setConfiguration(config);
-        this.notifyUser('Return home!', 'You have one tree less now.');
+        this.notifyUser(this.strings.loseTreeTitle, this.strings.loseTreeMessage);
       }
     })
   }

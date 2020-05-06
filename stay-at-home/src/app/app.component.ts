@@ -27,7 +27,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.translate.setDefaultLang('en');
       Device.getLanguageCode().then((language: DeviceLanguageCodeResult) => {
-        this.translate.use(language.value);
+        this.translate.use(language.value.substr(0, 2));
         SplashScreen.hide();
       });
     });

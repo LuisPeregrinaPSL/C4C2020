@@ -1,5 +1,6 @@
 {
   "HOME": {
+    "WELCOME": "Welcome!",
     "FOREST": "My forest",
     "DETAILS": "Details:",
     "FORESTLEVEL": "Forest level:",
@@ -10,6 +11,16 @@
     "RULE2": "One tree grows every {{val1}} seconds you stay at home.",
     "RULE3": "One tree is cut down every {{val1}} seconds you are not home.",
     "RULE4": "There are levels that you can achieve by growing a certain number of trees: 10, 20, 40, 80, etc."
+  },
+  "FOREST": {
+    "NEWLEVEL": {
+      "TITLE": "Congratulations!",
+      "MESSAGE": "You have increased your forest level to {{val1}}!"
+    },
+    "LOSETREE": {
+      "TITLE": "Please return home",
+      "MESSAGE": "One tree has been cut down."
+    }
   },
   "SETTINGS": {
     "TITLE": "Settings",
@@ -23,6 +34,10 @@
     "LICENCE": "Licence",
     "IMAGES": "Images",
     "AUDIO": "Audio",
-    "3DASSETS": "3D assets"
+    "3DASSETS": "3D assets",
+    "MODAL": {
+      "TITLE": "Please confirm",
+      "MESSAGE": "Are you sure you want to delete all settings?"
+    }
   }
 }

@@ -1,5 +1,6 @@
 {
   "HOME" : {
+    "WELCOME" : "¡ Bienvenido!",
     "FOREST" : "Mi bosque",
     "DETAILS" : "Detalles:",
     "FORESTLEVEL" : "Nivel de bosque:",
@@ -10,6 +11,16 @@
     "RULE2" : "Un árbol crece cada {{val1}} segundos que se queda en casa.",
     "RULE3" : "Se recortan un árbol cada {{val1}} segundos que no está en casa.",
     "RULE4" : "Hay niveles que se pueden lograr mediante el crecimiento de un cierto número de árboles: 10, 20, 40, 80, etc."
+  },
+  "FOREST" : {
+    "NEWLEVEL" : {
+      "TITLE" : "¡ Enhorabuena!",
+      "MESSAGE" : "Ha aumentado el nivel de bosque a {{val1}}."
+    },
+    "LOSETREE" : {
+      "TITLE" : "Vuelva a casa",
+      "MESSAGE" : "Se ha cortado un árbol."
+    }
   },
   "SETTINGS" : {
     "TITLE" : "Configuración",
@@ -23,6 +34,10 @@
     "LICENCE" : "Licence",
     "IMAGES" : "Imágenes",
     "AUDIO" : "Audio",
-    "3DASSETS" : "Activos 3D"
+    "3DASSETS" : "Activos 3D",
+    "MODAL" : {
+      "TITLE" : "Confirme",
+      "MESSAGE" : "¿Está seguro de que desea suprimir todos los valores?"
+    }
   }
 }

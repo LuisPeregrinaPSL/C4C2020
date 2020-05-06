@@ -127,9 +127,7 @@ export class GpsService {
 					distanceFilter: 0,
 					interval: AppConfiguration.GPS_CHECK_POSITION_BACKGROUND_TIMEOUT,
 					fastestInterval: AppConfiguration.GPS_CHECK_POSITION_TIMEOUT,
-					notificationsEnabled: true,
-					notificationTitle: 'Background tracking',
-					notificationText: 'enabled',
+					notificationsEnabled: false,
 					debug: true
 				});
 				console.info('Using mobile GPS.')
