@@ -11,8 +11,7 @@ export class TabsService {
   /**
    * Hide tabs automatically if page is in this array.
    */
-  hideTabBarPages = [
-  ];
+  hideTabBarPages = ['welcome'];
   /**
    * Hide tabs automatically if this routed (eg. "tabs/:user") page is in this array.
    */
@@ -26,12 +25,12 @@ export class TabsService {
 
   public hideTabs() {
     const tabBar = document.getElementById('myTabBar');
-    if (tabBar.style.display !== 'none') tabBar.style.display = 'none';
+    if (tabBar && tabBar.style.display !== 'none') tabBar.style.display = 'none';
   }
 
   public showTabs() {
     const tabBar = document.getElementById('myTabBar');
-    if (tabBar.style.display !== 'flex') tabBar.style.display = 'flex';
+    if (tabBar && tabBar.style.display !== 'flex') tabBar.style.display = 'flex';
   }
 
   private navEvents() {

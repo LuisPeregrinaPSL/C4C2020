@@ -70,10 +70,10 @@ export class AppStorageService {
  */
   public async deleteConfiguration() {
     console.warn("Deleting config");
-    let config = new UserConfiguration()
-    await this.storage.set(Constants.CONFIGURATION, JSON.stringify(config));
-    this.cachedConfig = null;
-    this.update.emit(config);
+    this.storage.clear().then(() => {
+      this.cachedConfig = null;
+      this.update.emit();
+    });
   }
 
 

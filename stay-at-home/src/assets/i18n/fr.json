@@ -1,4 +1,23 @@
 {
+  "WELCOME" : {
+    "SLIDE1" : {
+      "TITLE" : "Bienvenue à Stay @ Home!",
+      "PARAGRAPH" : "Cette application a été faite pour que rester à la maison reste amusant dans ces temps de quarantaine."
+    },
+    "SLIDE2" : {
+      "TITLE" : "Restez à la maison et faites pousser votre forêt",
+      "PARAGRAPH" : "À chaque fois que vous restez à la maison, après un certain temps, un nouvel arbre grandit. Mais attention: quand tu parles, un arbre est coupé."
+    },
+    "SLIDE3" : {
+      "TITLE" : "Qu'y a-il pour moi?",
+      "PARAGRAPH" : "Compete contre vos voisins et d'autres personnes pour voir qui peut cultiver la plus grande forêt en restant à la maison le plus de temps possible."
+    },
+    "SLIDE4" : {
+      "TITLE" : "Voir votre forêt dans la réalité virtuelle",
+      "PARAGRAPH" : "Vous pouvez utiliser les technologies de votre téléphone pour visualiser votre forêt en réalité virtuelle !",
+      "CONTINUE" : "Commençons !"
+    }
+  },
   "HOME" : {
     "WELCOME" : "Bienvenue !",
     "FOREST" : "Ma forêt",
@@ -39,5 +58,10 @@
       "TITLE" : "Veuillez confirmer",
       "MESSAGE" : "Etes-vous sûr de vouloir supprimer tous les paramètres?"
     }
+  },
+  "GENERIC" : {
+    "YES" : "Oui",
+    "NO" : "Non",
+    "CANCEL" : "Annuler"
   }
 }

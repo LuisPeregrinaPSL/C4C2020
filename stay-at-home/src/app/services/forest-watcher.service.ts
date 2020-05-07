@@ -47,27 +47,30 @@ export class ForestWatcherService {
     // A new entry was added to the history. There is a configuration, the user enabled geolocation and a home was set.
     gpsSvc.beacon.subscribe(async (newCoords: SimpleCoordinates) => {
       this.appStorageSvc.getConfiguration().then((config: UserConfiguration) => {
-        let metersFromHome = Utils.convertToMeters(config.home.latitude, config.home.longitude, newCoords.latitude, newCoords.longitude);
-        if (metersFromHome > AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
-          // We are shrinking
-          this.status = ForestStatus.SHRINKING;
-          GameRules.earliestGrowingDate = null;
-          this.deductTree();
-          this.appStorageSvc.addHistory(new GpsHistory(newCoords, new Date(), -1));
-          this.restApi.postLocation(newCoords);
-          this.shrink.emit(config.trees);
-          this.audio.play('lose-tree');
-        } else {
-          let now = new Date();
-          if (!GameRules.earliestGrowingDate) {
-            // We just started growing
-            GameRules.earliestGrowingDate = now;
+        if (config.home) {
+          let metersFromHome = Utils.convertToMeters(config.home.latitude, config.home.longitude, newCoords.latitude, newCoords.longitude);
+          if (metersFromHome > AppConfiguration.DISTANCE_TO_HOUSE_THRESHOLD) {
+            // We are shrinking
+            this.status = ForestStatus.SHRINKING;
+            GameRules.earliestGrowingDate = null;
+            this.deductTree();
+            this.appStorageSvc.addHistory(new GpsHistory(newCoords, new Date(), -1));
+            this.restApi.postLocation(newCoords);
+            this.shrink.emit(config.trees);
+            this.audio.play('lose-tree');
           } else {
-            // We continue growing
-            this.status = ForestStatus.GROWING;
-            this.calculate(now, newCoords);
+            let now = new Date();
+            if (!GameRules.earliestGrowingDate) {
+              // We just started growing
+              GameRules.earliestGrowingDate = now;
+            } else {
+              // We continue growing
+              this.status = ForestStatus.GROWING;
+              this.calculate(now, newCoords);
+            }
           }
         }
+
       });
 
     });

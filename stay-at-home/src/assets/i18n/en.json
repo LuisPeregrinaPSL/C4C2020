@@ -1,4 +1,23 @@
 {
+  "WELCOME": {
+    "SLIDE1": {
+      "TITLE": "Welcome to Stay@Home!",
+      "PARAGRAPH": "This app was made so that staying at home stays fun in these quarantine times."
+    },
+    "SLIDE2": {
+      "TITLE": "Stay at home and make your forest grow",
+      "PARAGRAPH": "Whenever you stay at home, after a certain time a new tree grows. But beware: whenever you leave home a tree is cut down."
+    },
+    "SLIDE3": {
+      "TITLE": "What's in it for me?",
+      "PARAGRAPH": "Compete against your neighbors and other people to see who can grow the largest forest by staying at home the most time possible."
+    },
+    "SLIDE4": {
+      "TITLE": "See your forest in Virtual Reality",
+      "PARAGRAPH": "You can use the technologies in your phone to view your forest in Virtual Reality!",
+      "CONTINUE": "Let's start!"
+    }
+  },
   "HOME": {
     "WELCOME": "Welcome!",
     "FOREST": "My forest",
@@ -39,5 +58,10 @@
       "TITLE": "Please confirm",
       "MESSAGE": "Are you sure you want to delete all settings?"
     }
+  },
+  "GENERIC": {
+    "YES": "Yes",
+    "NO": "No",
+    "CANCEL": "Cancel"
   }
 }

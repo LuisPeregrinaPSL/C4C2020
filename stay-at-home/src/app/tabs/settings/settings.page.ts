@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { GpsService } from '../../services/gps.service';
 import { GpsHistory } from 'src/app/gps-history';
 import { AppStorageService } from 'src/app/services/app-storage.service';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { Plugins, DeviceInfo } from '@capacitor/core';
 import { SimpleCoordinates } from 'src/app/simple-coordinates';
-import { YesNoModalPage } from '../../modals/yes-no-modal/yes-no-modal.page';
 import { TranslateService } from '@ngx-translate/core';
 
 const { Device, Browser } = Plugins;
@@ -22,18 +21,23 @@ export class SettingsPage {
   configForm: FormGroup;
   loader: any;
   historyArray: Array<GpsHistory>;
+  strings: any = {};
 
   constructor(
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public configService: AppStorageService,
     public gpsService: GpsService,
-    public modalCtrl: ModalController,
+    public alertCtrl: AlertController,
     public translate: TranslateService
   ) {
     this.prefillAndValidateForm(new UserConfiguration());
     this.loadFormData();
     this.loadHistory();
+    this.translate.get('SETTINGS.MODAL.TITLE').subscribe(s => this.strings.modalTitle = s);
+    this.translate.get('SETTINGS.MODAL.MESSAGE').subscribe(s => this.strings.modalMessage = s);
+    this.translate.get('GENERIC.YES').subscribe(s => this.strings.yes = s);
+    this.translate.get('GENERIC.NO').subscribe(s => this.strings.no = s);
   }
 
 
@@ -56,7 +60,6 @@ export class SettingsPage {
             if (info.uuid != this.config.deviceId) {
               this.config.deviceId = info.uuid;
             }
-            this.updateConfig();
           }).finally(() => {
             this.prefillAndValidateForm(this.config);
             /* this.drawForest(); */
@@ -133,21 +136,26 @@ export class SettingsPage {
   }
 
   public async deleteSettings() {
-    this.modalCtrl.create({
-      component: YesNoModalPage,
-      componentProps: {
-        'title': 'SETTINGS.MODAL.TITLE',
-        'message': 'SETTINGS.MODAL.MESSAGE'
-      }
-    }).then((modal: HTMLIonModalElement) => {
-      modal.onDidDismiss().then(result => {
-        if (result && result.data) {
+    this.alertCtrl.create({
+      header: this.strings.modalTitle,
+      message: this.strings.modalMessage,
+      buttons: [{
+        text: this.strings.no,
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }, {
+        text: this.strings.yes,
+        cssClass: 'failure-button',
+        handler: () => {
           this.configService.deleteConfiguration();
           this.config = new UserConfiguration();
           this.loadFormData();
         }
-      });
-      modal.present();
+      }]
+    }).then((alert: HTMLIonAlertElement) => {
+      alert.present();
     });
   }
 }

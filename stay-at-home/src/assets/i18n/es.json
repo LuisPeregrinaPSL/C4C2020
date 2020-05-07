@@ -1,4 +1,23 @@
 {
+  "WELCOME" : {
+    "SLIDE1" : {
+      "TITLE" : "Bienvenido a Stay @ Home!",
+      "PARAGRAPH" : "Esta aplicación se ha hecho para que permanecer en casa se divierte en estos tiempos de cuarentena."
+    },
+    "SLIDE2" : {
+      "TITLE" : "Quédense en casa y hagan crecer su bosque",
+      "PARAGRAPH" : "Cada vez que te quedas en casa, después de un cierto tiempo crece un nuevo árbol. Pero ten cuidado: cada vez que te vayas de casa, un árbol está cortado."
+    },
+    "SLIDE3" : {
+      "TITLE" : "¿Qué hay en eso para mí?",
+      "PARAGRAPH" : "Compete en contra de sus vecinos y de otras personas para ver quién puede cultivar el bosque más grande al permanecer en casa el mayor tiempo posible."
+    },
+    "SLIDE4" : {
+      "TITLE" : "Vea su bosque en Realidad Virtual",
+      "PARAGRAPH" : "Usted puede utilizar las tecnologías en su teléfono para ver su bosque en la Realidad Virtual!",
+      "CONTINUE" : "¡ Empecemos!"
+    }
+  },
   "HOME" : {
     "WELCOME" : "¡ Bienvenido!",
     "FOREST" : "Mi bosque",
@@ -39,5 +58,10 @@
       "TITLE" : "Confirme",
       "MESSAGE" : "¿Está seguro de que desea suprimir todos los valores?"
     }
+  },
+  "GENERIC" : {
+    "YES" : "Sí",
+    "NO" : "No",
+    "CANCEL" : "Cancelar"
   }
 }

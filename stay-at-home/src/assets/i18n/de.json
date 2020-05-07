@@ -1,4 +1,23 @@
 {
+  "WELCOME" : {
+    "SLIDE1" : {
+      "TITLE" : "Willkommen bei Stay @ Home!",
+      "PARAGRAPH" : "Diese App wurde so gemacht, dass der Aufenthalt zu Hause bleibt Spaß in diesen Quarantäne Zeiten."
+    },
+    "SLIDE2" : {
+      "TITLE" : "Bleiben Sie zu Hause und machen Sie Ihren Wald wachsen",
+      "PARAGRAPH" : "Immer wenn man zu Hause bleibt, wächst nach einer gewissen Zeit ein neuer Baum. Aber Vorsicht: Wenn Sie nach Hause lassen, wird ein Baum abgehauen."
+    },
+    "SLIDE3" : {
+      "TITLE" : "Was ist für mich da?",
+      "PARAGRAPH" : "Konkurrieren Sie gegen Ihre Nachbarn und andere Menschen, um zu sehen, wer den größten Wald wachsen kann, indem Sie zu Hause die meiste Zeit möglich sein."
+    },
+    "SLIDE4" : {
+      "TITLE" : "Sehen Sie Ihren Wald in Virtual Reality",
+      "PARAGRAPH" : "Sie können die Technologien in Ihrem Handy verwenden, um Ihren Wald in Virtual Reality zu sehen!",
+      "CONTINUE" : "Lets Start!"
+    }
+  },
   "HOME" : {
     "WELCOME" : "Willkommen!",
     "FOREST" : "Mein Wald",
@@ -39,5 +58,10 @@
       "TITLE" : "Bitte bestätigen",
       "MESSAGE" : "Sind Sie sicher, dass Sie alle Einstellungen löschen möchten?"
     }
+  },
+  "GENERIC" : {
+    "YES" : "Ja",
+    "NO" : "Nein",
+    "CANCEL" : "Abbrechen"
   }
 }

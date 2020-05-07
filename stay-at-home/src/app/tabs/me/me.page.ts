@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'; // Don't remove ElementRef
-import { Platform, NavController, ToastController } from '@ionic/angular';
+import { Platform, NavController, ToastController, ModalController } from '@ionic/angular';
 import { UserConfiguration } from 'src/app/user-configuration';
 import { GpsService } from 'src/app/services/gps.service';
 import { AppStorageService } from 'src/app/services/app-storage.service';
@@ -15,6 +15,7 @@ import { GameRules } from 'src/app/game-rules';
 import { ConfettiUtil } from 'src/app/confetti-util';
 import { ForestRenderer } from 'src/app/forest-renderer';
 import { TranslateService } from '@ngx-translate/core';
+import { WelcomePage } from 'src/app/modals/welcome/welcome.page';
 
 
 const { Share } = Plugins;
@@ -48,8 +49,12 @@ export class MePage implements OnInit, AfterViewInit {
 		public navCtrl: NavController,
 		public gpsService: GpsService,
 		public translate: TranslateService,
-		public toastController: ToastController
+		public toastController: ToastController,
+		public modalCtrl: ModalController
 	) {
+		// If there is no configuration, go to welcome. No need for guards, that would add complexity for each time you opena new tab.
+		this.configService.getConfiguration().catch(conf => this.showWelcome());
+
 		configService.update.subscribe((config: UserConfiguration) => {
 			this.config = config;
 
@@ -171,5 +176,16 @@ export class MePage implements OnInit, AfterViewInit {
 
 	public isBrowser() {
 		return this.platform.is('desktop');
+	}
+
+	public async showWelcome() {
+		this.modalCtrl.create({
+			component: WelcomePage
+		}).then((modal: HTMLIonModalElement) => {
+			modal.onDidDismiss().then(result => {
+				//TODO: Actualizar conf?
+			});
+			modal.present();
+		});
 	}
 }
