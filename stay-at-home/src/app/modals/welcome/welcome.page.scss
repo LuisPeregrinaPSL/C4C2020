@@ -36,3 +36,13 @@ p {
 img.anim {
     animation: welcome 1s linear 0s infinite alternate;
 }
+
+.closeWelcome {
+    position: absolute;
+    top: 0em;
+    right: 0em;
+}
+
+ion-slides {
+    overflow-y: scroll;
+}
