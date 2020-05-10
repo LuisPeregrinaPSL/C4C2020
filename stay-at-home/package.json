@@ -77,5 +77,8 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "Gamifying the quarantine need by providing goals and rewards for staying at home."
+  "description": "Gamifying the quarantine need by providing goals and rewards for staying at home.",
+  "engines": {
+    "node": "12"
+  }
 }
