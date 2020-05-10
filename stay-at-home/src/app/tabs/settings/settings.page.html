@@ -44,12 +44,17 @@
             <ion-card-title translate>SETTINGS.TIME</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button (click)="loadHistory()">
-              <ion-icon name="reload"></ion-icon>
-            </ion-button>
-            <ion-button color="warning" (click)="deleteHistory()">
-              <ion-icon name="trash"></ion-icon>
-            </ion-button>
+            <ion-list>
+              <ion-item>
+                <ion-button (click)="loadHistory()" slot="start">
+                  <ion-icon name="reload"></ion-icon>
+                </ion-button>
+                <ion-button color="warning" (click)="deleteHistory()" slot="start">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-list>
+
             <ion-list>
               <ng-container *ngFor="let gpsHistory of historyArray">
                 <ion-item>

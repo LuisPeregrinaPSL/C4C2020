@@ -147,7 +147,7 @@ export class SettingsPage {
         }
       }, {
         text: this.strings.yes,
-        cssClass: 'failure-button',
+        cssClass: 'alertDanger',
         handler: () => {
           this.configService.deleteConfiguration();
           this.config = new UserConfiguration();

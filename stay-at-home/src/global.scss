@@ -26,6 +26,6 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 .alertDanger {
-    background-color: red !important;
-    color: white !important;
+    background-color: var(--ion-color-danger) !important;
+    color: var(--ion-color-dark-contrast) !important;
 }

@@ -1,4 +1,14 @@
+ion-content {
+    --background: var(--ion-color-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+    ion-content {
+        --background: var(--ion-color-primary-tint);
+    }
+}
+
 ion-button {
-    max-width: 20vw;
-    width: 10vw;
+    width: 3em;
+    height: 3em;
 }

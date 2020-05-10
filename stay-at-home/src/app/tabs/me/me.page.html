@@ -25,21 +25,23 @@
             <ion-card-title translate>HOME.DETAILS</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-item>
-              <ion-label translate>HOME.FORESTLEVEL</ion-label>
-              <ion-text slot="end">{{config.level}}</ion-text>
-            </ion-item>
-            <ion-item>
-              <ion-label translate>HOME.TREESINFOREST</ion-label>
-              <ion-text slot="end">{{config.trees}}</ion-text>
-            </ion-item>
-            <ion-item>
-              <ion-label translate>HOME.NEXTTREE</ion-label>
-              <ion-text slot="end">
-                <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'mm:ss', demand:true }">
-                </countdown>
-              </ion-text>
-            </ion-item>
+            <ion-list>
+              <ion-item>
+                <ion-label translate>HOME.FORESTLEVEL</ion-label>
+                <ion-text slot="end">{{config.level}}</ion-text>
+              </ion-item>
+              <ion-item>
+                <ion-label translate>HOME.TREESINFOREST</ion-label>
+                <ion-text slot="end">{{config.trees}}</ion-text>
+              </ion-item>
+              <ion-item>
+                <ion-label translate>HOME.NEXTTREE</ion-label>
+                <ion-text slot="end">
+                  <countdown #countdown [config]="{ leftTime: timeToGrowTree, format: 'mm:ss', demand:true }">
+                  </countdown>
+                </ion-text>
+              </ion-item>
+            </ion-list>
           </ion-card-content>
         </ion-card>
         <ion-card>

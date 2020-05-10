@@ -1,10 +1,11 @@
-ion-toolbar {
-  --background: var(--ion-color-primary);
-  --color: #ffffff;
-}
-
 ion-content {
   --background: var(--ion-color-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background: var(--ion-color-primary-tint);
+  }
 }
 
 ion-card#vr {
