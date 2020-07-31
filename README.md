@@ -7,8 +7,8 @@ VR Mobile platform to track and analyze Stay@home behavior
    ### Team members
    * Jaime de Alba (jaime_alba@persistent.com)
    * Guillermo Moreno (guillermo_moreno@persistent.com)
-   * Roberto Mosqueda (roberto_mosqueda@persistent.com)
-   * Luis Peregrina (luis_andrade@persistent.co.in)
+   * Cecilia Macias (cecilia_macias@persistent.com)
+   * Luis Peregrina (luis_andrade@persistent.com)
    * Hector Toscano (hector_toscano@persistent.com)
    
   ### Project Description
