@@ -15,7 +15,7 @@
   "dependencies": {
     "cfenv": "^1.2.2",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.7-alpha.3",
+    "express-fileupload": "^1.1.10",
     "express-handlebars": "^4.0.3",
     "jimp": "^0.10.2",
     "tmp": "^0.1.0"
